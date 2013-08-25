@@ -73,7 +73,7 @@
 		3B4EC5E217CAAA6B00B254EB /* librope.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = librope.xcodeproj; path = librope/librope.xcodeproj; sourceTree = "<group>"; };
 		3B4EC5F017CAB30200B254EB /* minunit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = minunit.h; sourceTree = "<group>"; };
 		3B4EC5F117CAB30200B254EB /* ot_test.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ot_test.c; sourceTree = "<group>"; };
-		3B4EC5F617CAB3AF00B254EB /* libot-test */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "libot-test"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3B4EC5F617CAB3AF00B254EB /* libot-test */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = "libot-test"; path = tests; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -403,6 +403,7 @@
 				3B4EC5AC17CAA72400B254EB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		3B4EC5FC17CAB3AF00B254EB /* Build configuration list for PBXNativeTarget "tests" */ = {
 			isa = XCConfigurationList;
@@ -411,6 +412,7 @@
 				3B4EC5FE17CAB3AF00B254EB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
