@@ -6,8 +6,23 @@
 	objectVersion = 46;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		3B4EC5CD17CAA82400B254EB /* ot.h in Headers */ = {isa = PBXBuildFile; fileRef = 3B4EC5BF17CAA82400B254EB /* ot.h */; };
+		3B4EC5CE17CAA82400B254EB /* ot.c in Sources */ = {isa = PBXBuildFile; fileRef = 3B4EC5C017CAA82400B254EB /* ot.c */; };
+		3B4EC5CF17CAA82400B254EB /* client.c in Sources */ = {isa = PBXBuildFile; fileRef = 3B4EC5C117CAA82400B254EB /* client.c */; };
+		3B4EC5D017CAA82400B254EB /* client.h in Headers */ = {isa = PBXBuildFile; fileRef = 3B4EC5C217CAA82400B254EB /* client.h */; };
+		3B4EC5D117CAA82400B254EB /* server.h in Headers */ = {isa = PBXBuildFile; fileRef = 3B4EC5C317CAA82400B254EB /* server.h */; };
+		3B4EC5D217CAA82400B254EB /* server.c in Sources */ = {isa = PBXBuildFile; fileRef = 3B4EC5C417CAA82400B254EB /* server.c */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		3B4EC5A617CAA72400B254EB /* liblibot.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = liblibot.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		3B4EC5BF17CAA82400B254EB /* ot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ot.h; sourceTree = "<group>"; };
+		3B4EC5C017CAA82400B254EB /* ot.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ot.c; sourceTree = "<group>"; };
+		3B4EC5C117CAA82400B254EB /* client.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = client.c; sourceTree = "<group>"; };
+		3B4EC5C217CAA82400B254EB /* client.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = client.h; sourceTree = "<group>"; };
+		3B4EC5C317CAA82400B254EB /* server.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = server.h; sourceTree = "<group>"; };
+		3B4EC5C417CAA82400B254EB /* server.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = server.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -24,6 +39,12 @@
 		3B4EC59D17CAA72400B254EB = {
 			isa = PBXGroup;
 			children = (
+				3B4EC5BF17CAA82400B254EB /* ot.h */,
+				3B4EC5C017CAA82400B254EB /* ot.c */,
+				3B4EC5C117CAA82400B254EB /* client.c */,
+				3B4EC5C217CAA82400B254EB /* client.h */,
+				3B4EC5C317CAA82400B254EB /* server.h */,
+				3B4EC5C417CAA82400B254EB /* server.c */,
 				3B4EC5A717CAA72400B254EB /* Products */,
 			);
 			sourceTree = "<group>";
@@ -43,6 +64,9 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3B4EC5CD17CAA82400B254EB /* ot.h in Headers */,
+				3B4EC5D017CAA82400B254EB /* client.h in Headers */,
+				3B4EC5D117CAA82400B254EB /* server.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -97,6 +121,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3B4EC5D217CAA82400B254EB /* server.c in Sources */,
+				3B4EC5CF17CAA82400B254EB /* client.c in Sources */,
+				3B4EC5CE17CAA82400B254EB /* ot.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
