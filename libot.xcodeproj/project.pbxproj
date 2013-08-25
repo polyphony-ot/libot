@@ -13,16 +13,67 @@
 		3B4EC5D017CAA82400B254EB /* client.h in Headers */ = {isa = PBXBuildFile; fileRef = 3B4EC5C217CAA82400B254EB /* client.h */; };
 		3B4EC5D117CAA82400B254EB /* server.h in Headers */ = {isa = PBXBuildFile; fileRef = 3B4EC5C317CAA82400B254EB /* server.h */; };
 		3B4EC5D217CAA82400B254EB /* server.c in Sources */ = {isa = PBXBuildFile; fileRef = 3B4EC5C417CAA82400B254EB /* server.c */; };
+		3B4EC5FF17CAB41C00B254EB /* minunit.h in Sources */ = {isa = PBXBuildFile; fileRef = 3B4EC5F017CAB30200B254EB /* minunit.h */; };
+		3B4EC60017CAB41C00B254EB /* ot_test.c in Sources */ = {isa = PBXBuildFile; fileRef = 3B4EC5F117CAB30200B254EB /* ot_test.c */; };
+		3B4EC60417CAB86600B254EB /* libot.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B4EC5A617CAA72400B254EB /* libot.a */; };
+		3B4EC60717CAB89B00B254EB /* librope.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B4EC5E817CAAA6B00B254EB /* librope.a */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		3B4EC5E717CAAA6B00B254EB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3B4EC5E217CAAA6B00B254EB /* librope.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = FD5D7C2515E1DBAD00F847DF;
+			remoteInfo = rope;
+		};
+		3B4EC5E917CAAA6B00B254EB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3B4EC5E217CAAA6B00B254EB /* librope.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = FD5D7C3C15E1DCA100F847DF;
+			remoteInfo = tests;
+		};
+		3B4EC5EB17CAAAED00B254EB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3B4EC5E217CAAA6B00B254EB /* librope.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = FD5D7C2415E1DBAD00F847DF;
+			remoteInfo = rope;
+		};
+		3B4EC60517CAB86D00B254EB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3B4EC59E17CAA72400B254EB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3B4EC5A517CAA72400B254EB;
+			remoteInfo = ot;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		3B4EC5F417CAB3AF00B254EB /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
-		3B4EC5A617CAA72400B254EB /* liblibot.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = liblibot.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		3B4EC5A617CAA72400B254EB /* libot.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libot.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B4EC5BF17CAA82400B254EB /* ot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ot.h; sourceTree = "<group>"; };
 		3B4EC5C017CAA82400B254EB /* ot.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ot.c; sourceTree = "<group>"; };
 		3B4EC5C117CAA82400B254EB /* client.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = client.c; sourceTree = "<group>"; };
 		3B4EC5C217CAA82400B254EB /* client.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = client.h; sourceTree = "<group>"; };
 		3B4EC5C317CAA82400B254EB /* server.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = server.h; sourceTree = "<group>"; };
 		3B4EC5C417CAA82400B254EB /* server.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = server.c; sourceTree = "<group>"; };
+		3B4EC5E217CAAA6B00B254EB /* librope.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = librope.xcodeproj; path = librope/librope.xcodeproj; sourceTree = "<group>"; };
+		3B4EC5F017CAB30200B254EB /* minunit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = minunit.h; sourceTree = "<group>"; };
+		3B4EC5F117CAB30200B254EB /* ot_test.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ot_test.c; sourceTree = "<group>"; };
+		3B4EC5F617CAB3AF00B254EB /* libot-test */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "libot-test"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -30,6 +81,15 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3B4EC60717CAB89B00B254EB /* librope.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3B4EC5F317CAB3AF00B254EB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3B4EC60417CAB86600B254EB /* libot.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -39,6 +99,8 @@
 		3B4EC59D17CAA72400B254EB = {
 			isa = PBXGroup;
 			children = (
+				3B4EC5E217CAAA6B00B254EB /* librope.xcodeproj */,
+				3B4EC5EF17CAB30200B254EB /* test */,
 				3B4EC5BF17CAA82400B254EB /* ot.h */,
 				3B4EC5C017CAA82400B254EB /* ot.c */,
 				3B4EC5C117CAA82400B254EB /* client.c */,
@@ -52,9 +114,28 @@
 		3B4EC5A717CAA72400B254EB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				3B4EC5A617CAA72400B254EB /* liblibot.a */,
+				3B4EC5A617CAA72400B254EB /* libot.a */,
+				3B4EC5F617CAB3AF00B254EB /* libot-test */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		3B4EC5E317CAAA6B00B254EB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3B4EC5E817CAAA6B00B254EB /* librope.a */,
+				3B4EC5EA17CAAA6B00B254EB /* tests */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		3B4EC5EF17CAB30200B254EB /* test */ = {
+			isa = PBXGroup;
+			children = (
+				3B4EC5F017CAB30200B254EB /* minunit.h */,
+				3B4EC5F117CAB30200B254EB /* ot_test.c */,
+			);
+			path = test;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -73,9 +154,9 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		3B4EC5A517CAA72400B254EB /* libot */ = {
+		3B4EC5A517CAA72400B254EB /* ot */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 3B4EC5AA17CAA72400B254EB /* Build configuration list for PBXNativeTarget "libot" */;
+			buildConfigurationList = 3B4EC5AA17CAA72400B254EB /* Build configuration list for PBXNativeTarget "ot" */;
 			buildPhases = (
 				3B4EC5A217CAA72400B254EB /* Sources */,
 				3B4EC5A317CAA72400B254EB /* Frameworks */,
@@ -84,11 +165,30 @@
 			buildRules = (
 			);
 			dependencies = (
+				3B4EC5EC17CAAAED00B254EB /* PBXTargetDependency */,
 			);
-			name = libot;
+			name = ot;
 			productName = libot;
-			productReference = 3B4EC5A617CAA72400B254EB /* liblibot.a */;
+			productReference = 3B4EC5A617CAA72400B254EB /* libot.a */;
 			productType = "com.apple.product-type.library.static";
+		};
+		3B4EC5F517CAB3AF00B254EB /* tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3B4EC5FC17CAB3AF00B254EB /* Build configuration list for PBXNativeTarget "tests" */;
+			buildPhases = (
+				3B4EC5F217CAB3AF00B254EB /* Sources */,
+				3B4EC5F317CAB3AF00B254EB /* Frameworks */,
+				3B4EC5F417CAB3AF00B254EB /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3B4EC60617CAB86D00B254EB /* PBXTargetDependency */,
+			);
+			name = tests;
+			productName = "libot-test";
+			productReference = 3B4EC5F617CAB3AF00B254EB /* libot-test */;
+			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
 
@@ -109,12 +209,36 @@
 			mainGroup = 3B4EC59D17CAA72400B254EB;
 			productRefGroup = 3B4EC5A717CAA72400B254EB /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 3B4EC5E317CAAA6B00B254EB /* Products */;
+					ProjectRef = 3B4EC5E217CAAA6B00B254EB /* librope.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
-				3B4EC5A517CAA72400B254EB /* libot */,
+				3B4EC5A517CAA72400B254EB /* ot */,
+				3B4EC5F517CAB3AF00B254EB /* tests */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		3B4EC5E817CAAA6B00B254EB /* librope.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = librope.a;
+			remoteRef = 3B4EC5E717CAAA6B00B254EB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		3B4EC5EA17CAAA6B00B254EB /* tests */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = tests;
+			remoteRef = 3B4EC5E917CAAA6B00B254EB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXSourcesBuildPhase section */
 		3B4EC5A217CAA72400B254EB /* Sources */ = {
@@ -127,7 +251,29 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		3B4EC5F217CAB3AF00B254EB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3B4EC5FF17CAB41C00B254EB /* minunit.h in Sources */,
+				3B4EC60017CAB41C00B254EB /* ot_test.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		3B4EC5EC17CAAAED00B254EB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = rope;
+			targetProxy = 3B4EC5EB17CAAAED00B254EB /* PBXContainerItemProxy */;
+		};
+		3B4EC60617CAB86D00B254EB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3B4EC5A517CAA72400B254EB /* ot */;
+			targetProxy = 3B4EC60517CAB86D00B254EB /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		3B4EC5A817CAA72400B254EB /* Debug */ = {
@@ -204,6 +350,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				EXECUTABLE_PREFIX = lib;
+				GCC_C_LANGUAGE_STANDARD = c99;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -212,6 +359,27 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				EXECUTABLE_PREFIX = lib;
+				GCC_C_LANGUAGE_STANDARD = c99;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		3B4EC5FD17CAB3AF00B254EB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		3B4EC5FE17CAB3AF00B254EB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_C_LANGUAGE_STANDARD = c99;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -228,11 +396,19 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		3B4EC5AA17CAA72400B254EB /* Build configuration list for PBXNativeTarget "libot" */ = {
+		3B4EC5AA17CAA72400B254EB /* Build configuration list for PBXNativeTarget "ot" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				3B4EC5AB17CAA72400B254EB /* Debug */,
 				3B4EC5AC17CAA72400B254EB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		3B4EC5FC17CAB3AF00B254EB /* Build configuration list for PBXNativeTarget "tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3B4EC5FD17CAB3AF00B254EB /* Debug */,
+				3B4EC5FE17CAB3AF00B254EB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 		};

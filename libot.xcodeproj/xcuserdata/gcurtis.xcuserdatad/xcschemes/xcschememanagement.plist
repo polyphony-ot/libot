@@ -4,7 +4,12 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>libot.xcscheme</key>
+		<key>ot-tests.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>3</integer>
+		</dict>
+		<key>ot.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>0</integer>
@@ -13,6 +18,11 @@
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
 		<key>3B4EC5A517CAA72400B254EB</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>3B4EC5F517CAB3AF00B254EB</key>
 		<dict>
 			<key>primary</key>
 			<true/>

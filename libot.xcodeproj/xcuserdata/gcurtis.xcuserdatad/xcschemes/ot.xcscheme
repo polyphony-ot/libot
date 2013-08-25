@@ -16,7 +16,7 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "3B4EC5A517CAA72400B254EB"
                BuildableName = "liblibot.a"
-               BlueprintName = "libot"
+               BlueprintName = "ot"
                ReferencedContainer = "container:libot.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
