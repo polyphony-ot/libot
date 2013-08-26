@@ -50,7 +50,7 @@ typedef struct ot_comp_delete
 
 typedef struct ot_comp_open_element
 {
-	uint8_t* elem;
+	rope* elem;
 } ot_comp_open_element;
 
 typedef struct ot_comp_fmtbound
