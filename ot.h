@@ -79,7 +79,7 @@ typedef struct ot_op {
 } ot_op;
 
 ot_op* ot_new_op(int64_t client_id, int64_t* parent);
-ot_op* ot_free_op(ot_op* op);
+void ot_free_op(ot_op* op);
 void ot_skip(ot_op* op, int64_t count);
 void ot_insert(ot_op* op, uint8_t* text);
 void ot_delete(ot_op* op, int64_t count);
@@ -91,6 +91,8 @@ uint8_t* snapshot(ot_op op);
 ot_comp_fmtbound* ot_new_fmtbound();
 void ot_start_fmt(ot_comp_fmtbound* fmtbound, uint8_t* name, uint8_t* value);
 void ot_end_fmt(ot_comp_fmtbound* fmtbound, uint8_t* name, uint8_t* value);
+
+void ot_free_comp(ot_comp* comp);
 
 uint8_t* ot_snapshot(ot_op* op);
 

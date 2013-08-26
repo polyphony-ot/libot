@@ -38,10 +38,27 @@ ot_op* ot_new_op(int64_t client_id, int64_t* parent) {
 	return op;
 }
 
+void ot_free_op(ot_op* op) {
+    for (int i = 0; i < op->comp_count; ++i)
+	{
+        ot_free_comp(op->comps + i);
+    }
+    free(op->comps);
+    free(op);
+}
+
 void ot_insert(ot_op* op, uint8_t* text) {
 	ot_comp* comp = ot_append_new_comp(op);
 	comp->type = INSERT;
 	comp->value.insert.text = rope_new_with_utf8(text);
+}
+
+void ot_free_comp(ot_comp* comp) {
+    switch (comp->type) {
+        case INSERT:
+            rope_free(comp->value.insert.text);
+            break;
+    }
 }
 
 uint8_t* ot_snapshot(ot_op* op) {
@@ -51,7 +68,7 @@ uint8_t* ot_snapshot(ot_op* op) {
 	for (int i = 0; i < op->comp_count; ++i)
 	{
 		if (op->comps[i].type == INSERT) {
-			pos += rope_write_cstr(op->comps[i].value.insert.text, &out[pos]) - 1;
+			pos += rope_write_cstr(op->comps[i].value.insert.text, out + pos) - 1;
 		}
 	}
 

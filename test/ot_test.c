@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "minunit.h"
 #include "../ot.h"
 
@@ -10,9 +11,16 @@ static char* test_foo() {
 	ot_insert(op, "Hello world!");
 	ot_insert(op, " It's me again, world!");
 
-	puts(ot_snapshot(op));
+    uint8_t* snapshot = ot_snapshot(op);
+	puts(snapshot);
+    free(snapshot);
 
-	mu_assert("Count should be 1.", op->comp_count == 1);
+    int64_t actual = op->comp_count;
+    ot_free_op(op);
+    
+	mu_assert("Count should be 1.", actual == 1);
+    
+    
 
 	return 0;
 }
