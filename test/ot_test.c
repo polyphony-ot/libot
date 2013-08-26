@@ -1,49 +1,84 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "minunit.h"
 #include "../ot.h"
 
 int tests_run = 0;
 
-static char* test_foo() {
+static char* test_serialize_empty_op() {
+    const char* expected = "[]";
 	int64_t parent[8] = { 0 };
 	ot_op* op = ot_new_op(0, parent);
-	ot_insert(op, "Hello world!");
-	ot_insert(op, " It's me again, world!");
-
-    uint8_t* snapshot = ot_snapshot(op);
-	puts(snapshot);
-    free(snapshot);
-
-    int64_t actual = op->comp_count;
+    
+    uint8_t* actual = ot_serialize(op);
+    int cmp = strcmp(expected, (char*) actual);
+    
+    free(actual);
     ot_free_op(op);
     
-	mu_assert("Count should be 1.", actual == 2);
+    mu_assert("Serializing empty op did not create expected string.", cmp == 0);
     
 	return 0;
 }
 
-static char* test_serialize() {
+static char* test_serialize_single_insert() {
+    const char* expected = "[ { \"type\": \"insert\", \"text\": \"any string\" } ]";
 	int64_t parent[8] = { 0 };
 	ot_op* op = ot_new_op(0, parent);
-	//ot_skip(op, 5);
-    //ot_insert(op, "Hello world!");
-    //ot_skip(op, 3);
-	ot_insert(op, "It's me again, world!");
+    ot_insert(op, (uint8_t*) "any string");
     
-    uint8_t* json = ot_serialize(op);
-	puts(json);
-    free(json);
+    uint8_t* actual = ot_serialize(op);
+    int cmp = strcmp(expected, (char*) actual);
+    
+    free(actual);
     ot_free_op(op);
     
-    mu_assert("Count should be 1.", 1 == 1);
+    mu_assert("Serializing a single insert did not create expected string.", cmp == 0);
+    
+	return 0;
+}
+
+static char* test_serialize_two_inserts() {
+    const char* expected = "[ { \"type\": \"insert\", \"text\": \"any string\" }, { \"type\": \"insert\", \"text\": \"any other string\" } ]";
+	int64_t parent[8] = { 0 };
+	ot_op* op = ot_new_op(0, parent);
+    ot_insert(op, (uint8_t*) "any string");
+    ot_insert(op, (uint8_t*) "any other string");
+    
+    uint8_t* actual = ot_serialize(op);
+    int cmp = strcmp(expected, (char*) actual);
+    
+    free(actual);
+    ot_free_op(op);
+    
+    mu_assert("Serializing two inserts did not create expected string.", cmp == 0);
+    
+	return 0;
+}
+
+static char* test_serialize_skip() {
+    const char* expected = "[ { \"type\": \"skip\", \"count\": 1 } ]";
+	int64_t parent[8] = { 0 };
+	ot_op* op = ot_new_op(0, parent);
+    ot_skip(op, 1);
+    
+    uint8_t* actual = ot_serialize(op);
+    int cmp = strcmp(expected, (char*) actual);
+    
+    free(actual);
+    ot_free_op(op);
+    
+    mu_assert("Serializing a single skip did not create expected string.", cmp == 0);
     
 	return 0;
 }
 
 static char* all_tests() {
-	mu_run_test(test_foo);
-    mu_run_test(test_serialize);
+    mu_run_test(test_serialize_empty_op);
+    mu_run_test(test_serialize_single_insert);
+    mu_run_test(test_serialize_two_inserts);
+    mu_run_test(test_serialize_skip);
 
 	return 0;
 }

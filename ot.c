@@ -89,9 +89,9 @@ uint8_t* ot_snapshot(ot_op* op) {
 }
 
 uint8_t* ot_serialize(ot_op* op) {
-    size_t size = sizeof(3);
-	uint8_t* json = malloc(2);
-    memcpy(json, "[ ", 2);
+    size_t size = sizeof(uint8_t) * 3;
+	uint8_t* json = malloc(size);
+    memcpy(json, "[ \0", size);
 	size_t written = 2;
     
 	for (int i = 0; i < op->comp_count; ++i)
@@ -114,6 +114,11 @@ uint8_t* ot_serialize(ot_op* op) {
 		}
 	}
     
-    memcpy(json + written - 2, " ]\0", 3);
+    if (written == 2) {
+        json[1] = ']';
+    } else {
+        memcpy(json + written - 2, " ]\0", 3);
+    }
+
 	return json;
 }
