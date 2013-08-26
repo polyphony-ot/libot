@@ -27,13 +27,23 @@ static ot_comp* ot_append_comp(ot_op* op, ot_comp* comp) {
 	return appended;
 }
 
+static void ot_free_comp(ot_comp* comp) {
+    switch (comp->type) {
+        case INSERT:
+            rope_free(comp->value.insert.text);
+            break;
+        default:
+            break;
+    }
+}
+
 ot_op* ot_new_op(int64_t client_id, int64_t* parent) {
 	ot_op* op = (ot_op*) malloc(sizeof(ot_op));
 	op->client_id = client_id;
 	op->comp_count = 0;
 	op->comp_cap = 0;
 	op->comps = NULL;
-
+    
 	memcpy(op->parent, parent, sizeof(int64_t) * 8);
 	return op;
 }
@@ -47,30 +57,32 @@ void ot_free_op(ot_op* op) {
     free(op);
 }
 
+void ot_skip(ot_op* op, int64_t count) {
+    ot_comp* comp = ot_append_new_comp(op);
+	comp->type = SKIP;
+    comp->value.skip.count = count;
+}
+
 void ot_insert(ot_op* op, uint8_t* text) {
 	ot_comp* comp = ot_append_new_comp(op);
 	comp->type = INSERT;
 	comp->value.insert.text = rope_new_with_utf8(text);
 }
 
-void ot_free_comp(ot_comp* comp) {
-    switch (comp->type) {
-        case INSERT:
-            rope_free(comp->value.insert.text);
-            break;
-    }
-}
-
 uint8_t* ot_snapshot(ot_op* op) {
-	uint8_t* out = malloc(sizeof(uint8_t) * 100);
-
-	int pos = 0;
+    size_t size = sizeof(uint8_t);
+	uint8_t* out = NULL;
+	int64_t written = 0;
+    
 	for (int i = 0; i < op->comp_count; ++i)
 	{
 		if (op->comps[i].type == INSERT) {
-			pos += rope_write_cstr(op->comps[i].value.insert.text, out + pos) - 1;
+            rope* r = op->comps[i].value.insert.text;
+            size += rope_byte_count(r);
+            out = realloc(out, size);
+			written += rope_write_cstr(r, out + written) - 1;
 		}
 	}
-
+    
 	return out;
 }

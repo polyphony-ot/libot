@@ -86,14 +86,11 @@ void ot_delete(ot_op* op, int64_t count);
 void ot_open_element(ot_op* op, uint8_t* elem);
 void ot_close_element(ot_op* op);
 void ot_fmtbound(ot_op* op, ot_comp_fmtbound fmtbound);
-uint8_t* snapshot(ot_op op);
+uint8_t* ot_snapshot(ot_op* op);
+uint8_t* ot_serialize(ot_op* op);
 
 ot_comp_fmtbound* ot_new_fmtbound();
 void ot_start_fmt(ot_comp_fmtbound* fmtbound, uint8_t* name, uint8_t* value);
 void ot_end_fmt(ot_comp_fmtbound* fmtbound, uint8_t* name, uint8_t* value);
-
-void ot_free_comp(ot_comp* comp);
-
-uint8_t* ot_snapshot(ot_op* op);
 
 #endif
