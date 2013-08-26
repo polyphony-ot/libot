@@ -26,12 +26,12 @@ typedef struct ot_fmt {
 } ot_fmt;
 
 typedef enum {
-	SKIP = 0,
-	INSERT = 1,
-	DELETE = 2,
-	OPEN_ELEMENT = 3,
-	CLOSE_ELEMENT = 4,
-	FORMATTING_BOUNDARY = 5
+	OT_SKIP = 0,
+	OT_INSERT = 1,
+	OT_DELETE = 2,
+	OT_OPEN_ELEMENT = 3,
+	OT_CLOSE_ELEMENT = 4,
+	OT_FORMATTING_BOUNDARY = 5
 } ot_comp_type;
 
 typedef struct ot_comp_skip {

@@ -30,7 +30,7 @@ static ot_comp* ot_append_comp(ot_op* op, ot_comp* comp) {
 
 static void ot_free_comp(ot_comp* comp) {
     switch (comp->type) {
-        case INSERT:
+        case OT_INSERT:
             rope_free(comp->value.insert.text);
             break;
         default:
@@ -60,13 +60,13 @@ void ot_free_op(ot_op* op) {
 
 void ot_skip(ot_op* op, int64_t count) {
     ot_comp* comp = ot_append_new_comp(op);
-	comp->type = SKIP;
+	comp->type = OT_SKIP;
     comp->value.skip.count = count;
 }
 
 void ot_insert(ot_op* op, uint8_t* text) {
 	ot_comp* comp = ot_append_new_comp(op);
-	comp->type = INSERT;
+	comp->type = OT_INSERT;
 	comp->value.insert.text = rope_new_with_utf8(text);
 }
 
@@ -77,7 +77,7 @@ uint8_t* ot_snapshot(ot_op* op) {
     
 	for (int i = 0; i < op->comp_count; ++i)
 	{
-		if (op->comps[i].type == INSERT) {
+		if (op->comps[i].type == OT_INSERT) {
             rope* r = op->comps[i].value.insert.text;
             size += rope_byte_count(r);
             snapshot = realloc(snapshot, size);
@@ -97,19 +97,19 @@ uint8_t* ot_serialize(ot_op* op) {
 	for (int i = 0; i < op->comp_count; ++i)
 	{
         ot_comp_type t = op->comps[i].type;
-        if (t == SKIP) {
+        if (t == OT_SKIP) {
             int64_t count = op->comps[i].value.skip.count;
             char* fmtstr = "{ \"type\": \"skip\", \"count\": %d }, ";
             size += snprintf(NULL, 0, fmtstr, count);
             json = realloc(json, size);
             written += sprintf((char*) json + written, fmtstr, count);
-        } else if (t == INSERT) {
+        } else if (t == OT_INSERT) {
             rope* r = op->comps[i].value.insert.text;
-            char* textstr = (char*) rope_create_cstr(r);
+            uint8_t* textstr = rope_create_cstr(r);
             char* fmtstr = "{ \"type\": \"insert\", \"text\": \"%s\" }, ";
             size += snprintf(NULL, 0, fmtstr, textstr);
             json = realloc(json, size);
-            written += sprintf(json + written, fmtstr, textstr);
+            written += sprintf((char*) json + written, fmtstr, textstr);
             free(textstr);
 		}
 	}
