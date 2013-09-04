@@ -172,13 +172,11 @@ static char* test_start_fmt_does_not_append_another_fmtbound_when_last_component
     const size_t expected_comp_count = 1;
     char* any_name = "any name";
     char* any_value = "any value";
-    char* any_name2 = "any name2";
-    char* any_value2 = "any value2";
     
 	int64_t parent[8] = { 0 };
 	ot_op* op = ot_new_op(0, parent);
     ot_start_fmt(op, (uint8_t*) any_name, (uint8_t*) any_value);
-    ot_start_fmt(op, (uint8_t*) any_name2, (uint8_t*) any_value2);
+    ot_start_fmt(op, (uint8_t*) any_name, (uint8_t*) any_value);
     
     size_t actual_comp_count = op->comp_count;
     

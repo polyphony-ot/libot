@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "test_start_fmt:ot_test.c">
+      </ContextState>
+      <ContextState
+         contextName = "ot_start_fmt:ot.c">
+         <PersistentStrings>
+            <PersistentString
+               value = "((ot_fmt*) fmtbound-&gt;start.data)">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "ot_free_fmtbound:ot.c">
+         <PersistentStrings>
+            <PersistentString
+               value = "start_data[i].name">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "array_ensure_size:array.c">
+         <PersistentStrings>
+            <PersistentString
+               value = "(ot_fmt*) arr-&gt;data">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>
