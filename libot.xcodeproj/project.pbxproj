@@ -17,6 +17,8 @@
 		3B4EC60017CAB41C00B254EB /* ot_test.c in Sources */ = {isa = PBXBuildFile; fileRef = 3B4EC5F117CAB30200B254EB /* ot_test.c */; };
 		3B4EC60417CAB86600B254EB /* libot.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B4EC5A617CAA72400B254EB /* libot.a */; };
 		3B4EC60717CAB89B00B254EB /* librope.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B4EC5E817CAAA6B00B254EB /* librope.a */; };
+		3BE9FEDD17CFEBBF00F8B9F0 /* array.h in Headers */ = {isa = PBXBuildFile; fileRef = 3BE9FEDC17CFEBBF00F8B9F0 /* array.h */; };
+		3BE9FEE017CFEBCE00F8B9F0 /* array.c in Sources */ = {isa = PBXBuildFile; fileRef = 3BE9FEDF17CFEBCE00F8B9F0 /* array.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -74,6 +76,8 @@
 		3B4EC5F017CAB30200B254EB /* minunit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = minunit.h; sourceTree = "<group>"; };
 		3B4EC5F117CAB30200B254EB /* ot_test.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ot_test.c; sourceTree = "<group>"; };
 		3B4EC5F617CAB3AF00B254EB /* libot-test */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = "libot-test"; path = tests; sourceTree = BUILT_PRODUCTS_DIR; };
+		3BE9FEDC17CFEBBF00F8B9F0 /* array.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = array.h; sourceTree = "<group>"; };
+		3BE9FEDF17CFEBCE00F8B9F0 /* array.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = array.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,13 +104,15 @@
 			isa = PBXGroup;
 			children = (
 				3B4EC5E217CAAA6B00B254EB /* librope.xcodeproj */,
-				3B4EC5EF17CAB30200B254EB /* test */,
+				3BE9FEDF17CFEBCE00F8B9F0 /* array.c */,
+				3BE9FEDC17CFEBBF00F8B9F0 /* array.h */,
 				3B4EC5BF17CAA82400B254EB /* ot.h */,
 				3B4EC5C017CAA82400B254EB /* ot.c */,
 				3B4EC5C117CAA82400B254EB /* client.c */,
 				3B4EC5C217CAA82400B254EB /* client.h */,
 				3B4EC5C317CAA82400B254EB /* server.h */,
 				3B4EC5C417CAA82400B254EB /* server.c */,
+				3B4EC5EF17CAB30200B254EB /* test */,
 				3B4EC5A717CAA72400B254EB /* Products */,
 			);
 			sourceTree = "<group>";
@@ -145,6 +151,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3BE9FEDD17CFEBBF00F8B9F0 /* array.h in Headers */,
 				3B4EC5CD17CAA82400B254EB /* ot.h in Headers */,
 				3B4EC5D017CAA82400B254EB /* client.h in Headers */,
 				3B4EC5D117CAA82400B254EB /* server.h in Headers */,
@@ -248,6 +255,7 @@
 				3B4EC5D217CAA82400B254EB /* server.c in Sources */,
 				3B4EC5CF17CAA82400B254EB /* client.c in Sources */,
 				3B4EC5CE17CAA82400B254EB /* ot.c in Sources */,
+				3BE9FEE017CFEBCE00F8B9F0 /* array.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -351,6 +359,7 @@
 			buildSettings = {
 				EXECUTABLE_PREFIX = lib;
 				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_WARN_PEDANTIC = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -360,6 +369,7 @@
 			buildSettings = {
 				EXECUTABLE_PREFIX = lib;
 				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_WARN_PEDANTIC = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

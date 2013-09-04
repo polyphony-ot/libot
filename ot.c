@@ -4,7 +4,6 @@
 #include <stdarg.h>
 #include "ot.h"
 
-
 static void ot_ensure_size(ot_op* op) {
 	if (op->comp_count == 0) {
 		op->comp_cap = 1;
@@ -15,25 +14,27 @@ static void ot_ensure_size(ot_op* op) {
 	}
 }
 
-static size_t ot_ensure_size2(size_t len, size_t cap, size_t size, void** arrptr) {
-    if (len == 0) {
-        *arrptr = malloc(size);
-        return 1;
-    }
-    
-    if (len >= cap) {
-        cap = cap * 2;
-        *arrptr = realloc(*arrptr, size * cap);
-    }
-    
-    return cap;
-}
-
 static ot_comp* ot_append_new_comp(ot_op* op) {
 	ot_ensure_size(op);
 	ot_comp* new = &op->comps[op->comp_count];
 	op->comp_count++;
 	return new;
+}
+
+static void ot_free_fmtbound(ot_comp_fmtbound* fmtbound) {
+    ot_fmt* start_data = fmtbound->start.data;
+    for (int i = 0; i < fmtbound->start.len; ++i) {
+        rope_free(start_data[i].name);
+        rope_free(start_data[i].value);
+    }
+    array_free(&fmtbound->start);
+    
+    ot_fmt* end_data = fmtbound->end.data;
+    for (int i = 0; i < fmtbound->end.len; ++i) {
+        rope_free(end_data[i].name);
+        rope_free(end_data[i].value);
+    }
+    array_free(&fmtbound->end);
 }
 
 static void ot_free_comp(ot_comp* comp) {
@@ -44,6 +45,8 @@ static void ot_free_comp(ot_comp* comp) {
         case OT_OPEN_ELEMENT:
             rope_free(comp->value.open_element.elem);
             break;
+        case OT_FORMATTING_BOUNDARY:
+            ot_free_fmtbound(&comp->value.fmtbound);
         default:
             break;
     }
@@ -51,12 +54,16 @@ static void ot_free_comp(ot_comp* comp) {
 
 ot_op* ot_new_op(int64_t client_id, int64_t* parent) {
 	ot_op* op = (ot_op*) malloc(sizeof(ot_op));
+    if (op == NULL) {
+        exit(1);
+    }
 	op->client_id = client_id;
 	op->comp_count = 0;
 	op->comp_cap = 0;
 	op->comps = NULL;
     
-	memcpy(op->parent, parent, sizeof(int64_t) * 8);
+    memcpy(op->parent, parent, sizeof(int64_t) * 8);
+    
 	return op;
 }
 
@@ -99,23 +106,28 @@ void ot_close_element(ot_op* op) {
 }
 
 void ot_start_fmt(ot_op* op, uint8_t* name, uint8_t* value) {
-    ot_comp* fmtbound_comp;
+    ot_comp* comp;
+    ot_comp_fmtbound* fmtbound;
     if (op->comp_count == 0) {
-        fmtbound_comp = ot_append_new_comp(op);
-        fmtbound_comp->type = OT_FORMATTING_BOUNDARY;
+        comp = ot_append_new_comp(op);
+        comp->type = OT_FORMATTING_BOUNDARY;
+        fmtbound = &comp->value.fmtbound;
+        array_init(&comp->value.fmtbound.start, sizeof(ot_fmt));
     } else {
-        fmtbound_comp = op->comps + op->comp_count - 1;
-        if (fmtbound_comp->type != OT_FORMATTING_BOUNDARY) {
-            fmtbound_comp = ot_append_new_comp(op);
-            fmtbound_comp->type = OT_FORMATTING_BOUNDARY;
+        comp = op->comps + op->comp_count - 1;
+        if (comp->type != OT_FORMATTING_BOUNDARY) {
+            comp = ot_append_new_comp(op);
+            comp->type = OT_FORMATTING_BOUNDARY;
+            fmtbound = &comp->value.fmtbound;
+            array_init(&comp->value.fmtbound.start, sizeof(ot_fmt));
+        } else {
+            fmtbound = &comp->value.fmtbound;
         }
     }
     
-    ot_comp_fmtbound* fmtbound = &fmtbound_comp->value.fmtbound;
-    fmtbound->start_cap = ot_ensure_size2(fmtbound->start_len, fmtbound->start_cap, sizeof(ot_fmt), (void**) &fmtbound->start);
-    fmtbound->start[fmtbound->start_len].name = rope_new_with_utf8(name);
-    fmtbound->start[fmtbound->start_len].value = rope_new_with_utf8(value);
-    fmtbound->start_len++;
+    ot_fmt* fmt = array_append(&fmtbound->start);
+    fmt->name = rope_new_with_utf8(name);
+    fmt->value = rope_new_with_utf8(value);
 }
 
 uint8_t* ot_snapshot(ot_op* op) {

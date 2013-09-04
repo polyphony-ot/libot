@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include "librope/rope.h"
+#include "array.h"
 
 /*
 
@@ -55,12 +56,8 @@ typedef struct ot_comp_open_element
 
 typedef struct ot_comp_fmtbound
 {
-    int64_t start_len;
-    int64_t start_cap;
-    int64_t end_len;
-    int64_t end_cap;
-	ot_fmt* start;
-	ot_fmt* end;
+    array start;
+    array end;
 } ot_comp_fmtbound;
 
 typedef struct ot_comp {

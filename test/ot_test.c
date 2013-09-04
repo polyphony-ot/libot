@@ -125,6 +125,70 @@ static char* test_serialize_single_close_element() {
 	return 0;
 }
 
+static char* test_start_fmt_appends_correct_comp_type() {
+    ot_comp_type expected_type = OT_FORMATTING_BOUNDARY;
+    char* expected_name = "any name";
+    char* expected_value = "any value";
+    
+	int64_t parent[8] = { 0 };
+	ot_op* op = ot_new_op(0, parent);
+    ot_start_fmt(op, (uint8_t*) expected_name, (uint8_t*) expected_value);
+    
+    ot_comp_type actual_type = op->comps[0].type;
+    int equal = expected_type == actual_type;
+    
+    ot_free_op(op);
+    
+    mu_assert("Starting a format did not append a component of type OT_FORMATTING_BOUNDARY.", equal);
+    
+	return 0;
+}
+
+static char* test_start_fmt_appends_correct_name_and_value() {
+    char* expected_name = "any name";
+    char* expected_value = "any value";
+    
+	int64_t parent[8] = { 0 };
+	ot_op* op = ot_new_op(0, parent);
+    ot_start_fmt(op, (uint8_t*) expected_name, (uint8_t*) expected_value);
+    
+    ot_fmt* data = op->comps[0].value.fmtbound.start.data;
+    char* actual_name = (char*) rope_create_cstr(data[0].name);
+    char* actual_value = (char*) rope_create_cstr(data[0].value);
+    
+    int cmp_name = strcmp(expected_name, actual_name);
+    int cmp_value = strcmp(expected_value, actual_value);
+    
+    free(actual_name);
+    free(actual_value);
+    ot_free_op(op);
+    
+    mu_assert("Appended format did not have the correct name and value.", cmp_name == 0 && cmp_value == 0);
+    
+	return 0;
+}
+
+static char* test_start_fmt_does_not_append_another_fmtbound_when_last_component_is_fmtbound() {
+    const size_t expected_comp_count = 1;
+    char* any_name = "any name";
+    char* any_value = "any value";
+    char* any_name2 = "any name2";
+    char* any_value2 = "any value2";
+    
+	int64_t parent[8] = { 0 };
+	ot_op* op = ot_new_op(0, parent);
+    ot_start_fmt(op, (uint8_t*) any_name, (uint8_t*) any_value);
+    ot_start_fmt(op, (uint8_t*) any_name2, (uint8_t*) any_value2);
+    
+    size_t actual_comp_count = op->comp_count;
+    
+    ot_free_op(op);
+    
+    mu_assert("Appended format did not have the correct name and value.", expected_comp_count == actual_comp_count);
+    
+	return 0;
+}
+
 static char* all_tests() {
     mu_run_test(test_serialize_empty_op);
     mu_run_test(test_serialize_single_insert);
@@ -133,6 +197,9 @@ static char* all_tests() {
     mu_run_test(test_serialize_single_delete);
     mu_run_test(test_serialize_single_open_element);
     mu_run_test(test_serialize_single_close_element);
+    mu_run_test(test_start_fmt_appends_correct_comp_type);
+    mu_run_test(test_start_fmt_appends_correct_name_and_value);
+    mu_run_test(test_start_fmt_does_not_append_another_fmtbound_when_last_component_is_fmtbound);
 
 	return 0;
 }
