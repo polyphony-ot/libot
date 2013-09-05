@@ -134,7 +134,8 @@ static char* test_start_fmt_appends_correct_comp_type() {
 	ot_op* op = ot_new_op(0, parent);
     ot_start_fmt(op, (uint8_t*) expected_name, (uint8_t*) expected_value);
     
-    ot_comp_type actual_type = op->comps[0].type;
+    ot_comp* comps = op->comps.data;
+    ot_comp_type actual_type = comps[0].type;
     int equal = expected_type == actual_type;
     
     ot_free_op(op);
@@ -152,7 +153,8 @@ static char* test_start_fmt_appends_correct_name_and_value() {
 	ot_op* op = ot_new_op(0, parent);
     ot_start_fmt(op, (uint8_t*) expected_name, (uint8_t*) expected_value);
     
-    ot_fmt* data = op->comps[0].value.fmtbound.start.data;
+    ot_comp* comps = op->comps.data;
+    ot_fmt* data = comps[0].value.fmtbound.start.data;
     char* actual_name = (char*) rope_create_cstr(data[0].name);
     char* actual_value = (char*) rope_create_cstr(data[0].value);
     
@@ -178,7 +180,7 @@ static char* test_start_fmt_does_not_append_another_fmtbound_when_last_component
     ot_start_fmt(op, (uint8_t*) any_name, (uint8_t*) any_value);
     ot_start_fmt(op, (uint8_t*) any_name, (uint8_t*) any_value);
     
-    size_t actual_comp_count = op->comp_count;
+    size_t actual_comp_count = op->comps.len;
     
     ot_free_op(op);
     

@@ -74,9 +74,7 @@ typedef struct ot_comp {
 typedef struct ot_op {
 	int64_t client_id;
 	int64_t parent[8];
-	int64_t comp_count;
-	int64_t comp_cap;
-	ot_comp* comps;	
+	array comps;
 } ot_op;
 
 ot_op* ot_new_op(int64_t client_id, int64_t* parent);
