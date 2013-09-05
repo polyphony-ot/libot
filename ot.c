@@ -95,6 +95,7 @@ void ot_start_fmt(ot_op* op, uint8_t* name, uint8_t* value) {
         cur_comp->type = OT_FORMATTING_BOUNDARY;
         fmtbound = &cur_comp->value.fmtbound;
         array_init(&cur_comp->value.fmtbound.start, sizeof(ot_fmt));
+        array_init(&cur_comp->value.fmtbound.end, sizeof(ot_fmt));
     } else {
         cur_comp = comps + op->comps.len - 1;
         if (cur_comp->type != OT_FORMATTING_BOUNDARY) {
@@ -102,6 +103,7 @@ void ot_start_fmt(ot_op* op, uint8_t* name, uint8_t* value) {
             cur_comp->type = OT_FORMATTING_BOUNDARY;
             fmtbound = &cur_comp->value.fmtbound;
             array_init(&cur_comp->value.fmtbound.start, sizeof(ot_fmt));
+            array_init(&cur_comp->value.fmtbound.end, sizeof(ot_fmt));
         } else {
             fmtbound = &cur_comp->value.fmtbound;
         }
@@ -113,7 +115,31 @@ void ot_start_fmt(ot_op* op, uint8_t* name, uint8_t* value) {
 }
 
 void ot_end_fmt(ot_op* op, uint8_t* name, uint8_t* value) {
+    ot_comp* cur_comp;
+    ot_comp* comps = op->comps.data;
+    ot_comp_fmtbound* fmtbound;
+    if (op->comps.len == 0) {
+        cur_comp = array_append(&op->comps);
+        cur_comp->type = OT_FORMATTING_BOUNDARY;
+        fmtbound = &cur_comp->value.fmtbound;
+        array_init(&cur_comp->value.fmtbound.start, sizeof(ot_fmt));
+        array_init(&cur_comp->value.fmtbound.end, sizeof(ot_fmt));
+    } else {
+        cur_comp = comps + op->comps.len - 1;
+        if (cur_comp->type != OT_FORMATTING_BOUNDARY) {
+            cur_comp = array_append(&op->comps);
+            cur_comp->type = OT_FORMATTING_BOUNDARY;
+            fmtbound = &cur_comp->value.fmtbound;
+            array_init(&cur_comp->value.fmtbound.start, sizeof(ot_fmt));
+            array_init(&cur_comp->value.fmtbound.end, sizeof(ot_fmt));
+        } else {
+            fmtbound = &cur_comp->value.fmtbound;
+        }
+    }
     
+    ot_fmt* fmt = array_append(&fmtbound->end);
+    fmt->name = rope_new_with_utf8(name);
+    fmt->value = rope_new_with_utf8(value);
 }
 
 uint8_t* ot_snapshot(ot_op* op) {
