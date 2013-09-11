@@ -1,6 +1,6 @@
 #include "hex.h"
 
-int hextoa(uint8_t* a, uint8_t* hex, size_t len) {
+int hextoa(uint8_t* a, const uint8_t* hex, size_t len) {
     size_t j = 0;
     for (size_t i = 0; i < len; ++i) {
         char c;

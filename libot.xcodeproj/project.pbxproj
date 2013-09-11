@@ -10,7 +10,6 @@
 		3B113B0217DA6F05007A547E /* gen.c in Sources */ = {isa = PBXBuildFile; fileRef = 3B113B0117DA6F05007A547E /* gen.c */; };
 		3B204AB617DFD1D400C9AB99 /* hex.h in Headers */ = {isa = PBXBuildFile; fileRef = 3B204AB517DFD1D400C9AB99 /* hex.h */; };
 		3B204AB917DFD1DD00C9AB99 /* hex.c in Sources */ = {isa = PBXBuildFile; fileRef = 3B204AB817DFD1DD00C9AB99 /* hex.c */; };
-		3B204ABB17DFE83B00C9AB99 /* array_test.c in Sources */ = {isa = PBXBuildFile; fileRef = 3B204ABA17DFE83B00C9AB99 /* array_test.c */; };
 		3B4EC5CD17CAA82400B254EB /* ot.h in Headers */ = {isa = PBXBuildFile; fileRef = 3B4EC5BF17CAA82400B254EB /* ot.h */; };
 		3B4EC5CE17CAA82400B254EB /* ot.c in Sources */ = {isa = PBXBuildFile; fileRef = 3B4EC5C017CAA82400B254EB /* ot.c */; };
 		3B4EC5CF17CAA82400B254EB /* client.c in Sources */ = {isa = PBXBuildFile; fileRef = 3B4EC5C117CAA82400B254EB /* client.c */; };
@@ -87,7 +86,6 @@
 		3B113B0317DA6F14007A547E /* gen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gen.h; sourceTree = "<group>"; };
 		3B204AB517DFD1D400C9AB99 /* hex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hex.h; sourceTree = "<group>"; };
 		3B204AB817DFD1DD00C9AB99 /* hex.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = hex.c; sourceTree = "<group>"; };
-		3B204ABA17DFE83B00C9AB99 /* array_test.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = array_test.c; sourceTree = "<group>"; };
 		3B4EC5A617CAA72400B254EB /* libot.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libot.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B4EC5BF17CAA82400B254EB /* ot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ot.h; sourceTree = "<group>"; };
 		3B4EC5C017CAA82400B254EB /* ot.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ot.c; sourceTree = "<group>"; };
@@ -98,7 +96,7 @@
 		3B4EC5E217CAAA6B00B254EB /* librope.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = librope.xcodeproj; path = librope/librope.xcodeproj; sourceTree = "<group>"; };
 		3B4EC5F017CAB30200B254EB /* minunit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = minunit.h; sourceTree = "<group>"; };
 		3B4EC5F117CAB30200B254EB /* ot_test.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ot_test.c; sourceTree = "<group>"; };
-		3B4EC5F617CAB3AF00B254EB /* libot-test */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = "libot-test"; path = tests; sourceTree = BUILT_PRODUCTS_DIR; };
+		3B4EC5F617CAB3AF00B254EB /* tests */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = tests; sourceTree = BUILT_PRODUCTS_DIR; };
 		3BDA029A17D92EA90039A78C /* cli */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = cli; sourceTree = BUILT_PRODUCTS_DIR; };
 		3BDA029C17D92EA90039A78C /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		3BDA02A417D935120039A78C /* jsmn.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = jsmn.c; sourceTree = "<group>"; };
@@ -163,7 +161,7 @@
 			isa = PBXGroup;
 			children = (
 				3B4EC5A617CAA72400B254EB /* libot.a */,
-				3B4EC5F617CAB3AF00B254EB /* libot-test */,
+				3B4EC5F617CAB3AF00B254EB /* tests */,
 				3BDA029A17D92EA90039A78C /* cli */,
 			);
 			name = Products;
@@ -185,7 +183,6 @@
 				3B4EC5F117CAB30200B254EB /* ot_test.c */,
 				3B113B0117DA6F05007A547E /* gen.c */,
 				3B113B0317DA6F14007A547E /* gen.h */,
-				3B204ABA17DFE83B00C9AB99 /* array_test.c */,
 			);
 			path = test;
 			sourceTree = "<group>";
@@ -263,7 +260,7 @@
 			);
 			name = tests;
 			productName = "libot-test";
-			productReference = 3B4EC5F617CAB3AF00B254EB /* libot-test */;
+			productReference = 3B4EC5F617CAB3AF00B254EB /* tests */;
 			productType = "com.apple.product-type.tool";
 		};
 		3BDA029917D92EA90039A78C /* cli */ = {
@@ -357,7 +354,6 @@
 				3B113B0217DA6F05007A547E /* gen.c in Sources */,
 				3B4EC5FF17CAB41C00B254EB /* minunit.h in Sources */,
 				3B4EC60017CAB41C00B254EB /* ot_test.c in Sources */,
-				3B204ABB17DFE83B00C9AB99 /* array_test.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
