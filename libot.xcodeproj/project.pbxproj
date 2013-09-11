@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3B113B0217DA6F05007A547E /* gen.c in Sources */ = {isa = PBXBuildFile; fileRef = 3B113B0117DA6F05007A547E /* gen.c */; };
 		3B204AB617DFD1D400C9AB99 /* hex.h in Headers */ = {isa = PBXBuildFile; fileRef = 3B204AB517DFD1D400C9AB99 /* hex.h */; };
 		3B204AB917DFD1DD00C9AB99 /* hex.c in Sources */ = {isa = PBXBuildFile; fileRef = 3B204AB817DFD1DD00C9AB99 /* hex.c */; };
 		3B4EC5CD17CAA82400B254EB /* ot.h in Headers */ = {isa = PBXBuildFile; fileRef = 3B4EC5BF17CAA82400B254EB /* ot.h */; };
@@ -16,15 +15,12 @@
 		3B4EC5D017CAA82400B254EB /* client.h in Headers */ = {isa = PBXBuildFile; fileRef = 3B4EC5C217CAA82400B254EB /* client.h */; };
 		3B4EC5D117CAA82400B254EB /* server.h in Headers */ = {isa = PBXBuildFile; fileRef = 3B4EC5C317CAA82400B254EB /* server.h */; };
 		3B4EC5D217CAA82400B254EB /* server.c in Sources */ = {isa = PBXBuildFile; fileRef = 3B4EC5C417CAA82400B254EB /* server.c */; };
-		3B4EC5FF17CAB41C00B254EB /* minunit.h in Sources */ = {isa = PBXBuildFile; fileRef = 3B4EC5F017CAB30200B254EB /* minunit.h */; };
-		3B4EC60017CAB41C00B254EB /* ot_test.c in Sources */ = {isa = PBXBuildFile; fileRef = 3B4EC5F117CAB30200B254EB /* ot_test.c */; };
+		3B4EC60017CAB41C00B254EB /* libot_test.c in Sources */ = {isa = PBXBuildFile; fileRef = 3B4EC5F117CAB30200B254EB /* libot_test.c */; };
 		3B4EC60417CAB86600B254EB /* libot.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B4EC5A617CAA72400B254EB /* libot.a */; };
 		3B4EC60717CAB89B00B254EB /* librope.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B4EC5E817CAAA6B00B254EB /* librope.a */; };
 		3BDA029D17D92EA90039A78C /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 3BDA029C17D92EA90039A78C /* main.c */; };
 		3BDA02AA17D935120039A78C /* jsmn.c in Sources */ = {isa = PBXBuildFile; fileRef = 3BDA02A417D935120039A78C /* jsmn.c */; };
 		3BDA02AB17D935120039A78C /* jsmn.h in Headers */ = {isa = PBXBuildFile; fileRef = 3BDA02A517D935120039A78C /* jsmn.h */; };
-		3BDA02AC17D935120039A78C /* jsmn_test.c in Sources */ = {isa = PBXBuildFile; fileRef = 3BDA02A617D935120039A78C /* jsmn_test.c */; };
-		3BDA02AD17D935120039A78C /* Makefile in Sources */ = {isa = PBXBuildFile; fileRef = 3BDA02A817D935120039A78C /* Makefile */; };
 		3BE9FEDD17CFEBBF00F8B9F0 /* array.h in Headers */ = {isa = PBXBuildFile; fileRef = 3BE9FEDC17CFEBBF00F8B9F0 /* array.h */; };
 		3BE9FEE017CFEBCE00F8B9F0 /* array.c in Sources */ = {isa = PBXBuildFile; fileRef = 3BE9FEDF17CFEBCE00F8B9F0 /* array.c */; };
 /* End PBXBuildFile section */
@@ -82,8 +78,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		3B113B0117DA6F05007A547E /* gen.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gen.c; sourceTree = "<group>"; };
-		3B113B0317DA6F14007A547E /* gen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gen.h; sourceTree = "<group>"; };
 		3B204AB517DFD1D400C9AB99 /* hex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hex.h; sourceTree = "<group>"; };
 		3B204AB817DFD1DD00C9AB99 /* hex.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = hex.c; sourceTree = "<group>"; };
 		3B4EC5A617CAA72400B254EB /* libot.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libot.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -95,15 +89,13 @@
 		3B4EC5C417CAA82400B254EB /* server.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = server.c; sourceTree = "<group>"; };
 		3B4EC5E217CAAA6B00B254EB /* librope.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = librope.xcodeproj; path = librope/librope.xcodeproj; sourceTree = "<group>"; };
 		3B4EC5F017CAB30200B254EB /* minunit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = minunit.h; sourceTree = "<group>"; };
-		3B4EC5F117CAB30200B254EB /* ot_test.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ot_test.c; sourceTree = "<group>"; };
+		3B4EC5F117CAB30200B254EB /* libot_test.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = libot_test.c; sourceTree = "<group>"; };
 		3B4EC5F617CAB3AF00B254EB /* tests */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = tests; sourceTree = BUILT_PRODUCTS_DIR; };
 		3BDA029A17D92EA90039A78C /* cli */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = cli; sourceTree = BUILT_PRODUCTS_DIR; };
 		3BDA029C17D92EA90039A78C /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		3BDA02A417D935120039A78C /* jsmn.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = jsmn.c; sourceTree = "<group>"; };
 		3BDA02A517D935120039A78C /* jsmn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = jsmn.h; sourceTree = "<group>"; };
-		3BDA02A617D935120039A78C /* jsmn_test.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = jsmn_test.c; sourceTree = "<group>"; };
 		3BDA02A717D935120039A78C /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
-		3BDA02A817D935120039A78C /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		3BDA02A917D935120039A78C /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
 		3BE9FEDC17CFEBBF00F8B9F0 /* array.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = array.h; sourceTree = "<group>"; };
 		3BE9FEDF17CFEBCE00F8B9F0 /* array.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = array.c; sourceTree = "<group>"; };
@@ -180,9 +172,7 @@
 			isa = PBXGroup;
 			children = (
 				3B4EC5F017CAB30200B254EB /* minunit.h */,
-				3B4EC5F117CAB30200B254EB /* ot_test.c */,
-				3B113B0117DA6F05007A547E /* gen.c */,
-				3B113B0317DA6F14007A547E /* gen.h */,
+				3B4EC5F117CAB30200B254EB /* libot_test.c */,
 			);
 			path = test;
 			sourceTree = "<group>";
@@ -200,9 +190,7 @@
 			children = (
 				3BDA02A417D935120039A78C /* jsmn.c */,
 				3BDA02A517D935120039A78C /* jsmn.h */,
-				3BDA02A617D935120039A78C /* jsmn_test.c */,
 				3BDA02A717D935120039A78C /* LICENSE */,
-				3BDA02A817D935120039A78C /* Makefile */,
 				3BDA02A917D935120039A78C /* README */,
 			);
 			path = jsmn;
@@ -340,9 +328,7 @@
 				3B4EC5D217CAA82400B254EB /* server.c in Sources */,
 				3B4EC5CF17CAA82400B254EB /* client.c in Sources */,
 				3B204AB917DFD1DD00C9AB99 /* hex.c in Sources */,
-				3BDA02AC17D935120039A78C /* jsmn_test.c in Sources */,
 				3B4EC5CE17CAA82400B254EB /* ot.c in Sources */,
-				3BDA02AD17D935120039A78C /* Makefile in Sources */,
 				3BE9FEE017CFEBCE00F8B9F0 /* array.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -351,9 +337,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3B113B0217DA6F05007A547E /* gen.c in Sources */,
-				3B4EC5FF17CAB41C00B254EB /* minunit.h in Sources */,
-				3B4EC60017CAB41C00B254EB /* ot_test.c in Sources */,
+				3B4EC60017CAB41C00B254EB /* libot_test.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -479,6 +463,7 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
+				GCC_WARN_PEDANTIC = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -487,6 +472,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_WARN_PEDANTIC = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -498,6 +484,7 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
+				GCC_WARN_PEDANTIC = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -505,6 +492,7 @@
 		3BDA02A217D92EA90039A78C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				GCC_WARN_PEDANTIC = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
