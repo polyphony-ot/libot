@@ -29,5 +29,13 @@
             </PersistentString>
          </PersistentStrings>
       </ContextState>
+      <ContextState
+         contextName = "try_parse_parent:ot.c">
+         <PersistentStrings>
+            <PersistentString
+               value = "(start[i] - 0x30) &lt;&lt; 4">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
    </ContextStates>
 </VariablesViewState>

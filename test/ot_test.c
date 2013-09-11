@@ -6,7 +6,7 @@
 
 int tests_run = 0;
 
-static char* test_serialize_empty_op() {
+MU_TEST(test_serialize_empty_op) {
     const char* expected = "[]";
 	int64_t parent[8] = { 0 };
 	ot_op* op = ot_new_op(0, parent);
@@ -17,9 +17,7 @@ static char* test_serialize_empty_op() {
     free(actual);
     ot_free_op(op);
     
-    mu_assert("Serializing empty op did not create expected string.", cmp == 0);
-    
-	return 0;
+    mu_assert(cmp == 0, "Serializing empty op did not create expected string.");
 }
 
 static char* test_serialize_single_insert() {
@@ -233,6 +231,35 @@ static char* test_end_fmt_does_not_append_another_fmtbound_when_last_component_i
 	return 0;
 }
 
+static char* test_parse_client_id() {
+    const int64_t expected_client_id = 1234;
+    uint8_t* expected_json = (uint8_t*) "{ \"clientId\": 1234 }";
+    
+	ot_op* op = ot_new_json(expected_json);
+    int64_t actual_client_id = op->client_id;
+    
+    ot_free_op(op);
+    
+    mu_assert("Parsed op did not have the correct clientId.", expected_client_id == actual_client_id);
+    
+	return 0;
+}
+
+static char* test_parse_parent() {
+    uint8_t expected_parent[] = "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijkl";
+    uint8_t* expected_json = (uint8_t*) "{ \"parent\": \"6162636465666768696a6b6c6d6e6f707172737475767778797a6162636465666768696a6b6c6d6e6f707172737475767778797a6162636465666768696a6b6c\" }";
+    
+	ot_op* op = ot_new_json(expected_json);
+    unsigned char* actual_parent = op->parent;
+    int cmp = memcmp(expected_parent, actual_parent, 64);
+    
+    ot_free_op(op);
+    
+    mu_assert("Parsed op did not have the correct parent.", cmp == 0);
+    
+	return 0;
+}
+
 static char* all_tests() {
     mu_run_test(test_serialize_empty_op);
     mu_run_test(test_serialize_single_insert);
@@ -246,6 +273,8 @@ static char* all_tests() {
     mu_run_test(test_start_fmt_does_not_append_another_fmtbound_when_last_component_is_fmtbound);
     mu_run_test(test_end_fmt_appends_correct_name_and_value);
     mu_run_test(test_end_fmt_does_not_append_another_fmtbound_when_last_component_is_fmtbound);
+    mu_run_test(test_parse_client_id);
+    mu_run_test(test_parse_parent);
 
 	return 0;
 }

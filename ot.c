@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include "ot.h"
+#include "hex.h"
+#include "jsmn.h"
 
 static void ot_free_fmtbound(ot_comp_fmtbound* fmtbound) {
     ot_fmt* start_data = fmtbound->start.data;
@@ -35,16 +37,87 @@ static void ot_free_comp(ot_comp* comp) {
     }
 }
 
+static int tokcmp(jsmntok_t* tok, uint8_t* json, void* cmp) {
+    size_t length = tok->end - tok->start;
+    return memcmp(cmp, json + tok->start, length);
+}
+
+static int try_parse_client_id(uint8_t* json, jsmntok_t* key, jsmntok_t* val, ot_op* op) {
+    int cmp = tokcmp(key, json, "clientId");
+    if (cmp != 0) {
+        return 0;
+    }
+    
+    op->client_id = atoi((char*) json + val->start);
+    return 1;
+}
+
+static int try_parse_parent(uint8_t* json, jsmntok_t* key, jsmntok_t* val, ot_op* op) {
+    int cmp = tokcmp(key, json, "parent");
+    if (cmp != 0) {
+        return 0;
+    }
+    
+    uint8_t* start = (uint8_t*) json + val->start;
+    hextoa((uint8_t*) &op->parent, start, 128);
+    
+    return 1;
+}
+
+static int try_parse_comps(uint8_t* json, jsmntok_t* key, jsmntok_t* valstart, ot_op* op) {
+    int cmp = tokcmp(key, json, "components");
+    if (cmp != 0) {
+        return 0;
+    }
+    
+    // "comps"
+    // array (size)
+    // object
+    // key 1
+    // field 1
+    // object
+    // key 1
+    // field 1
+    
+    for (int i = 0; i < valstart->size; ++i) {
+        
+    }
+    
+    return 1;
+}
+
+static void ot_parse_op(ot_op* op, uint8_t* json, jsmntok_t* tokens) {
+    int num_tokens = tokens[0].size;
+    
+    for (int i = 1; i < num_tokens; i += 2) {
+        if (try_parse_client_id(json, &tokens[i], &tokens[i + 1], op)) {
+            
+        } else if (try_parse_parent(json, &tokens[i], &tokens[i + 1], op)) {
+            
+        }
+    }
+}
+
 ot_op* ot_new_op(int64_t client_id, int64_t* parent) {
 	ot_op* op = (ot_op*) malloc(sizeof(ot_op));
-    if (op == NULL) {
-        exit(1);
-    }
 	op->client_id = client_id;
     array_init(&op->comps, sizeof(ot_comp));
     memcpy(op->parent, parent, sizeof(int64_t) * 8);
     
 	return op;
+}
+
+ot_op* ot_new_json(uint8_t* json) {
+    int err;
+    jsmn_parser parser;
+    jsmntok_t tokens[128];
+    
+    jsmn_init(&parser);
+    err = jsmn_parse(&parser, (char*) json, tokens, 128);
+    ot_op* op = malloc(sizeof(ot_op));
+    ot_parse_op(op, json, tokens);
+    array_init(&op->comps, sizeof(ot_comp));
+    return op;
 }
 
 void ot_free_op(ot_op* op) {

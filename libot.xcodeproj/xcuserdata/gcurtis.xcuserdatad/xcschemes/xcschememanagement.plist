@@ -4,6 +4,11 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>cli.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>2</integer>
+		</dict>
 		<key>ot-tests.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
@@ -23,6 +28,11 @@
 			<true/>
 		</dict>
 		<key>3B4EC5F517CAB3AF00B254EB</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>3BDA029917D92EA90039A78C</key>
 		<dict>
 			<key>primary</key>
 			<true/>
