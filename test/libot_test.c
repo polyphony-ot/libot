@@ -5,111 +5,7 @@
 #include "../ot.h"
 #include "../array.h"
 #include "../hex.h"
-
-MU_TEST(test_serialize_empty_op) {
-    const char* expected = "[]";
-	int64_t parent[8] = { 0 };
-	ot_op* op = ot_new_op(0, parent);
-    
-    uint8_t* actual = ot_serialize(op);
-    int cmp = strcmp(expected, (char*) actual);
-    
-    free(actual);
-    ot_free_op(op);
-    
-    mu_assert(cmp == 0, "Serializing empty op did not create expected string.");
-}
-
-MU_TEST(test_serialize_single_insert) {
-    const char* expected = "[ { \"type\": \"insert\", \"text\": \"any string\" } ]";
-	int64_t parent[8] = { 0 };
-	ot_op* op = ot_new_op(0, parent);
-    ot_insert(op, (uint8_t*) "any string");
-    
-    uint8_t* actual = ot_serialize(op);
-    int cmp = strcmp(expected, (char*) actual);
-    
-    free(actual);
-    ot_free_op(op);
-    
-    mu_assert(cmp == 0, "Serializing a single insert did not create expected string.");
-}
-
-MU_TEST(test_serialize_two_inserts) {
-    const char* expected = "[ { \"type\": \"insert\", \"text\": \"any string\" }, { \"type\": \"insert\", \"text\": \"any other string\" } ]";
-	int64_t parent[8] = { 0 };
-	ot_op* op = ot_new_op(0, parent);
-    ot_insert(op, (uint8_t*) "any string");
-    ot_insert(op, (uint8_t*) "any other string");
-    
-    uint8_t* actual = ot_serialize(op);
-    int cmp = strcmp(expected, (char*) actual);
-    
-    free(actual);
-    ot_free_op(op);
-    
-    mu_assert(cmp == 0, "Serializing two inserts did not create expected string.");
-}
-
-MU_TEST(test_serialize_single_skip) {
-    const char* expected = "[ { \"type\": \"skip\", \"count\": 1 } ]";
-	int64_t parent[8] = { 0 };
-	ot_op* op = ot_new_op(0, parent);
-    ot_skip(op, 1);
-    
-    uint8_t* actual = ot_serialize(op);
-    int cmp = strcmp(expected, (char*) actual);
-    
-    free(actual);
-    ot_free_op(op);
-    
-    mu_assert(cmp == 0, "Serializing a single skip did not create expected string.");
-}
-
-MU_TEST(test_serialize_single_delete) {
-    const char* expected = "[ { \"type\": \"delete\", \"count\": 1 } ]";
-	int64_t parent[8] = { 0 };
-	ot_op* op = ot_new_op(0, parent);
-    ot_delete(op, 1);
-    
-    uint8_t* actual = ot_serialize(op);
-    int cmp = strcmp(expected, (char*) actual);
-    
-    free(actual);
-    ot_free_op(op);
-    
-    mu_assert(cmp == 0, "Serializing a single delete did not create expected string.");
-}
-
-MU_TEST(test_serialize_single_open_element) {
-    const char* expected = "[ { \"type\": \"openElement\", \"element\": \"any string\" } ]";
-	int64_t parent[8] = { 0 };
-	ot_op* op = ot_new_op(0, parent);
-    ot_open_element(op, (uint8_t*) "any string");
-    
-    uint8_t* actual = ot_serialize(op);
-    int cmp = strcmp(expected, (char*) actual);
-    
-    free(actual);
-    ot_free_op(op);
-    
-    mu_assert(cmp == 0, "Serializing a single openElement did not create expected string.");
-}
-
-MU_TEST(test_serialize_single_close_element) {
-    const char* expected = "[ { \"type\": \"closeElement\" } ]";
-	int64_t parent[8] = { 0 };
-	ot_op* op = ot_new_op(0, parent);
-    ot_close_element(op);
-    
-    uint8_t* actual = ot_serialize(op);
-    int cmp = strcmp(expected, (char*) actual);
-    
-    free(actual);
-    ot_free_op(op);
-    
-    mu_assert(cmp == 0, "Serializing a single closeElement did not create expected string.");
-}
+#include "../otencode.h"
 
 MU_TEST(test_start_fmt_appends_correct_comp_type) {
     ot_comp_type expected_type = OT_FORMATTING_BOUNDARY;
@@ -235,13 +131,6 @@ MU_TEST(test_parse_parent) {
 }
 
 MU_TEST_SUITE(ot_test_suite) {
-    MU_RUN_TEST(test_serialize_empty_op);
-    MU_RUN_TEST(test_serialize_single_insert);
-    MU_RUN_TEST(test_serialize_two_inserts);
-    MU_RUN_TEST(test_serialize_single_skip);
-    MU_RUN_TEST(test_serialize_single_delete);
-    MU_RUN_TEST(test_serialize_single_open_element);
-    MU_RUN_TEST(test_serialize_single_close_element);
     MU_RUN_TEST(test_start_fmt_appends_correct_comp_type);
     MU_RUN_TEST(test_start_fmt_appends_correct_name_and_value);
     MU_RUN_TEST(test_start_fmt_does_not_append_another_fmtbound_when_last_component_is_fmtbound);
@@ -249,6 +138,124 @@ MU_TEST_SUITE(ot_test_suite) {
     MU_RUN_TEST(test_end_fmt_does_not_append_another_fmtbound_when_last_component_is_fmtbound);
     MU_RUN_TEST(test_parse_client_id);
     MU_RUN_TEST(test_parse_parent);
+}
+
+/* otencode tests */
+
+
+MU_TEST(test_serialize_empty_op) {
+    const char* expected = "[]";
+	int64_t parent[8] = { 0 };
+	ot_op* op = ot_new_op(0, parent);
+    
+    uint8_t* actual = ot_encode(op);
+    int cmp = strcmp(expected, (char*) actual);
+    
+    free(actual);
+    ot_free_op(op);
+    
+    mu_assert(cmp == 0, "Serializing empty op did not create expected string.");
+}
+
+MU_TEST(test_serialize_single_insert) {
+    const char* expected = "[ { \"type\": \"insert\", \"text\": \"any string\" } ]";
+	int64_t parent[8] = { 0 };
+	ot_op* op = ot_new_op(0, parent);
+    ot_insert(op, (uint8_t*) "any string");
+    
+    uint8_t* actual = ot_encode(op);
+    int cmp = strcmp(expected, (char*) actual);
+    
+    free(actual);
+    ot_free_op(op);
+    
+    mu_assert(cmp == 0, "Serializing a single insert did not create expected string.");
+}
+
+MU_TEST(test_serialize_two_inserts) {
+    const char* expected = "[ { \"type\": \"insert\", \"text\": \"any string\" }, { \"type\": \"insert\", \"text\": \"any other string\" } ]";
+	int64_t parent[8] = { 0 };
+	ot_op* op = ot_new_op(0, parent);
+    ot_insert(op, (uint8_t*) "any string");
+    ot_insert(op, (uint8_t*) "any other string");
+    
+    uint8_t* actual = ot_encode(op);
+    int cmp = strcmp(expected, (char*) actual);
+    
+    free(actual);
+    ot_free_op(op);
+    
+    mu_assert(cmp == 0, "Serializing two inserts did not create expected string.");
+}
+
+MU_TEST(test_serialize_single_skip) {
+    const char* expected = "[ { \"type\": \"skip\", \"count\": 1 } ]";
+	int64_t parent[8] = { 0 };
+	ot_op* op = ot_new_op(0, parent);
+    ot_skip(op, 1);
+    
+    uint8_t* actual = ot_encode(op);
+    int cmp = strcmp(expected, (char*) actual);
+    
+    free(actual);
+    ot_free_op(op);
+    
+    mu_assert(cmp == 0, "Serializing a single skip did not create expected string.");
+}
+
+MU_TEST(test_serialize_single_delete) {
+    const char* expected = "[ { \"type\": \"delete\", \"count\": 1 } ]";
+	int64_t parent[8] = { 0 };
+	ot_op* op = ot_new_op(0, parent);
+    ot_delete(op, 1);
+    
+    uint8_t* actual = ot_encode(op);
+    int cmp = strcmp(expected, (char*) actual);
+    
+    free(actual);
+    ot_free_op(op);
+    
+    mu_assert(cmp == 0, "Serializing a single delete did not create expected string.");
+}
+
+MU_TEST(test_serialize_single_open_element) {
+    const char* expected = "[ { \"type\": \"openElement\", \"element\": \"any string\" } ]";
+	int64_t parent[8] = { 0 };
+	ot_op* op = ot_new_op(0, parent);
+    ot_open_element(op, (uint8_t*) "any string");
+    
+    uint8_t* actual = ot_encode(op);
+    int cmp = strcmp(expected, (char*) actual);
+    
+    free(actual);
+    ot_free_op(op);
+    
+    mu_assert(cmp == 0, "Serializing a single openElement did not create expected string.");
+}
+
+MU_TEST(test_serialize_single_close_element) {
+    const char* expected = "[ { \"type\": \"closeElement\" } ]";
+	int64_t parent[8] = { 0 };
+	ot_op* op = ot_new_op(0, parent);
+    ot_close_element(op);
+    
+    uint8_t* actual = ot_encode(op);
+    int cmp = strcmp(expected, (char*) actual);
+    
+    free(actual);
+    ot_free_op(op);
+    
+    mu_assert(cmp == 0, "Serializing a single closeElement did not create expected string.");
+}
+
+MU_TEST_SUITE(otencode_test_suite) {
+    MU_RUN_TEST(test_serialize_empty_op);
+    MU_RUN_TEST(test_serialize_single_insert);
+    MU_RUN_TEST(test_serialize_two_inserts);
+    MU_RUN_TEST(test_serialize_single_skip);
+    MU_RUN_TEST(test_serialize_single_delete);
+    MU_RUN_TEST(test_serialize_single_open_element);
+    MU_RUN_TEST(test_serialize_single_close_element);
 }
 
 /* array tests */
@@ -378,6 +385,7 @@ MU_TEST_SUITE(hex_test_suite) {
 
 int main() {
 	MU_RUN_SUITE(ot_test_suite);
+    MU_RUN_SUITE(otencode_test_suite);
     MU_RUN_SUITE(array_test_suite);
     MU_RUN_SUITE(hex_test_suite);
 	MU_REPORT();

@@ -1,7 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
-#include <stdarg.h>
 #include "ot.h"
 #include "hex.h"
 #include "jsmn.h"
@@ -232,63 +231,4 @@ uint8_t* ot_snapshot(ot_op* op) {
 	}
     
 	return snapshot;
-}
-
-static void ot_serialize_fmtstr(uint8_t** buf, size_t* bufsize, size_t* written, char* fmt, ...) {
-    va_list args;
-    va_start(args, fmt);
-    *bufsize += vsnprintf(NULL, 0, fmt, args);
-    va_end(args);
-    
-    *buf = realloc(*buf, *bufsize);
-    
-    va_list args2;
-    va_start(args2, fmt);
-    *written += vsprintf((char*) *buf + *written, fmt, args2);
-    va_end(args2);
-}
-
-uint8_t* ot_serialize(ot_op* op) {
-    ot_comp* comps = op->comps.data;
-    size_t bufsize = sizeof(uint8_t) * 3;
-	uint8_t* buf = malloc(bufsize);
-    memcpy(buf, "[ \0", bufsize);
-	size_t written = 2;
-    
-	for (int i = 0; i < op->comps.len; ++i)
-	{
-        ot_comp_type t = comps[i].type;
-        if (t == OT_SKIP) {
-            int64_t count = comps[i].value.skip.count;
-            char* fmt = "{ \"type\": \"skip\", \"count\": %d }, ";
-            ot_serialize_fmtstr(&buf, &bufsize, &written, fmt, count);
-        } else if (t == OT_INSERT) {
-            rope* r = comps[i].value.insert.text;
-            uint8_t* textstr = rope_create_cstr(r);
-            char* fmt = "{ \"type\": \"insert\", \"text\": \"%s\" }, ";
-            ot_serialize_fmtstr(&buf, &bufsize, &written, fmt, textstr);
-            free(textstr);
-		} else if (t == OT_DELETE) {
-            int64_t count = comps[i].value.delete.count;
-            char* fmt = "{ \"type\": \"delete\", \"count\": %d }, ";
-            ot_serialize_fmtstr(&buf, &bufsize, &written, fmt, count);
-        } else if (t == OT_OPEN_ELEMENT) {
-            rope* r = comps[i].value.open_element.elem;
-            uint8_t* textstr = rope_create_cstr(r);
-            char* fmt = "{ \"type\": \"openElement\", \"element\": \"%s\" }, ";
-            ot_serialize_fmtstr(&buf, &bufsize, &written, fmt, textstr);
-            free(textstr);
-        } else if (t == OT_CLOSE_ELEMENT) {
-            char* fmt = "{ \"type\": \"closeElement\" }, ";
-            ot_serialize_fmtstr(&buf, &bufsize, &written, fmt);
-        }
-	}
-    
-    if (written == 2) {
-        buf[1] = ']';
-    } else {
-        memcpy(buf + written - 2, " ]\0", 3);
-    }
-
-	return buf;
 }

@@ -88,7 +88,6 @@ void ot_close_element(ot_op* op);
 void ot_start_fmt(ot_op* op, uint8_t* name, uint8_t* value);
 void ot_end_fmt(ot_op* op, uint8_t* name, uint8_t* value);
 uint8_t* ot_snapshot(ot_op* op);
-uint8_t* ot_serialize(ot_op* op);
 
 ot_comp_fmtbound* ot_new_fmtbound();
 
