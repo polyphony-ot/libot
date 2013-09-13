@@ -28,3 +28,7 @@ int hextoa(uint8_t* a, const uint8_t* hex, size_t len) {
     
     return 0;
 }
+
+int atohex(uint8_t* hex, const uint8_t* a, size_t len) {
+    return 0;
+}

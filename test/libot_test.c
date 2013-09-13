@@ -144,12 +144,12 @@ MU_TEST_SUITE(ot_test_suite) {
 
 
 MU_TEST(test_serialize_empty_op) {
-    const char* expected = "[]";
+    const char* const EXPECTED = "{ \"clientId\": 0, \"parent\": \"\", \"components\": [ ] }";
 	int64_t parent[8] = { 0 };
 	ot_op* op = ot_new_op(0, parent);
     
-    uint8_t* actual = ot_encode(op);
-    int cmp = strcmp(expected, (char*) actual);
+    char* actual = ot_encode(op);
+    int cmp = strcmp(EXPECTED, (char*) actual);
     
     free(actual);
     ot_free_op(op);
@@ -158,13 +158,13 @@ MU_TEST(test_serialize_empty_op) {
 }
 
 MU_TEST(test_serialize_single_insert) {
-    const char* expected = "[ { \"type\": \"insert\", \"text\": \"any string\" } ]";
+    const char* const EXPECTED = "{ \"clientId\": 0, \"parent\": \"\", \"components\": [ { \"type\": \"insert\", \"text\": \"any string\" } ] }";
 	int64_t parent[8] = { 0 };
 	ot_op* op = ot_new_op(0, parent);
     ot_insert(op, (uint8_t*) "any string");
     
-    uint8_t* actual = ot_encode(op);
-    int cmp = strcmp(expected, (char*) actual);
+    char* actual = ot_encode(op);
+    int cmp = strcmp(EXPECTED, (char*) actual);
     
     free(actual);
     ot_free_op(op);
@@ -173,14 +173,14 @@ MU_TEST(test_serialize_single_insert) {
 }
 
 MU_TEST(test_serialize_two_inserts) {
-    const char* expected = "[ { \"type\": \"insert\", \"text\": \"any string\" }, { \"type\": \"insert\", \"text\": \"any other string\" } ]";
+    const char* const EXPECTED = "{ \"clientId\": 0, \"parent\": \"\", \"components\": [ { \"type\": \"insert\", \"text\": \"any string\" }, { \"type\": \"insert\", \"text\": \"any other string\" } ] }";
 	int64_t parent[8] = { 0 };
 	ot_op* op = ot_new_op(0, parent);
     ot_insert(op, (uint8_t*) "any string");
     ot_insert(op, (uint8_t*) "any other string");
     
-    uint8_t* actual = ot_encode(op);
-    int cmp = strcmp(expected, (char*) actual);
+    char* actual = ot_encode(op);
+    int cmp = strcmp(EXPECTED, (char*) actual);
     
     free(actual);
     ot_free_op(op);
@@ -189,13 +189,13 @@ MU_TEST(test_serialize_two_inserts) {
 }
 
 MU_TEST(test_serialize_single_skip) {
-    const char* expected = "[ { \"type\": \"skip\", \"count\": 1 } ]";
+    const char* const EXPECTED = "{ \"clientId\": 0, \"parent\": \"\", \"components\": [ { \"type\": \"skip\", \"count\": 1 } ] }";
 	int64_t parent[8] = { 0 };
 	ot_op* op = ot_new_op(0, parent);
     ot_skip(op, 1);
     
-    uint8_t* actual = ot_encode(op);
-    int cmp = strcmp(expected, (char*) actual);
+    char* actual = ot_encode(op);
+    int cmp = strcmp(EXPECTED, (char*) actual);
     
     free(actual);
     ot_free_op(op);
@@ -204,13 +204,13 @@ MU_TEST(test_serialize_single_skip) {
 }
 
 MU_TEST(test_serialize_single_delete) {
-    const char* expected = "[ { \"type\": \"delete\", \"count\": 1 } ]";
+    const char* const EXPECTED = "{ \"clientId\": 0, \"parent\": \"\", \"components\": [ { \"type\": \"delete\", \"count\": 1 } ] }";
 	int64_t parent[8] = { 0 };
 	ot_op* op = ot_new_op(0, parent);
     ot_delete(op, 1);
     
-    uint8_t* actual = ot_encode(op);
-    int cmp = strcmp(expected, (char*) actual);
+    char* actual = ot_encode(op);
+    int cmp = strcmp(EXPECTED, (char*) actual);
     
     free(actual);
     ot_free_op(op);
@@ -219,13 +219,13 @@ MU_TEST(test_serialize_single_delete) {
 }
 
 MU_TEST(test_serialize_single_open_element) {
-    const char* expected = "[ { \"type\": \"openElement\", \"element\": \"any string\" } ]";
+    const char* const EXPECTED = "{ \"clientId\": 0, \"parent\": \"\", \"components\": [ { \"type\": \"openElement\", \"element\": \"any string\" } ] }";
 	int64_t parent[8] = { 0 };
 	ot_op* op = ot_new_op(0, parent);
     ot_open_element(op, (uint8_t*) "any string");
     
-    uint8_t* actual = ot_encode(op);
-    int cmp = strcmp(expected, (char*) actual);
+    char* actual = ot_encode(op);
+    int cmp = strcmp(EXPECTED, (char*) actual);
     
     free(actual);
     ot_free_op(op);
@@ -234,13 +234,13 @@ MU_TEST(test_serialize_single_open_element) {
 }
 
 MU_TEST(test_serialize_single_close_element) {
-    const char* expected = "[ { \"type\": \"closeElement\" } ]";
+    const char* const EXPECTED = "{ \"clientId\": 0, \"parent\": \"\", \"components\": [ { \"type\": \"closeElement\" } ] }";
 	int64_t parent[8] = { 0 };
 	ot_op* op = ot_new_op(0, parent);
     ot_close_element(op);
     
-    uint8_t* actual = ot_encode(op);
-    int cmp = strcmp(expected, (char*) actual);
+    char* actual = ot_encode(op);
+    int cmp = strcmp(EXPECTED, (char*) actual);
     
     free(actual);
     ot_free_op(op);
