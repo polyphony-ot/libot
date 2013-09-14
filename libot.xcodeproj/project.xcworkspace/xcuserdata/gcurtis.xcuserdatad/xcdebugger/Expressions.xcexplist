@@ -47,13 +47,22 @@
          contextName = "test_start_fmt:ot_test.c">
       </ContextState>
       <ContextState
+         contextName = "atohex_encodes_multiple_bytes:libot_test.c">
+      </ContextState>
+      <ContextState
          contextName = "atohex_encodes_single_byte:libot_test.c">
       </ContextState>
       <ContextState
          contextName = "atohex:hex.c">
          <PersistentStrings>
             <PersistentString
-               value = "high + 0x30">
+               value = "(unsigned char) 0xFF &gt;&gt; 4">
+            </PersistentString>
+            <PersistentString
+               value = "high + 0x51">
+            </PersistentString>
+            <PersistentString
+               value = "low + 0x57">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

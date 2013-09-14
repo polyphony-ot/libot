@@ -374,10 +374,21 @@ MU_TEST(atohex_encodes_single_byte) {
     const char ARRAY[] = { 0x01 };
     
     char actual[2];
-    atohex(actual, ARRAY, 1);
+    atohex(actual, ARRAY, sizeof(ARRAY));
     int cmp = memcmp(EXPECTED, actual, sizeof(actual));
     
     mu_assert(cmp == 0, "Encoding a single byte gave an incorrect result.");
+}
+
+MU_TEST(atohex_encodes_multiple_bytes) {
+    const char* const EXPECTED = "01ff1a";
+    const char ARRAY[] = { 0x01, 0xFF, 0x1A };
+    
+    char actual[6];
+    atohex(actual, ARRAY, sizeof(ARRAY));
+    int cmp = memcmp(EXPECTED, actual, sizeof(actual));
+    
+    mu_assert(cmp == 0, "Encoding multiple bytes gave an incorrect result.");
 }
 
 MU_TEST_SUITE(hex_test_suite) {
@@ -388,6 +399,7 @@ MU_TEST_SUITE(hex_test_suite) {
     MU_RUN_TEST(hextoa_decodes_lowercase_letters);
     MU_RUN_TEST(hextoa_decodes_uppercase_letters);
     MU_RUN_TEST(atohex_encodes_single_byte);
+    MU_RUN_TEST(atohex_encodes_multiple_bytes);
 }
 
 int main() {

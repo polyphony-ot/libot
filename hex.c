@@ -42,14 +42,14 @@ int atohex(char* const hex, const char* const a, size_t len) {
         if (high <= 0x9) {
             hex[j] = high + 0x30;
         } else {
-            hex[j] = high + 0x61;
+            hex[j] = high + 0x57;
         }
         ++j;
         
         if (low <= 0x9) {
             hex[j] += low + 0x30;
         } else {
-            hex[j] += low + 0x61;
+            hex[j] += low + 0x57;
         }
         ++j;
     }
