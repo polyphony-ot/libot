@@ -5,6 +5,8 @@
 #include "otencode.h"
 #include "hex.h"
 
+// Writes a string to a buffer, resizing it if necessary. See append_fmtstr for
+// more info.
 static void append_str(char** buf,
                        size_t* const bufsize,
                        size_t* const written,
@@ -38,6 +40,10 @@ static void append_fmtstr(char** buf,
     va_start(args2, fmt);
     *written += vsprintf((char*) *buf + *written, (char*) fmt, args2);
     va_end(args2);
+}
+
+static void encode_fmtbound(const ot_comp_fmtbound* fmtbound) {
+    
 }
 
 char* ot_encode(const ot_op* const op) {
@@ -80,6 +86,8 @@ char* ot_encode(const ot_op* const op) {
         } else if (t == OT_CLOSE_ELEMENT) {
             char* fmt = "{ \"type\": \"closeElement\" }, ";
             append_fmtstr(&buf, &bufsize, &written, fmt);
+        } else if (t == OT_FORMATTING_BOUNDARY) {
+            encode_fmtbound(&comps[i].value.fmtbound);
         }
 	}
     
