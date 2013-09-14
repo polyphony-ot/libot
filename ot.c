@@ -36,12 +36,12 @@ static void ot_free_comp(ot_comp* comp) {
     }
 }
 
-static int tokcmp(jsmntok_t* tok, uint8_t* json, void* cmp) {
+static int tokcmp(jsmntok_t* tok, char* json, void* cmp) {
     size_t length = tok->end - tok->start;
     return memcmp(cmp, json + tok->start, length);
 }
 
-static int try_parse_client_id(uint8_t* json, jsmntok_t* key, jsmntok_t* val, ot_op* op) {
+static int try_parse_client_id(char* json, jsmntok_t* key, jsmntok_t* val, ot_op* op) {
     int cmp = tokcmp(key, json, "clientId");
     if (cmp != 0) {
         return 0;
@@ -51,19 +51,19 @@ static int try_parse_client_id(uint8_t* json, jsmntok_t* key, jsmntok_t* val, ot
     return 1;
 }
 
-static int try_parse_parent(uint8_t* json, jsmntok_t* key, jsmntok_t* val, ot_op* op) {
+static int try_parse_parent(char* json, jsmntok_t* key, jsmntok_t* val, ot_op* op) {
     int cmp = tokcmp(key, json, "parent");
     if (cmp != 0) {
         return 0;
     }
     
-    uint8_t* start = (uint8_t*) json + val->start;
-    hextoa((uint8_t*) &op->parent, start, 128);
+    char* start = json + val->start;
+    hextoa(op->parent, start, 128);
     
     return 1;
 }
 
-static int try_parse_comps(uint8_t* json, jsmntok_t* key, jsmntok_t* valstart, ot_op* op) {
+static int try_parse_comps(char* json, jsmntok_t* key, jsmntok_t* valstart, ot_op* op) {
     int cmp = tokcmp(key, json, "components");
     if (cmp != 0) {
         return 0;
@@ -85,7 +85,7 @@ static int try_parse_comps(uint8_t* json, jsmntok_t* key, jsmntok_t* valstart, o
     return 1;
 }
 
-static void ot_parse_op(ot_op* op, uint8_t* json, jsmntok_t* tokens) {
+static void ot_parse_op(ot_op* op, char* json, jsmntok_t* tokens) {
     int num_tokens = tokens[0].size;
     
     for (int i = 1; i < num_tokens; i += 2) {
@@ -106,13 +106,13 @@ ot_op* ot_new_op(int64_t client_id, int64_t* parent) {
 	return op;
 }
 
-ot_op* ot_new_json(uint8_t* json) {
+ot_op* ot_new_json(char* json) {
     int err;
     jsmn_parser parser;
     jsmntok_t tokens[128];
     
     jsmn_init(&parser);
-    err = jsmn_parse(&parser, (char*) json, tokens, 128);
+    err = jsmn_parse(&parser, json, tokens, 128);
     ot_op* op = malloc(sizeof(ot_op));
     ot_parse_op(op, json, tokens);
     array_init(&op->comps, sizeof(ot_comp));

@@ -107,7 +107,7 @@ MU_TEST(test_end_fmt_does_not_append_another_fmtbound_when_last_component_is_fmt
 
 MU_TEST(test_parse_client_id) {
     const int64_t expected_client_id = 1234;
-    uint8_t* expected_json = (uint8_t*) "{ \"clientId\": 1234 }";
+    char* expected_json = "{ \"clientId\": 1234 }";
     
 	ot_op* op = ot_new_json(expected_json);
     int64_t actual_client_id = op->client_id;
@@ -119,10 +119,10 @@ MU_TEST(test_parse_client_id) {
 
 MU_TEST(test_parse_parent) {
     uint8_t expected_parent[] = "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijkl";
-    uint8_t* expected_json = (uint8_t*) "{ \"parent\": \"6162636465666768696a6b6c6d6e6f707172737475767778797a6162636465666768696a6b6c6d6e6f707172737475767778797a6162636465666768696a6b6c\" }";
+    char* expected_json = "{ \"parent\": \"6162636465666768696a6b6c6d6e6f707172737475767778797a6162636465666768696a6b6c6d6e6f707172737475767778797a6162636465666768696a6b6c\" }";
     
 	ot_op* op = ot_new_json(expected_json);
-    unsigned char* actual_parent = op->parent;
+    char* actual_parent = op->parent;
     int cmp = memcmp(expected_parent, actual_parent, 64);
     
     ot_free_op(op);
@@ -310,77 +310,72 @@ MU_TEST_SUITE(array_test_suite) {
 /* hex tests */
 
 MU_TEST(hextoa_does_not_write_to_array_when_hex_is_empty) {
-    const uint8_t EXPECTED = 1;
-    uint8_t a[] = { EXPECTED };
+    const char EXPECTED = 1;
+    char a[] = { EXPECTED };
     
-    hextoa(a, (uint8_t*) "", 0);
-    const uint8_t ACTUAL = a[0];
+    hextoa(a, "", 0);
+    const char ACTUAL = a[0];
     
     mu_assert(EXPECTED == ACTUAL, "Converting an empty hex string to an array should not write anything to the array.");
 }
 
 MU_TEST(hextoa_decodes_single_byte) {
-    const uint8_t EXPECTED[] = "a";
-    const uint8_t HEX[] = "61";
+    const char* const EXPECTED = "a";
     
-    uint8_t actual[1];
-    hextoa(actual, HEX, 2);
-    int cmp = memcmp(EXPECTED, actual, 1);
+    char actual[1];
+    hextoa(actual, "61", 2);
+    int cmp = memcmp(EXPECTED, actual, sizeof(actual));
     
     mu_assert(cmp == 0, "Decoding a single byte gave an incorrect result.");
 }
 
 MU_TEST(hextoa_decodes_multiple_bytes) {
-    const uint8_t EXPECTED[] = "abc";
-    const uint8_t HEX[] = "616263";
+    const char* const EXPECTED = "abc";
     
-    uint8_t actual[3];
-    hextoa(actual, HEX, 6);
-    int cmp = memcmp(EXPECTED, actual, 3);
+    char actual[3];
+    hextoa(actual, "616263", 6);
+    int cmp = memcmp(EXPECTED, actual, sizeof(actual));
     
     mu_assert(cmp == 0, "Decoding multiple bytes gave an incorrect result.");
 }
 
 MU_TEST(hextoa_decodes_mixed_case_letters) {
-    const uint8_t EXPECTED[] = "JZ";
-    const uint8_t HEX[] = "4A5a";
+    const char* const EXPECTED = "JZ";
     
-    uint8_t actual[2];
-    hextoa(actual, HEX, 4);
-    int cmp = memcmp(EXPECTED, actual, 2);
+    char actual[2];
+    hextoa(actual, "4A5a", 4);
+    int cmp = memcmp(EXPECTED, actual, sizeof(actual));
     
     mu_assert(cmp == 0, "Decoding mixed-case letters gave an incorrect result.");
 }
 
 MU_TEST(hextoa_decodes_lowercase_letters) {
-    const uint8_t EXPECTED[] = "JZ";
-    const uint8_t HEX[] = "4a5a";
+    const char* const EXPECTED = "JZ";
     
-    uint8_t actual[2];
-    hextoa(actual, HEX, 4);
-    int cmp = memcmp(EXPECTED, actual, 2);
+    char actual[2];
+    hextoa(actual, "4a5a", 4);
+    int cmp = memcmp(EXPECTED, actual, sizeof(actual));
     
     mu_assert(cmp == 0, "Decoding lowercase letters gave an incorrect result.");
 }
 
 MU_TEST(hextoa_decodes_uppercase_letters) {
-    const uint8_t EXPECTED[] = "JZ";
-    const uint8_t HEX[] = "4A5A";
+    const char* const EXPECTED = "JZ";
     
-    uint8_t actual[2];
-    hextoa(actual, HEX, 4);
-    int cmp = memcmp(EXPECTED, actual, 2);
+    char actual[2];
+    hextoa(actual, "4A5A", 4);
+    int cmp = memcmp(EXPECTED, actual, sizeof(actual));
     
     mu_assert(cmp == 0, "Decoding uppercase letters gave an incorrect result.");
 }
 
 MU_TEST(atohex_encodes_single_byte) {
-    const char* EXPECTED = "01";
-    const uint8_t HEX[] = { 0x01 };
+    const char* const EXPECTED = "01";
+    const char ARRAY[] = { 0x01 };
     
     char actual[2];
-    atohex(actual, HEX, 1);
-    int cmp = memcmp(EXPECTED, actual, 2);
+    atohex(actual, ARRAY, 1);
+    int cmp = memcmp(EXPECTED, actual, sizeof(actual));
     
     mu_assert(cmp == 0, "Encoding a single byte gave an incorrect result.");
 }

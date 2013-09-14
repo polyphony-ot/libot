@@ -11,11 +11,11 @@
 //
 // Warning: This function does not perform any sort of input validation, so it's
 // possible to pass in an invalid hex string and get an undefined result.
-int hextoa(uint8_t* a, const uint8_t* hex, size_t len);
+int hextoa(char* const a, const char* const hex, size_t len);
 
 // Converts an array to a hex string. The array is encoded and copied into hex.
 // hex must have at least len*2 space allocated to hold the encoded hex value.
 // len is the length of the array.
-int atohex(uint8_t* hex, const uint8_t* a, size_t len);
+int atohex(char* const hex, const char* const a, size_t len);
 
 #endif

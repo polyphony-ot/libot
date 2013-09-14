@@ -1,6 +1,6 @@
 #include "hex.h"
 
-int hextoa(uint8_t* a, const uint8_t* hex, size_t len) {
+int hextoa(char* const a, const char* const hex, size_t len) {
     size_t j = 0;
     for (size_t i = 0; i < len; ++i) {
         char c;
@@ -29,7 +29,7 @@ int hextoa(uint8_t* a, const uint8_t* hex, size_t len) {
     return 0;
 }
 
-int atohex(uint8_t* hex, const uint8_t* a, size_t len) {
+int atohex(char* const hex, const char* const a, size_t len) {
     size_t j = 0;
     for (size_t i = 0; i < len; ++i) {
         // Skip if the byte is a leading 0 unless we're on the last byte.
