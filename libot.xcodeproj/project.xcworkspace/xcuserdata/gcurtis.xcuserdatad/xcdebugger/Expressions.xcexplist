@@ -3,7 +3,20 @@
    version = "1.0">
    <ContextStates>
       <ContextState
-         contextName = "test_start_fmt:ot_test.c">
+         contextName = "array_ensure_size:array.c">
+         <PersistentStrings>
+            <PersistentString
+               value = "(ot_fmt*) arr-&gt;data">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "try_parse_parent:ot.c">
+         <PersistentStrings>
+            <PersistentString
+               value = "(start[i] - 0x30) &lt;&lt; 4">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "ot_start_fmt:ot.c">
@@ -22,20 +35,33 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "array_ensure_size:array.c">
+         contextName = "test_serialize_empty_op:libot_test.c">
+      </ContextState>
+      <ContextState
+         contextName = "ot_new_op:ot.c">
+      </ContextState>
+      <ContextState
+         contextName = "append_str:otencode.c">
+      </ContextState>
+      <ContextState
+         contextName = "test_start_fmt:ot_test.c">
+      </ContextState>
+      <ContextState
+         contextName = "atohex_encodes_single_byte:libot_test.c">
+      </ContextState>
+      <ContextState
+         contextName = "atohex:hex.c">
          <PersistentStrings>
             <PersistentString
-               value = "(ot_fmt*) arr-&gt;data">
+               value = "high + 0x30">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "try_parse_parent:ot.c">
-         <PersistentStrings>
-            <PersistentString
-               value = "(start[i] - 0x30) &lt;&lt; 4">
-            </PersistentString>
-         </PersistentStrings>
+         contextName = "array_init:array.c">
+      </ContextState>
+      <ContextState
+         contextName = "ot_encode:otencode.c">
       </ContextState>
    </ContextStates>
 </VariablesViewState>

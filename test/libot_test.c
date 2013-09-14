@@ -144,7 +144,7 @@ MU_TEST_SUITE(ot_test_suite) {
 
 
 MU_TEST(test_serialize_empty_op) {
-    const char* const EXPECTED = "{ \"clientId\": 0, \"parent\": \"\", \"components\": [ ] }";
+    const char* const EXPECTED = "{ \"clientId\": 0, \"parent\": \"00\", \"components\": [ ] }";
 	int64_t parent[8] = { 0 };
 	ot_op* op = ot_new_op(0, parent);
     
@@ -158,7 +158,7 @@ MU_TEST(test_serialize_empty_op) {
 }
 
 MU_TEST(test_serialize_single_insert) {
-    const char* const EXPECTED = "{ \"clientId\": 0, \"parent\": \"\", \"components\": [ { \"type\": \"insert\", \"text\": \"any string\" } ] }";
+    const char* const EXPECTED = "{ \"clientId\": 0, \"parent\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"any string\" } ] }";
 	int64_t parent[8] = { 0 };
 	ot_op* op = ot_new_op(0, parent);
     ot_insert(op, (uint8_t*) "any string");
@@ -173,7 +173,7 @@ MU_TEST(test_serialize_single_insert) {
 }
 
 MU_TEST(test_serialize_two_inserts) {
-    const char* const EXPECTED = "{ \"clientId\": 0, \"parent\": \"\", \"components\": [ { \"type\": \"insert\", \"text\": \"any string\" }, { \"type\": \"insert\", \"text\": \"any other string\" } ] }";
+    const char* const EXPECTED = "{ \"clientId\": 0, \"parent\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"any string\" }, { \"type\": \"insert\", \"text\": \"any other string\" } ] }";
 	int64_t parent[8] = { 0 };
 	ot_op* op = ot_new_op(0, parent);
     ot_insert(op, (uint8_t*) "any string");
@@ -189,7 +189,7 @@ MU_TEST(test_serialize_two_inserts) {
 }
 
 MU_TEST(test_serialize_single_skip) {
-    const char* const EXPECTED = "{ \"clientId\": 0, \"parent\": \"\", \"components\": [ { \"type\": \"skip\", \"count\": 1 } ] }";
+    const char* const EXPECTED = "{ \"clientId\": 0, \"parent\": \"00\", \"components\": [ { \"type\": \"skip\", \"count\": 1 } ] }";
 	int64_t parent[8] = { 0 };
 	ot_op* op = ot_new_op(0, parent);
     ot_skip(op, 1);
@@ -204,7 +204,7 @@ MU_TEST(test_serialize_single_skip) {
 }
 
 MU_TEST(test_serialize_single_delete) {
-    const char* const EXPECTED = "{ \"clientId\": 0, \"parent\": \"\", \"components\": [ { \"type\": \"delete\", \"count\": 1 } ] }";
+    const char* const EXPECTED = "{ \"clientId\": 0, \"parent\": \"00\", \"components\": [ { \"type\": \"delete\", \"count\": 1 } ] }";
 	int64_t parent[8] = { 0 };
 	ot_op* op = ot_new_op(0, parent);
     ot_delete(op, 1);
@@ -219,7 +219,7 @@ MU_TEST(test_serialize_single_delete) {
 }
 
 MU_TEST(test_serialize_single_open_element) {
-    const char* const EXPECTED = "{ \"clientId\": 0, \"parent\": \"\", \"components\": [ { \"type\": \"openElement\", \"element\": \"any string\" } ] }";
+    const char* const EXPECTED = "{ \"clientId\": 0, \"parent\": \"00\", \"components\": [ { \"type\": \"openElement\", \"element\": \"any string\" } ] }";
 	int64_t parent[8] = { 0 };
 	ot_op* op = ot_new_op(0, parent);
     ot_open_element(op, (uint8_t*) "any string");
@@ -234,7 +234,7 @@ MU_TEST(test_serialize_single_open_element) {
 }
 
 MU_TEST(test_serialize_single_close_element) {
-    const char* const EXPECTED = "{ \"clientId\": 0, \"parent\": \"\", \"components\": [ { \"type\": \"closeElement\" } ] }";
+    const char* const EXPECTED = "{ \"clientId\": 0, \"parent\": \"00\", \"components\": [ { \"type\": \"closeElement\" } ] }";
 	int64_t parent[8] = { 0 };
 	ot_op* op = ot_new_op(0, parent);
     ot_close_element(op);
@@ -374,6 +374,17 @@ MU_TEST(hextoa_decodes_uppercase_letters) {
     mu_assert(cmp == 0, "Decoding uppercase letters gave an incorrect result.");
 }
 
+MU_TEST(atohex_encodes_single_byte) {
+    const char* EXPECTED = "01";
+    const uint8_t HEX[] = { 0x01 };
+    
+    char actual[2];
+    atohex(actual, HEX, 1);
+    int cmp = memcmp(EXPECTED, actual, 2);
+    
+    mu_assert(cmp == 0, "Encoding a single byte gave an incorrect result.");
+}
+
 MU_TEST_SUITE(hex_test_suite) {
     MU_RUN_TEST(hextoa_does_not_write_to_array_when_hex_is_empty);
     MU_RUN_TEST(hextoa_decodes_single_byte);
@@ -381,6 +392,7 @@ MU_TEST_SUITE(hex_test_suite) {
     MU_RUN_TEST(hextoa_decodes_mixed_case_letters);
     MU_RUN_TEST(hextoa_decodes_lowercase_letters);
     MU_RUN_TEST(hextoa_decodes_uppercase_letters);
+    MU_RUN_TEST(atohex_encodes_single_byte);
 }
 
 int main() {

@@ -51,7 +51,7 @@ char* ot_encode(const ot_op* const op) {
                        "\"parent\": \"%s\", "
                        "\"components\": [ ";
     char hex[128] = { 0 };
-    atohex(&op->parent, hex, 64);
+    atohex(hex, op->parent, 64);
     fmtstr_to_buffer(&buf, &bufsize, &written, init_fmt, op->client_id, hex);
     
 	for (int i = 0; i < op->comps.len; ++i)
