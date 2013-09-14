@@ -20,7 +20,7 @@ static void append_str(char** buf,
 // resized, then it will be updated to point to the reallocated memory and
 // bufsize will be udpated with the new buffer size. written will contain the
 // number of bytes writen to buf.
-static void fmtstr_to_buffer(char** buf,
+static void append_fmtstr(char** buf,
                              size_t* const bufsize,
                              size_t* const written,
                              const char* const fmt,
@@ -52,7 +52,7 @@ char* ot_encode(const ot_op* const op) {
                        "\"components\": [ ";
     char hex[128] = { 0 };
     atohex(hex, op->parent, 64);
-    fmtstr_to_buffer(&buf, &bufsize, &written, init_fmt, op->client_id, hex);
+    append_fmtstr(&buf, &bufsize, &written, init_fmt, op->client_id, hex);
     
 	for (int i = 0; i < op->comps.len; ++i)
 	{
@@ -60,26 +60,26 @@ char* ot_encode(const ot_op* const op) {
         if (t == OT_SKIP) {
             int64_t count = comps[i].value.skip.count;
             char* fmt = "{ \"type\": \"skip\", \"count\": %d }, ";
-            fmtstr_to_buffer(&buf, &bufsize, &written, fmt, count);
+            append_fmtstr(&buf, &bufsize, &written, fmt, count);
         } else if (t == OT_INSERT) {
             rope* r = comps[i].value.insert.text;
             uint8_t* textstr = rope_create_cstr(r);
             char* fmt = "{ \"type\": \"insert\", \"text\": \"%s\" }, ";
-            fmtstr_to_buffer(&buf, &bufsize, &written, fmt, textstr);
+            append_fmtstr(&buf, &bufsize, &written, fmt, textstr);
             free(textstr);
 		} else if (t == OT_DELETE) {
             int64_t count = comps[i].value.delete.count;
             char* fmt = "{ \"type\": \"delete\", \"count\": %d }, ";
-            fmtstr_to_buffer(&buf, &bufsize, &written, fmt, count);
+            append_fmtstr(&buf, &bufsize, &written, fmt, count);
         } else if (t == OT_OPEN_ELEMENT) {
             rope* r = comps[i].value.open_element.elem;
             uint8_t* textstr = rope_create_cstr(r);
             char* fmt = "{ \"type\": \"openElement\", \"element\": \"%s\" }, ";
-            fmtstr_to_buffer(&buf, &bufsize, &written, fmt, textstr);
+            append_fmtstr(&buf, &bufsize, &written, fmt, textstr);
             free(textstr);
         } else if (t == OT_CLOSE_ELEMENT) {
             char* fmt = "{ \"type\": \"closeElement\" }, ";
-            fmtstr_to_buffer(&buf, &bufsize, &written, fmt);
+            append_fmtstr(&buf, &bufsize, &written, fmt);
         }
 	}
     
