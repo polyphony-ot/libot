@@ -1,0 +1,112 @@
+# OT
+
+## Operations
+
+An operation is defined as a list of components that _must_ span the entire
+document.
+
+An operation also has a `clientId` and a `parentDoc`. `clientId` is a unique
+integer value assigned to the client by the server. `parentDoc` is the hash
+of the parent document that the operation is based on.
+
+**Note:** A parent document is distinct from a parent operation. Remember, a
+document is defined as a list of operations _from the server_. For example, say
+the last heard document is X and then the user applies changes A followed by B.
+B's parent document is still X, **not** A. 
+
+	{
+		"clientId": n,
+		"parentDoc": "0b9cda76238570e1d5790452620b1df31dedf75d",
+		"components": []
+	}
+
+## Components
+
+### Skip
+
+Skips _n_ number of characters from the current position.
+
+Skips mean that the user did not modify the document at the skipped positions.
+
+	{
+		"type": "skip",
+		"count": n
+	}
+
+### Insert
+
+Inserts a string at the current position.
+
+Inserts are guaranteed to be contiguous when merging. For example, say user A
+inserts "abc" at position 0 and user B inserts "def" at position 0. The document
+will converge on either "abcdef" or "defabc", never "adbecf" or "daebfc".
+
+	{
+		"type": "insert",
+		"text": "str"
+	}
+
+### Delete
+
+Deletes _n_ number of characters at the current position.
+
+As with inserts, deletes are guaranteed to be contiguous when merging.
+
+	{
+		"type": "delete",
+		"count": n
+	}
+
+### Open Element
+
+Opens an element at the current position.
+
+Elements are distinct from formatting boundaries in a few ways. The primary
+differences is that elements cannot overlap. For example,
+`<elemA><elemB></elemA></elemB>` is **not** valid.
+
+The second difference is that elements can have a length of 0. A common example
+of this is a line break. The element `<newLine />` or `<newline></newline>` is
+valid and will not span any characters in the document. However, having a
+formatting boundary start and end at the same position is not valid.
+
+	{
+		"type": "openElement",
+		"element": "element"
+	}
+
+### Close Element
+
+Closes the last opened element at the current position.
+
+	{
+		"type": "closeElement"
+	}
+
+### Formatting Boundary
+
+Inserts a formatting boundary at the current position.
+
+Formatting boundaries make it easy to apply styling that can overlap - something
+that is not possible with elements. For example, say the user wants the text
+"**This _is some** text_". `<strong>This <em>is some</strong> text!</em>` would
+not be possible with elements. While possible to reorder the elements as
+`<strong>This <em>is some</em></strong><em> text!</em>`, it is much more
+confusing and difficult. Instead, you could use formatting boundaries to achieve
+the same effect.
+
+	{
+		"type": "formattingBoundary",
+		"startFormatting": [
+			{
+				"name": "formattingName",
+				"value": "formattingValue"
+			}
+		],
+		"endFormatting": [
+			{
+				"name": "formattingName",
+				"value": "formattingValue"
+			}
+		]
+	}
