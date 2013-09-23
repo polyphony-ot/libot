@@ -23,8 +23,6 @@
 		3B4EC60717CAB89B00B254EB /* librope.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B4EC5E817CAAA6B00B254EB /* librope.a */; };
 		3BD0401E17E7A70A000A7567 /* otdecode.c in Sources */ = {isa = PBXBuildFile; fileRef = 3BD0401D17E7A70A000A7567 /* otdecode.c */; };
 		3BDA029D17D92EA90039A78C /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 3BDA029C17D92EA90039A78C /* main.c */; };
-		3BDA02AA17D935120039A78C /* jsmn.c in Sources */ = {isa = PBXBuildFile; fileRef = 3BDA02A417D935120039A78C /* jsmn.c */; };
-		3BDA02AB17D935120039A78C /* jsmn.h in Headers */ = {isa = PBXBuildFile; fileRef = 3BDA02A517D935120039A78C /* jsmn.h */; };
 		3BE91B5A17E11A610040313D /* otencode.h in Headers */ = {isa = PBXBuildFile; fileRef = 3BE91B5917E11A610040313D /* otencode.h */; };
 		3BE91B5C17E11A6D0040313D /* otencode.c in Sources */ = {isa = PBXBuildFile; fileRef = 3BE91B5B17E11A6D0040313D /* otencode.c */; };
 		3BE9FEDD17CFEBBF00F8B9F0 /* array.h in Headers */ = {isa = PBXBuildFile; fileRef = 3BE9FEDC17CFEBBF00F8B9F0 /* array.h */; };
@@ -104,10 +102,6 @@
 		3BD0402017E7A717000A7567 /* otdecode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = otdecode.h; sourceTree = "<group>"; };
 		3BDA029A17D92EA90039A78C /* cli */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = cli; sourceTree = BUILT_PRODUCTS_DIR; };
 		3BDA029C17D92EA90039A78C /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
-		3BDA02A417D935120039A78C /* jsmn.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = jsmn.c; sourceTree = "<group>"; };
-		3BDA02A517D935120039A78C /* jsmn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = jsmn.h; sourceTree = "<group>"; };
-		3BDA02A717D935120039A78C /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
-		3BDA02A917D935120039A78C /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
 		3BE91B5917E11A610040313D /* otencode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = otencode.h; sourceTree = "<group>"; };
 		3BE91B5B17E11A6D0040313D /* otencode.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = otencode.c; sourceTree = "<group>"; };
 		3BE9FEDC17CFEBBF00F8B9F0 /* array.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = array.h; sourceTree = "<group>"; };
@@ -170,7 +164,6 @@
 				3B4EC5C317CAA82400B254EB /* server.h */,
 				3B4EC5C417CAA82400B254EB /* server.c */,
 				3B1444FB17ECCEA500A5784D /* cjson */,
-				3BDA02A317D935120039A78C /* jsmn */,
 				3B4EC5EF17CAB30200B254EB /* test */,
 				3BDA029B17D92EA90039A78C /* cli */,
 				3B4EC5A717CAA72400B254EB /* Products */,
@@ -213,17 +206,6 @@
 			path = cli;
 			sourceTree = "<group>";
 		};
-		3BDA02A317D935120039A78C /* jsmn */ = {
-			isa = PBXGroup;
-			children = (
-				3BDA02A417D935120039A78C /* jsmn.c */,
-				3BDA02A517D935120039A78C /* jsmn.h */,
-				3BDA02A717D935120039A78C /* LICENSE */,
-				3BDA02A917D935120039A78C /* README */,
-			);
-			path = jsmn;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -234,7 +216,6 @@
 				3B204AB617DFD1D400C9AB99 /* hex.h in Headers */,
 				3BE91B5A17E11A610040313D /* otencode.h in Headers */,
 				3B14450017ECCEA500A5784D /* cJSON.h in Headers */,
-				3BDA02AB17D935120039A78C /* jsmn.h in Headers */,
 				3BE9FEDD17CFEBBF00F8B9F0 /* array.h in Headers */,
 				3B4EC5CD17CAA82400B254EB /* ot.h in Headers */,
 				3B4EC5D017CAA82400B254EB /* client.h in Headers */,
@@ -355,7 +336,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				3BE91B5C17E11A6D0040313D /* otencode.c in Sources */,
-				3BDA02AA17D935120039A78C /* jsmn.c in Sources */,
 				3BD0401E17E7A70A000A7567 /* otdecode.c in Sources */,
 				3B1444FF17ECCEA500A5784D /* cJSON.c in Sources */,
 				3B4EC5D217CAA82400B254EB /* server.c in Sources */,
