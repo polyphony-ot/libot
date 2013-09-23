@@ -13,7 +13,7 @@ MU_TEST(test_start_fmt_appends_correct_comp_type) {
     char* expected_name = "any name";
     char* expected_value = "any value";
     
-	int64_t parent[8] = { 0 };
+	char parent[64] = { 0 };
 	ot_op* op = ot_new_op(0, parent);
     ot_start_fmt(op, (uint8_t*) expected_name, (uint8_t*) expected_value);
     
@@ -30,7 +30,7 @@ MU_TEST(test_start_fmt_appends_correct_name_and_value) {
     char* expected_name = "any name";
     char* expected_value = "any value";
     
-	int64_t parent[8] = { 0 };
+	char parent[64] = { 0 };
 	ot_op* op = ot_new_op(0, parent);
     ot_start_fmt(op, (uint8_t*) expected_name, (uint8_t*) expected_value);
     
@@ -54,7 +54,7 @@ MU_TEST(test_start_fmt_does_not_append_another_fmtbound_when_last_component_is_f
     char* any_name = "any name";
     char* any_value = "any value";
     
-	int64_t parent[8] = { 0 };
+	char parent[64] = { 0 };
 	ot_op* op = ot_new_op(0, parent);
     ot_start_fmt(op, (uint8_t*) any_name, (uint8_t*) any_value);
     ot_start_fmt(op, (uint8_t*) any_name, (uint8_t*) any_value);
@@ -70,7 +70,7 @@ MU_TEST(test_end_fmt_appends_correct_name_and_value) {
     char* expected_name = "any name";
     char* expected_value = "any value";
     
-	int64_t parent[8] = { 0 };
+	char parent[64] = { 0 };
 	ot_op* op = ot_new_op(0, parent);
     ot_end_fmt(op, (uint8_t*) expected_name, (uint8_t*) expected_value);
     
@@ -94,7 +94,7 @@ MU_TEST(test_end_fmt_does_not_append_another_fmtbound_when_last_component_is_fmt
     char* any_name = "any name";
     char* any_value = "any value";
     
-	int64_t parent[8] = { 0 };
+	char parent[64] = { 0 };
 	ot_op* op = ot_new_op(0, parent);
     ot_end_fmt(op, (uint8_t*) any_name, (uint8_t*) any_value);
     ot_end_fmt(op, (uint8_t*) any_name, (uint8_t*) any_value);
@@ -172,7 +172,7 @@ MU_TEST_SUITE(otdecode_test_suite) {
 
 MU_TEST(test_serialize_empty_op) {
     const char* const EXPECTED = "{ \"clientId\": 0, \"parent\": \"00\", \"components\": [ ] }";
-	int64_t parent[8] = { 0 };
+	char parent[64] = { 0 };
 	ot_op* op = ot_new_op(0, parent);
     
     char* actual = ot_encode(op);
@@ -186,7 +186,7 @@ MU_TEST(test_serialize_empty_op) {
 
 MU_TEST(test_serialize_single_insert) {
     const char* const EXPECTED = "{ \"clientId\": 0, \"parent\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"any string\" } ] }";
-	int64_t parent[8] = { 0 };
+	char parent[64] = { 0 };
 	ot_op* op = ot_new_op(0, parent);
     ot_insert(op, (uint8_t*) "any string");
     
@@ -201,7 +201,7 @@ MU_TEST(test_serialize_single_insert) {
 
 MU_TEST(test_serialize_two_inserts) {
     const char* const EXPECTED = "{ \"clientId\": 0, \"parent\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"any string\" }, { \"type\": \"insert\", \"text\": \"any other string\" } ] }";
-	int64_t parent[8] = { 0 };
+	char parent[64] = { 0 };
 	ot_op* op = ot_new_op(0, parent);
     ot_insert(op, (uint8_t*) "any string");
     ot_insert(op, (uint8_t*) "any other string");
@@ -217,7 +217,7 @@ MU_TEST(test_serialize_two_inserts) {
 
 MU_TEST(test_serialize_single_skip) {
     const char* const EXPECTED = "{ \"clientId\": 0, \"parent\": \"00\", \"components\": [ { \"type\": \"skip\", \"count\": 1 } ] }";
-	int64_t parent[8] = { 0 };
+	char parent[64] = { 0 };
 	ot_op* op = ot_new_op(0, parent);
     ot_skip(op, 1);
     
@@ -232,7 +232,7 @@ MU_TEST(test_serialize_single_skip) {
 
 MU_TEST(test_serialize_single_delete) {
     const char* const EXPECTED = "{ \"clientId\": 0, \"parent\": \"00\", \"components\": [ { \"type\": \"delete\", \"count\": 1 } ] }";
-	int64_t parent[8] = { 0 };
+	char parent[64] = { 0 };
 	ot_op* op = ot_new_op(0, parent);
     ot_delete(op, 1);
     
@@ -247,7 +247,7 @@ MU_TEST(test_serialize_single_delete) {
 
 MU_TEST(test_serialize_single_open_element) {
     const char* const EXPECTED = "{ \"clientId\": 0, \"parent\": \"00\", \"components\": [ { \"type\": \"openElement\", \"element\": \"any string\" } ] }";
-	int64_t parent[8] = { 0 };
+	char parent[64] = { 0 };
 	ot_op* op = ot_new_op(0, parent);
     ot_open_element(op, (uint8_t*) "any string");
     
@@ -262,7 +262,7 @@ MU_TEST(test_serialize_single_open_element) {
 
 MU_TEST(test_serialize_single_close_element) {
     const char* const EXPECTED = "{ \"clientId\": 0, \"parent\": \"00\", \"components\": [ { \"type\": \"closeElement\" } ] }";
-	int64_t parent[8] = { 0 };
+	char parent[64] = { 0 };
 	ot_op* op = ot_new_op(0, parent);
     ot_close_element(op);
     
