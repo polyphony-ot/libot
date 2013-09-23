@@ -7,22 +7,17 @@
 #include "hex.h"
 #include "cJSON.h"
 
-ot_op* ot_decode(const char* json) {
-    char p[64] = { 0 };
-    ot_op* op = ot_new_op(0, p);
+ot_decode_err ot_decode(ot_op* op, const char* json) {
     cJSON* root = cJSON_Parse(json);
     
     cJSON* client_idf = cJSON_GetObjectItem(root, "clientId");
-    int client_id = 0;
     if (client_idf != NULL) {
-        client_id = client_idf->valueint;
+        op->client_id = client_idf->valueint;
     }
     
     cJSON* parentf = cJSON_GetObjectItem(root, "parent");
-    char* parent_str = NULL;
     if (parentf != NULL) {
-        parent_str = parentf->valuestring;
-        hextoa(op->parent, parent_str, 128);
+        hextoa(op->parent, parentf->valuestring, 128);
     }
     
     cJSON* components = cJSON_GetObjectItem(root, "components");
@@ -39,6 +34,5 @@ ot_op* ot_decode(const char* json) {
         }
     }
     
-    op->client_id = client_id;
-    return op;
+    return OT_ERR_NONE;
 }

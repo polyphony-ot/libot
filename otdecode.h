@@ -3,7 +3,14 @@
 
 #include "ot.h"
 
+typedef enum {
+	OT_ERR_NONE = 0,
+	OT_ERR_PARENT_MISSING = 1,
+	OT_ERR_CLIENT_ID_MISSING = 2,
+	OT_ERR_INVALID_COMPONENT = 3
+} ot_decode_err;
+
 // Decodes an operation from a UTF-8 JSON string.
-ot_op* ot_decode(const char* const json);
+ot_decode_err ot_decode(ot_op* op, const char* const json);
 
 #endif

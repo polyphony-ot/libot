@@ -120,7 +120,10 @@ MU_TEST(decode_skip) {
     const int64_t expected_client_id = 1234;
     char* expected_json = "{ \"clientId\": 1234, \"parent\": \"6162636465666768696a6b6c6d6e6f707172737475767778797a6162636465666768696a6b6c6d6e6f707172737475767778797a6162636465666768696a6b6c\", \"components\": [ { \"type\": \"skip\", \"count\": 1 } ] }";
     
-	ot_op* op = ot_decode(expected_json);
+    char p[64];
+    ot_op* op = ot_new_op(0, p);
+	ot_decode_err err = ot_decode(op, expected_json);
+    mu_check(err == OT_ERR_NONE);
     int64_t actual_client_id = op->client_id;
     
     ot_free_op(op);
@@ -132,7 +135,10 @@ MU_TEST(decode_client_id) {
     const int64_t expected_client_id = 1234;
     char* expected_json = "{ \"clientId\": 1234 }";
     
-	ot_op* op = ot_decode(expected_json);
+	char p[64];
+    ot_op* op = ot_new_op(0, p);
+	ot_decode_err err = ot_decode(op, expected_json);
+    mu_check(err == OT_ERR_NONE);
     int64_t actual_client_id = op->client_id;
     
     ot_free_op(op);
@@ -144,7 +150,10 @@ MU_TEST(decode_parent) {
     uint8_t expected_parent[] = "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijkl";
     char* expected_json = "{ \"parent\": \"6162636465666768696a6b6c6d6e6f707172737475767778797a6162636465666768696a6b6c6d6e6f707172737475767778797a6162636465666768696a6b6c\" }";
     
-	ot_op* op = ot_decode(expected_json);
+	char p[64];
+    ot_op* op = ot_new_op(0, p);
+	ot_decode_err err = ot_decode(op, expected_json);
+    mu_check(err == OT_ERR_NONE);
     char* actual_parent = op->parent;
     int cmp = memcmp(expected_parent, actual_parent, 64);
     
