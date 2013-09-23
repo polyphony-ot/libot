@@ -35,6 +35,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "ot_decode:otdecode.c">
+      </ContextState>
+      <ContextState
          contextName = "test_serialize_empty_op:libot_test.c">
       </ContextState>
       <ContextState
@@ -48,6 +51,9 @@
       </ContextState>
       <ContextState
          contextName = "atohex_encodes_multiple_bytes:libot_test.c">
+      </ContextState>
+      <ContextState
+         contextName = "decode_skip:libot_test.c">
       </ContextState>
       <ContextState
          contextName = "atohex_encodes_single_byte:libot_test.c">

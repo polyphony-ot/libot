@@ -5,6 +5,7 @@
 #include "../ot.h"
 #include "../array.h"
 #include "../hex.h"
+#include "../otdecode.h"
 #include "../otencode.h"
 
 MU_TEST(test_start_fmt_appends_correct_comp_type) {
@@ -105,11 +106,21 @@ MU_TEST(test_end_fmt_does_not_append_another_fmtbound_when_last_component_is_fmt
     mu_assert(expected_comp_count == actual_comp_count, "Appended format did not have the correct name and value.");
 }
 
-MU_TEST(test_parse_client_id) {
+MU_TEST_SUITE(ot_test_suite) {
+    MU_RUN_TEST(test_start_fmt_appends_correct_comp_type);
+    MU_RUN_TEST(test_start_fmt_appends_correct_name_and_value);
+    MU_RUN_TEST(test_start_fmt_does_not_append_another_fmtbound_when_last_component_is_fmtbound);
+    MU_RUN_TEST(test_end_fmt_appends_correct_name_and_value);
+    MU_RUN_TEST(test_end_fmt_does_not_append_another_fmtbound_when_last_component_is_fmtbound);
+}
+
+/* otdecode tests */
+
+MU_TEST(decode_skip) {
     const int64_t expected_client_id = 1234;
-    char* expected_json = "{ \"clientId\": 1234 }";
+    char* expected_json = "{ \"clientId\": 1234, \"parent\": \"6162636465666768696a6b6c6d6e6f707172737475767778797a6162636465666768696a6b6c6d6e6f707172737475767778797a6162636465666768696a6b6c\", \"components\": [ { \"type\": \"skip\", \"count\": 1 } ] }";
     
-	ot_op* op = ot_new_json(expected_json);
+	ot_op* op = ot_decode(expected_json);
     int64_t actual_client_id = op->client_id;
     
     ot_free_op(op);
@@ -117,11 +128,23 @@ MU_TEST(test_parse_client_id) {
     mu_assert(expected_client_id == actual_client_id, "Parsed op did not have the correct clientId.");
 }
 
-MU_TEST(test_parse_parent) {
+MU_TEST(decode_client_id) {
+    const int64_t expected_client_id = 1234;
+    char* expected_json = "{ \"clientId\": 1234 }";
+    
+	ot_op* op = ot_decode(expected_json);
+    int64_t actual_client_id = op->client_id;
+    
+    ot_free_op(op);
+    
+    mu_assert(expected_client_id == actual_client_id, "Parsed op did not have the correct clientId.");
+}
+
+MU_TEST(decode_parent) {
     uint8_t expected_parent[] = "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijkl";
     char* expected_json = "{ \"parent\": \"6162636465666768696a6b6c6d6e6f707172737475767778797a6162636465666768696a6b6c6d6e6f707172737475767778797a6162636465666768696a6b6c\" }";
     
-	ot_op* op = ot_new_json(expected_json);
+	ot_op* op = ot_decode(expected_json);
     char* actual_parent = op->parent;
     int cmp = memcmp(expected_parent, actual_parent, 64);
     
@@ -130,18 +153,13 @@ MU_TEST(test_parse_parent) {
     mu_assert(cmp == 0, "Parsed op did not have the correct parent.");
 }
 
-MU_TEST_SUITE(ot_test_suite) {
-    MU_RUN_TEST(test_start_fmt_appends_correct_comp_type);
-    MU_RUN_TEST(test_start_fmt_appends_correct_name_and_value);
-    MU_RUN_TEST(test_start_fmt_does_not_append_another_fmtbound_when_last_component_is_fmtbound);
-    MU_RUN_TEST(test_end_fmt_appends_correct_name_and_value);
-    MU_RUN_TEST(test_end_fmt_does_not_append_another_fmtbound_when_last_component_is_fmtbound);
-    MU_RUN_TEST(test_parse_client_id);
-    MU_RUN_TEST(test_parse_parent);
+MU_TEST_SUITE(otdecode_test_suite) {
+    MU_RUN_TEST(decode_skip);
+    MU_RUN_TEST(decode_client_id);
+    MU_RUN_TEST(decode_parent);
 }
 
 /* otencode tests */
-
 
 MU_TEST(test_serialize_empty_op) {
     const char* const EXPECTED = "{ \"clientId\": 0, \"parent\": \"00\", \"components\": [ ] }";
@@ -404,6 +422,7 @@ MU_TEST_SUITE(hex_test_suite) {
 
 int main() {
 	MU_RUN_SUITE(ot_test_suite);
+    MU_RUN_SUITE(otdecode_test_suite);
     MU_RUN_SUITE(otencode_test_suite);
     MU_RUN_SUITE(array_test_suite);
     MU_RUN_SUITE(hex_test_suite);

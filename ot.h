@@ -77,8 +77,7 @@ typedef struct ot_op {
 	array comps;
 } ot_op;
 
-ot_op* ot_new_op(int64_t client_id, int64_t* parent);
-ot_op* ot_new_json(char* json);
+ot_op* ot_new_op(int64_t client_id, char parent[64]);
 void ot_free_op(ot_op* op);
 void ot_skip(ot_op* op, int64_t count);
 void ot_insert(ot_op* op, uint8_t* text);

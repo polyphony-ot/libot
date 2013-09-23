@@ -1,3 +1,4 @@
+#include <stddef.h>
 #include "hex.h"
 
 int hextoa(char* const a, const char* const hex, size_t len) {

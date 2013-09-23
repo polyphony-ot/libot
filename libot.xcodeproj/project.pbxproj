@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3B1444FF17ECCEA500A5784D /* cJSON.c in Sources */ = {isa = PBXBuildFile; fileRef = 3B1444FC17ECCEA500A5784D /* cJSON.c */; };
+		3B14450017ECCEA500A5784D /* cJSON.h in Headers */ = {isa = PBXBuildFile; fileRef = 3B1444FD17ECCEA500A5784D /* cJSON.h */; };
+		3B14450117ECCEA500A5784D /* test.c in Sources */ = {isa = PBXBuildFile; fileRef = 3B1444FE17ECCEA500A5784D /* test.c */; };
 		3B204AB617DFD1D400C9AB99 /* hex.h in Headers */ = {isa = PBXBuildFile; fileRef = 3B204AB517DFD1D400C9AB99 /* hex.h */; };
 		3B204AB917DFD1DD00C9AB99 /* hex.c in Sources */ = {isa = PBXBuildFile; fileRef = 3B204AB817DFD1DD00C9AB99 /* hex.c */; };
 		3B4EC5CD17CAA82400B254EB /* ot.h in Headers */ = {isa = PBXBuildFile; fileRef = 3B4EC5BF17CAA82400B254EB /* ot.h */; };
@@ -18,6 +21,7 @@
 		3B4EC60017CAB41C00B254EB /* libot_test.c in Sources */ = {isa = PBXBuildFile; fileRef = 3B4EC5F117CAB30200B254EB /* libot_test.c */; };
 		3B4EC60417CAB86600B254EB /* libot.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B4EC5A617CAA72400B254EB /* libot.a */; };
 		3B4EC60717CAB89B00B254EB /* librope.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B4EC5E817CAAA6B00B254EB /* librope.a */; };
+		3BD0401E17E7A70A000A7567 /* otdecode.c in Sources */ = {isa = PBXBuildFile; fileRef = 3BD0401D17E7A70A000A7567 /* otdecode.c */; };
 		3BDA029D17D92EA90039A78C /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 3BDA029C17D92EA90039A78C /* main.c */; };
 		3BDA02AA17D935120039A78C /* jsmn.c in Sources */ = {isa = PBXBuildFile; fileRef = 3BDA02A417D935120039A78C /* jsmn.c */; };
 		3BDA02AB17D935120039A78C /* jsmn.h in Headers */ = {isa = PBXBuildFile; fileRef = 3BDA02A517D935120039A78C /* jsmn.h */; };
@@ -80,6 +84,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		3B1444FC17ECCEA500A5784D /* cJSON.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = cJSON.c; sourceTree = "<group>"; };
+		3B1444FD17ECCEA500A5784D /* cJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cJSON.h; sourceTree = "<group>"; };
+		3B1444FE17ECCEA500A5784D /* test.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = test.c; sourceTree = "<group>"; };
 		3B204AB517DFD1D400C9AB99 /* hex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hex.h; sourceTree = "<group>"; };
 		3B204AB817DFD1DD00C9AB99 /* hex.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = hex.c; sourceTree = "<group>"; };
 		3B4EC5A617CAA72400B254EB /* libot.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libot.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -93,6 +100,8 @@
 		3B4EC5F017CAB30200B254EB /* minunit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = minunit.h; sourceTree = "<group>"; };
 		3B4EC5F117CAB30200B254EB /* libot_test.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = libot_test.c; sourceTree = "<group>"; };
 		3B4EC5F617CAB3AF00B254EB /* tests */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = tests; sourceTree = BUILT_PRODUCTS_DIR; };
+		3BD0401D17E7A70A000A7567 /* otdecode.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = otdecode.c; sourceTree = "<group>"; };
+		3BD0402017E7A717000A7567 /* otdecode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = otdecode.h; sourceTree = "<group>"; };
 		3BDA029A17D92EA90039A78C /* cli */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = cli; sourceTree = BUILT_PRODUCTS_DIR; };
 		3BDA029C17D92EA90039A78C /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		3BDA02A417D935120039A78C /* jsmn.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = jsmn.c; sourceTree = "<group>"; };
@@ -132,6 +141,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3B1444FB17ECCEA500A5784D /* cjson */ = {
+			isa = PBXGroup;
+			children = (
+				3B1444FC17ECCEA500A5784D /* cJSON.c */,
+				3B1444FD17ECCEA500A5784D /* cJSON.h */,
+				3B1444FE17ECCEA500A5784D /* test.c */,
+			);
+			path = cjson;
+			sourceTree = "<group>";
+		};
 		3B4EC59D17CAA72400B254EB = {
 			isa = PBXGroup;
 			children = (
@@ -142,12 +161,15 @@
 				3B204AB817DFD1DD00C9AB99 /* hex.c */,
 				3B4EC5BF17CAA82400B254EB /* ot.h */,
 				3B4EC5C017CAA82400B254EB /* ot.c */,
+				3BD0401D17E7A70A000A7567 /* otdecode.c */,
+				3BD0402017E7A717000A7567 /* otdecode.h */,
 				3BE91B5B17E11A6D0040313D /* otencode.c */,
 				3BE91B5917E11A610040313D /* otencode.h */,
 				3B4EC5C117CAA82400B254EB /* client.c */,
 				3B4EC5C217CAA82400B254EB /* client.h */,
 				3B4EC5C317CAA82400B254EB /* server.h */,
 				3B4EC5C417CAA82400B254EB /* server.c */,
+				3B1444FB17ECCEA500A5784D /* cjson */,
 				3BDA02A317D935120039A78C /* jsmn */,
 				3B4EC5EF17CAB30200B254EB /* test */,
 				3BDA029B17D92EA90039A78C /* cli */,
@@ -211,6 +233,7 @@
 			files = (
 				3B204AB617DFD1D400C9AB99 /* hex.h in Headers */,
 				3BE91B5A17E11A610040313D /* otencode.h in Headers */,
+				3B14450017ECCEA500A5784D /* cJSON.h in Headers */,
 				3BDA02AB17D935120039A78C /* jsmn.h in Headers */,
 				3BE9FEDD17CFEBBF00F8B9F0 /* array.h in Headers */,
 				3B4EC5CD17CAA82400B254EB /* ot.h in Headers */,
@@ -333,7 +356,10 @@
 			files = (
 				3BE91B5C17E11A6D0040313D /* otencode.c in Sources */,
 				3BDA02AA17D935120039A78C /* jsmn.c in Sources */,
+				3BD0401E17E7A70A000A7567 /* otdecode.c in Sources */,
+				3B1444FF17ECCEA500A5784D /* cJSON.c in Sources */,
 				3B4EC5D217CAA82400B254EB /* server.c in Sources */,
+				3B14450117ECCEA500A5784D /* test.c in Sources */,
 				3B4EC5CF17CAA82400B254EB /* client.c in Sources */,
 				3B204AB917DFD1DD00C9AB99 /* hex.c in Sources */,
 				3B4EC5CE17CAA82400B254EB /* ot.c in Sources */,
