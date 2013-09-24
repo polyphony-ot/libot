@@ -133,7 +133,7 @@ MU_TEST(decode_skip) {
 
 MU_TEST(decode_client_id) {
     const int64_t expected_client_id = 1234;
-    char* expected_json = "{ \"clientId\": 1234 }";
+    char* expected_json = "{ \"clientId\": 1234, \"parent\": \"0\", \"components\": [ ] }";
     
 	char p[64];
     ot_op* op = ot_new_op(0, p);
@@ -148,7 +148,7 @@ MU_TEST(decode_client_id) {
 
 MU_TEST(decode_parent) {
     uint8_t expected_parent[] = "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijkl";
-    char* expected_json = "{ \"parent\": \"6162636465666768696a6b6c6d6e6f707172737475767778797a6162636465666768696a6b6c6d6e6f707172737475767778797a6162636465666768696a6b6c\" }";
+    char* expected_json = "{ \"clientId\": 1234, \"parent\": \"6162636465666768696a6b6c6d6e6f707172737475767778797a6162636465666768696a6b6c6d6e6f707172737475767778797a6162636465666768696a6b6c\", \"components\": [ ] }";
     
 	char p[64];
     ot_op* op = ot_new_op(0, p);
@@ -162,10 +162,40 @@ MU_TEST(decode_parent) {
     mu_assert(cmp == 0, "Parsed op did not have the correct parent.");
 }
 
+MU_TEST(decode_fails_if_client_id_is_missing) {
+    char p[64] = { 0 };
+    ot_op* op = ot_new_op(0, p);
+    const char* json = "{ \"parent\": \"6162636465666768696a6b6c6d6e6f707172737475767778797a6162636465666768696a6b6c6d6e6f707172737475767778797a6162636465666768696a6b6c\", \"components\": [ ] }";
+    ot_decode_err err = ot_decode(op, json);
+    
+    mu_assert(err == OT_ERR_CLIENT_ID_MISSING, "Decode did not return the correct error for clientId missing.");
+}
+
+MU_TEST(decode_fails_if_parent_is_missing) {
+    char p[64] = { 0 };
+    ot_op* op = ot_new_op(0, p);
+    const char* json = "{ \"clientId\": 1234, \"components\": [ ] }";
+    ot_decode_err err = ot_decode(op, json);
+    
+    mu_assert(err == OT_ERR_PARENT_MISSING, "Decode did not return the correct error for parent missing.");
+}
+
+MU_TEST(decode_fails_if_components_is_missing) {
+    char p[64] = { 0 };
+    ot_op* op = ot_new_op(0, p);
+    const char* json = "{ \"clientId\": 1234, \"parent\": \"0\" }";
+    ot_decode_err err = ot_decode(op, json);
+    
+    mu_assert(err == OT_ERR_COMPONENTS_MISSING, "Decode did not return the correct error for components missing.");
+}
+
 MU_TEST_SUITE(otdecode_test_suite) {
     MU_RUN_TEST(decode_skip);
     MU_RUN_TEST(decode_client_id);
     MU_RUN_TEST(decode_parent);
+    MU_RUN_TEST(decode_fails_if_client_id_is_missing);
+    MU_RUN_TEST(decode_fails_if_parent_is_missing);
+    MU_RUN_TEST(decode_fails_if_components_is_missing);
 }
 
 /* otencode tests */
