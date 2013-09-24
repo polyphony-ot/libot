@@ -21,6 +21,7 @@
 		3B4EC60017CAB41C00B254EB /* libot_test.c in Sources */ = {isa = PBXBuildFile; fileRef = 3B4EC5F117CAB30200B254EB /* libot_test.c */; };
 		3B4EC60417CAB86600B254EB /* libot.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B4EC5A617CAA72400B254EB /* libot.a */; };
 		3B4EC60717CAB89B00B254EB /* librope.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B4EC5E817CAAA6B00B254EB /* librope.a */; };
+		3B9A39DD17F12A24008BDDFE /* libot.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B4EC5A617CAA72400B254EB /* libot.a */; };
 		3BD0401E17E7A70A000A7567 /* otdecode.c in Sources */ = {isa = PBXBuildFile; fileRef = 3BD0401D17E7A70A000A7567 /* otdecode.c */; };
 		3BDA029D17D92EA90039A78C /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 3BDA029C17D92EA90039A78C /* main.c */; };
 		3BE91B5A17E11A610040313D /* otencode.h in Headers */ = {isa = PBXBuildFile; fileRef = 3BE91B5917E11A610040313D /* otencode.h */; };
@@ -52,6 +53,13 @@
 			remoteInfo = rope;
 		};
 		3B4EC60517CAB86D00B254EB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3B4EC59E17CAA72400B254EB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3B4EC5A517CAA72400B254EB;
+			remoteInfo = ot;
+		};
+		3B9A39DA17F12A1C008BDDFE /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 3B4EC59E17CAA72400B254EB /* Project object */;
 			proxyType = 1;
@@ -129,6 +137,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3B9A39DD17F12A24008BDDFE /* libot.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -273,6 +282,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				3B9A39DB17F12A1C008BDDFE /* PBXTargetDependency */,
 			);
 			name = cli;
 			productName = cli;
@@ -375,6 +385,11 @@
 			isa = PBXTargetDependency;
 			target = 3B4EC5A517CAA72400B254EB /* ot */;
 			targetProxy = 3B4EC60517CAB86D00B254EB /* PBXContainerItemProxy */;
+		};
+		3B9A39DB17F12A1C008BDDFE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3B4EC5A517CAA72400B254EB /* ot */;
+			targetProxy = 3B9A39DA17F12A1C008BDDFE /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
