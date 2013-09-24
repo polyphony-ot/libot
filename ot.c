@@ -139,9 +139,9 @@ void ot_end_fmt(ot_op* op, uint8_t* name, uint8_t* value) {
     fmt->value = rope_new_with_utf8(value);
 }
 
-uint8_t* ot_snapshot(ot_op* op) {
+char* ot_snapshot(ot_op* op) {
     size_t size = sizeof(uint8_t);
-	uint8_t* snapshot = NULL;
+	char* snapshot = NULL;
 	int64_t written = 0;
     ot_comp* comps = op->comps.data;
     
@@ -151,7 +151,7 @@ uint8_t* ot_snapshot(ot_op* op) {
             rope* r = comps[i].value.insert.text;
             size += rope_byte_count(r);
             snapshot = realloc(snapshot, size);
-			written += rope_write_cstr(r, snapshot + written) - 1;
+			written += rope_write_cstr(r, (uint8_t*) snapshot + written) - 1;
 		}
 	}
     
