@@ -46,6 +46,7 @@ static void encode_fmtbound(const ot_comp_fmtbound* fmtbound) {
     
 }
 
+// TODO: Implement encoding formatting boundaries.
 char* ot_encode(const ot_op* const op) {
     ot_comp* comps = op->comps.data;
     

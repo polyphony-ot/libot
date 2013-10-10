@@ -7,6 +7,7 @@
 #include "hex.h"
 #include "cJSON.h"
 
+// TODO: Finish implementing decoding of formatting boundaries.
 ot_decode_err ot_decode(ot_op* op, const char* json) {
     cJSON* root = cJSON_Parse(json);
     
