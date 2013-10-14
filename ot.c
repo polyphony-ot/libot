@@ -35,6 +35,25 @@ static void ot_free_comp(ot_comp* comp) {
     }
 }
 
+static void ot_copy_comp(ot_comp* dest, ot_comp* src) {
+    switch (src->type) {
+        case OT_SKIP:
+            dest->type = OT_SKIP;
+            dest->value.skip.count = src->value.skip.count;
+            break;
+        case OT_INSERT:
+            dest->type = OT_INSERT;
+            dest->value.insert.text = rope_copy(src->value.insert.text);
+            break;
+        case OT_DELETE:
+            dest->type = OT_DELETE;
+            dest->value.delete.count = src->value.delete.count;
+            break;
+        default:
+            break;
+    }
+}
+
 ot_op* ot_new_op(int64_t client_id, char parent[64]) {
 	ot_op* op = (ot_op*) malloc(sizeof(ot_op));
 	op->client_id = client_id;
@@ -137,6 +156,51 @@ void ot_end_fmt(ot_op* op, uint8_t* name, uint8_t* value) {
     ot_fmt* fmt = array_append(&fmtbound->end);
     fmt->name = rope_new_with_utf8(name);
     fmt->value = rope_new_with_utf8(value);
+}
+
+ot_op* ot_compose(ot_op* op1, ot_op* op2) {
+    char parent[64];
+    memcpy(parent, op1->parent, 64);
+    ot_op* composed = ot_new_op(op1->client_id, parent);
+    
+    size_t op1_cur = 0;
+    ot_comp* op1_comps = op1->comps.data;
+    size_t op2_cur = 0;
+    ot_comp* op2_comps = op2->comps.data;
+    while (op1_cur < op1->comps.len || op2_cur < op2->comps.len) {
+        ot_comp* op1_comp;
+        if (op1_cur < op1->comps.len) {
+            op1_comp = op1_comps + op1_cur;
+        } else {
+            op1_comp = NULL;
+        }
+        
+        ot_comp* op2_comp;
+        if (op2_cur < op2->comps.len) {
+            op2_comp = op2_comps + op2_cur;
+        } else {
+            op2_comp = NULL;
+        }
+        
+        if (op2_comp->type == OT_SKIP) {
+            if (op1_comp == NULL) {
+                // ERROR
+            }
+            ot_comp* res = array_append(&composed->comps);
+            ot_copy_comp(res, op1_comp);
+            op1_cur++;
+            op2_cur++;
+        } else if (op2_comp->type == OT_INSERT) {
+            ot_comp* res = array_append(&composed->comps);
+            ot_copy_comp(res, op2_comp);
+            op2_cur++;
+        } else if (op2_comp->type == OT_DELETE) {
+            op1_cur++;
+            op2_cur++;
+        }
+    }
+    
+    return composed;
 }
 
 char* ot_snapshot(ot_op* op) {

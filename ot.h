@@ -5,22 +5,6 @@
 #include "librope/rope.h"
 #include "array.h"
 
-/*
-
-<op> ::= <int> <parent> <comp> <op>
-<comp> ::= <num> | <type>
-<num> ::= <int> <type>
-<type> ::= <ins> | "d" | "r"
-<ins> ::= "i" <str>
-
-int 0
-char[64] 0xa840c0d1e
-int64 length
-char i
-length Hello, world!
-
-*/
-
 typedef struct ot_fmt {
 	rope* name;
 	rope* value;
@@ -86,8 +70,18 @@ void ot_open_element(ot_op* op, uint8_t* elem);
 void ot_close_element(ot_op* op);
 void ot_start_fmt(ot_op* op, uint8_t* name, uint8_t* value);
 void ot_end_fmt(ot_op* op, uint8_t* name, uint8_t* value);
+ot_op* ot_compose(ot_op* op1, ot_op* op2);
 char* ot_snapshot(ot_op* op);
 
 ot_comp_fmtbound* ot_new_fmtbound();
+
+typedef struct ot_iter {
+    ot_op* op;      // Op to iterator over.
+    size_t pos;     // Current component position.
+    size_t offset;  // Offset within current component.
+} ot_iter;
+
+void ot_iter_init(ot_iter* iter);
+void ot_iter_next(ot_iter* iter);
 
 #endif
