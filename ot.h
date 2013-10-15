@@ -2,12 +2,11 @@
 #define OT_H
 
 #include <stdint.h>
-#include "librope/rope.h"
 #include "array.h"
 
 typedef struct ot_fmt {
-	rope* name;
-	rope* value;
+	char* name;
+	char* value;
 } ot_fmt;
 
 typedef enum {
@@ -25,7 +24,7 @@ typedef struct ot_comp_skip {
 
 typedef struct ot_comp_insert
 {
-	rope* text;
+	char* text;
 } ot_comp_insert;
 
 typedef struct ot_comp_delete
@@ -35,7 +34,7 @@ typedef struct ot_comp_delete
 
 typedef struct ot_comp_open_element
 {
-	rope* elem;
+	char* elem;
 } ot_comp_open_element;
 
 typedef struct ot_comp_fmtbound
@@ -64,12 +63,12 @@ typedef struct ot_op {
 ot_op* ot_new_op(int64_t client_id, char parent[64]);
 void ot_free_op(ot_op* op);
 void ot_skip(ot_op* op, int64_t count);
-void ot_insert(ot_op* op, uint8_t* text);
+void ot_insert(ot_op* op, const char* text);
 void ot_delete(ot_op* op, int64_t count);
-void ot_open_element(ot_op* op, uint8_t* elem);
+void ot_open_element(ot_op* op, const char* elem);
 void ot_close_element(ot_op* op);
-void ot_start_fmt(ot_op* op, uint8_t* name, uint8_t* value);
-void ot_end_fmt(ot_op* op, uint8_t* name, uint8_t* value);
+void ot_start_fmt(ot_op* op, const char* name, const char* value);
+void ot_end_fmt(ot_op* op, const char* name, const char* value);
 ot_op* ot_compose(ot_op* op1, ot_op* op2);
 char* ot_snapshot(ot_op* op);
 

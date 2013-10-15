@@ -42,7 +42,7 @@ ot_decode_err ot_decode(ot_op* op, const char* json) {
         } else if (memcmp(type, "insert", 6) == 0) {
             ot_comp* insert = array_append(&op->comps);
             insert->type = OT_INSERT;
-            insert->value.insert.text = rope_new_with_utf8((uint8_t*) cJSON_GetObjectItem(item, "text")->valuestring);
+            insert->value.insert.text = cJSON_GetObjectItem(item, "text")->valuestring;
         } else if (memcmp(type, "delete", 6) == 0) {
             ot_comp* delete = array_append(&op->comps);
             delete->type = OT_DELETE;
@@ -50,7 +50,7 @@ ot_decode_err ot_decode(ot_op* op, const char* json) {
         } else if (memcmp(type, "openElement", 11) == 0) {
             ot_comp* open_elem = array_append(&op->comps);
             open_elem->type = OT_OPEN_ELEMENT;
-            open_elem->value.open_element.elem = rope_new_with_utf8((uint8_t*) cJSON_GetObjectItem(item, "element")->valuestring);
+            open_elem->value.open_element.elem = cJSON_GetObjectItem(item, "element")->valuestring;
         } else if (memcmp(type, "closeElement", 12) == 0) {
             ot_comp* open_elem = array_append(&op->comps);
             open_elem->type = OT_CLOSE_ELEMENT;

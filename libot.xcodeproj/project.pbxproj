@@ -20,7 +20,6 @@
 		3B4EC5D217CAA82400B254EB /* server.c in Sources */ = {isa = PBXBuildFile; fileRef = 3B4EC5C417CAA82400B254EB /* server.c */; };
 		3B4EC60017CAB41C00B254EB /* libot_test.c in Sources */ = {isa = PBXBuildFile; fileRef = 3B4EC5F117CAB30200B254EB /* libot_test.c */; };
 		3B4EC60417CAB86600B254EB /* libot.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B4EC5A617CAA72400B254EB /* libot.a */; };
-		3B4EC60717CAB89B00B254EB /* librope.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B4EC5E817CAAA6B00B254EB /* librope.a */; };
 		3B9A39DD17F12A24008BDDFE /* libot.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B4EC5A617CAA72400B254EB /* libot.a */; };
 		3BD0401E17E7A70A000A7567 /* otdecode.c in Sources */ = {isa = PBXBuildFile; fileRef = 3BD0401D17E7A70A000A7567 /* otdecode.c */; };
 		3BDA029D17D92EA90039A78C /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 3BDA029C17D92EA90039A78C /* main.c */; };
@@ -31,27 +30,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		3B4EC5E717CAAA6B00B254EB /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 3B4EC5E217CAAA6B00B254EB /* librope.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = FD5D7C2515E1DBAD00F847DF;
-			remoteInfo = rope;
-		};
-		3B4EC5E917CAAA6B00B254EB /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 3B4EC5E217CAAA6B00B254EB /* librope.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = FD5D7C3C15E1DCA100F847DF;
-			remoteInfo = tests;
-		};
-		3B4EC5EB17CAAAED00B254EB /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 3B4EC5E217CAAA6B00B254EB /* librope.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = FD5D7C2415E1DBAD00F847DF;
-			remoteInfo = rope;
-		};
 		3B4EC60517CAB86D00B254EB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 3B4EC59E17CAA72400B254EB /* Project object */;
@@ -102,7 +80,6 @@
 		3B4EC5C217CAA82400B254EB /* client.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = client.h; sourceTree = "<group>"; };
 		3B4EC5C317CAA82400B254EB /* server.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = server.h; sourceTree = "<group>"; };
 		3B4EC5C417CAA82400B254EB /* server.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = server.c; sourceTree = "<group>"; };
-		3B4EC5E217CAAA6B00B254EB /* librope.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = librope.xcodeproj; path = librope/librope.xcodeproj; sourceTree = "<group>"; };
 		3B4EC5F017CAB30200B254EB /* minunit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = minunit.h; sourceTree = "<group>"; };
 		3B4EC5F117CAB30200B254EB /* libot_test.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = libot_test.c; sourceTree = "<group>"; };
 		3B4EC5F617CAB3AF00B254EB /* tests */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = tests; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -121,7 +98,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3B4EC60717CAB89B00B254EB /* librope.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -157,7 +133,6 @@
 		3B4EC59D17CAA72400B254EB = {
 			isa = PBXGroup;
 			children = (
-				3B4EC5E217CAAA6B00B254EB /* librope.xcodeproj */,
 				3BE9FEDF17CFEBCE00F8B9F0 /* array.c */,
 				3BE9FEDC17CFEBBF00F8B9F0 /* array.h */,
 				3B204AB517DFD1D400C9AB99 /* hex.h */,
@@ -185,15 +160,6 @@
 				3B4EC5A617CAA72400B254EB /* libot.a */,
 				3B4EC5F617CAB3AF00B254EB /* tests */,
 				3BDA029A17D92EA90039A78C /* cli */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		3B4EC5E317CAAA6B00B254EB /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				3B4EC5E817CAAA6B00B254EB /* librope.a */,
-				3B4EC5EA17CAAA6B00B254EB /* tests */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -246,7 +212,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				3B4EC5EC17CAAAED00B254EB /* PBXTargetDependency */,
 			);
 			name = ot;
 			productName = libot;
@@ -308,12 +273,6 @@
 			mainGroup = 3B4EC59D17CAA72400B254EB;
 			productRefGroup = 3B4EC5A717CAA72400B254EB /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = 3B4EC5E317CAAA6B00B254EB /* Products */;
-					ProjectRef = 3B4EC5E217CAAA6B00B254EB /* librope.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				3B4EC5A517CAA72400B254EB /* ot */,
@@ -322,23 +281,6 @@
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		3B4EC5E817CAAA6B00B254EB /* librope.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = librope.a;
-			remoteRef = 3B4EC5E717CAAA6B00B254EB /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		3B4EC5EA17CAAA6B00B254EB /* tests */ = {
-			isa = PBXReferenceProxy;
-			fileType = "compiled.mach-o.executable";
-			path = tests;
-			remoteRef = 3B4EC5E917CAAA6B00B254EB /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXSourcesBuildPhase section */
 		3B4EC5A217CAA72400B254EB /* Sources */ = {
@@ -376,11 +318,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		3B4EC5EC17CAAAED00B254EB /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = rope;
-			targetProxy = 3B4EC5EB17CAAAED00B254EB /* PBXContainerItemProxy */;
-		};
 		3B4EC60617CAB86D00B254EB /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 3B4EC5A517CAA72400B254EB /* ot */;

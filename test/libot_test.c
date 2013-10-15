@@ -15,7 +15,7 @@ MU_TEST(test_start_fmt_appends_correct_comp_type) {
     
 	char parent[64] = { 0 };
 	ot_op* op = ot_new_op(0, parent);
-    ot_start_fmt(op, (uint8_t*) expected_name, (uint8_t*) expected_value);
+    ot_start_fmt(op, expected_name, expected_value);
     
     ot_comp* comps = op->comps.data;
     ot_comp_type actual_type = comps[0].type;
@@ -32,18 +32,16 @@ MU_TEST(test_start_fmt_appends_correct_name_and_value) {
     
 	char parent[64] = { 0 };
 	ot_op* op = ot_new_op(0, parent);
-    ot_start_fmt(op, (uint8_t*) expected_name, (uint8_t*) expected_value);
+    ot_start_fmt(op, expected_name, expected_value);
     
     ot_comp* comps = op->comps.data;
     ot_fmt* data = comps[0].value.fmtbound.start.data;
-    char* actual_name = (char*) rope_create_cstr(data[0].name);
-    char* actual_value = (char*) rope_create_cstr(data[0].value);
+    char* actual_name = data[0].name;
+    char* actual_value = data[0].value;
     
     int cmp_name = strcmp(expected_name, actual_name);
     int cmp_value = strcmp(expected_value, actual_value);
     
-    free(actual_name);
-    free(actual_value);
     ot_free_op(op);
     
     mu_assert(cmp_name == 0 && cmp_value == 0, "Appended format did not have the correct name and value.");
@@ -56,8 +54,8 @@ MU_TEST(test_start_fmt_does_not_append_another_fmtbound_when_last_component_is_f
     
 	char parent[64] = { 0 };
 	ot_op* op = ot_new_op(0, parent);
-    ot_start_fmt(op, (uint8_t*) any_name, (uint8_t*) any_value);
-    ot_start_fmt(op, (uint8_t*) any_name, (uint8_t*) any_value);
+    ot_start_fmt(op, any_name, any_value);
+    ot_start_fmt(op, any_name, any_value);
     
     size_t actual_comp_count = op->comps.len;
     
@@ -72,18 +70,16 @@ MU_TEST(test_end_fmt_appends_correct_name_and_value) {
     
 	char parent[64] = { 0 };
 	ot_op* op = ot_new_op(0, parent);
-    ot_end_fmt(op, (uint8_t*) expected_name, (uint8_t*) expected_value);
+    ot_end_fmt(op, expected_name, expected_value);
     
     ot_comp* comps = op->comps.data;
     ot_fmt* data = comps[0].value.fmtbound.end.data;
-    char* actual_name = (char*) rope_create_cstr(data[0].name);
-    char* actual_value = (char*) rope_create_cstr(data[0].value);
+    char* actual_name = data[0].name;
+    char* actual_value = data[0].value;
     
     int cmp_name = strcmp(expected_name, actual_name);
     int cmp_value = strcmp(expected_value, actual_value);
     
-    free(actual_name);
-    free(actual_value);
     ot_free_op(op);
     
     mu_assert(cmp_name == 0 && cmp_value == 0, "Appended format did not have the correct name and value.");
@@ -96,8 +92,8 @@ MU_TEST(test_end_fmt_does_not_append_another_fmtbound_when_last_component_is_fmt
     
 	char parent[64] = { 0 };
 	ot_op* op = ot_new_op(0, parent);
-    ot_end_fmt(op, (uint8_t*) any_name, (uint8_t*) any_value);
-    ot_end_fmt(op, (uint8_t*) any_name, (uint8_t*) any_value);
+    ot_end_fmt(op, any_name, any_value);
+    ot_end_fmt(op, any_name, any_value);
     
     size_t actual_comp_count = op->comps.len;
     
@@ -218,7 +214,7 @@ MU_TEST(test_serialize_single_insert) {
     const char* const EXPECTED = "{ \"clientId\": 0, \"parent\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"any string\" } ] }";
 	char parent[64] = { 0 };
 	ot_op* op = ot_new_op(0, parent);
-    ot_insert(op, (uint8_t*) "any string");
+    ot_insert(op, "any string");
     
     char* actual = ot_encode(op);
     int cmp = strcmp(EXPECTED, (char*) actual);
@@ -233,8 +229,8 @@ MU_TEST(test_serialize_two_inserts) {
     const char* const EXPECTED = "{ \"clientId\": 0, \"parent\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"any string\" }, { \"type\": \"insert\", \"text\": \"any other string\" } ] }";
 	char parent[64] = { 0 };
 	ot_op* op = ot_new_op(0, parent);
-    ot_insert(op, (uint8_t*) "any string");
-    ot_insert(op, (uint8_t*) "any other string");
+    ot_insert(op, "any string");
+    ot_insert(op, "any other string");
     
     char* actual = ot_encode(op);
     int cmp = strcmp(EXPECTED, (char*) actual);
@@ -279,7 +275,7 @@ MU_TEST(test_serialize_single_open_element) {
     const char* const EXPECTED = "{ \"clientId\": 0, \"parent\": \"00\", \"components\": [ { \"type\": \"openElement\", \"element\": \"any string\" } ] }";
 	char parent[64] = { 0 };
 	ot_op* op = ot_new_op(0, parent);
-    ot_open_element(op, (uint8_t*) "any string");
+    ot_open_element(op, "any string");
     
     char* actual = ot_encode(op);
     int cmp = strcmp(EXPECTED, (char*) actual);

@@ -69,21 +69,17 @@ char* ot_encode(const ot_op* const op) {
             char* fmt = "{ \"type\": \"skip\", \"count\": %d }, ";
             append_fmtstr(&buf, &bufsize, &written, fmt, count);
         } else if (t == OT_INSERT) {
-            rope* r = comps[i].value.insert.text;
-            uint8_t* textstr = rope_create_cstr(r);
+            char* text = comps[i].value.insert.text;
             char* fmt = "{ \"type\": \"insert\", \"text\": \"%s\" }, ";
-            append_fmtstr(&buf, &bufsize, &written, fmt, textstr);
-            free(textstr);
+            append_fmtstr(&buf, &bufsize, &written, fmt, text);
 		} else if (t == OT_DELETE) {
             int64_t count = comps[i].value.delete.count;
             char* fmt = "{ \"type\": \"delete\", \"count\": %d }, ";
             append_fmtstr(&buf, &bufsize, &written, fmt, count);
         } else if (t == OT_OPEN_ELEMENT) {
-            rope* r = comps[i].value.open_element.elem;
-            uint8_t* textstr = rope_create_cstr(r);
+            char* elem = comps[i].value.open_element.elem;
             char* fmt = "{ \"type\": \"openElement\", \"element\": \"%s\" }, ";
-            append_fmtstr(&buf, &bufsize, &written, fmt, textstr);
-            free(textstr);
+            append_fmtstr(&buf, &bufsize, &written, fmt, elem);
         } else if (t == OT_CLOSE_ELEMENT) {
             char* fmt = "{ \"type\": \"closeElement\" }, ";
             append_fmtstr(&buf, &bufsize, &written, fmt);

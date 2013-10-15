@@ -7,15 +7,15 @@
 static void ot_free_fmtbound(ot_comp_fmtbound* fmtbound) {
     ot_fmt* start_data = fmtbound->start.data;
     for (int i = 0; i < fmtbound->start.len; ++i) {
-        rope_free(start_data[i].name);
-        rope_free(start_data[i].value);
+        free(start_data[i].name);
+        free(start_data[i].value);
     }
     array_free(&fmtbound->start);
     
     ot_fmt* end_data = fmtbound->end.data;
     for (int i = 0; i < fmtbound->end.len; ++i) {
-        rope_free(end_data[i].name);
-        rope_free(end_data[i].value);
+        free(end_data[i].name);
+        free(end_data[i].value);
     }
     array_free(&fmtbound->end);
 }
@@ -23,10 +23,10 @@ static void ot_free_fmtbound(ot_comp_fmtbound* fmtbound) {
 static void ot_free_comp(ot_comp* comp) {
     switch (comp->type) {
         case OT_INSERT:
-            rope_free(comp->value.insert.text);
+            free(comp->value.insert.text);
             break;
         case OT_OPEN_ELEMENT:
-            rope_free(comp->value.open_element.elem);
+            free(comp->value.open_element.elem);
             break;
         case OT_FORMATTING_BOUNDARY:
             ot_free_fmtbound(&comp->value.fmtbound);
@@ -43,7 +43,7 @@ static void ot_copy_comp(ot_comp* dest, ot_comp* src) {
             break;
         case OT_INSERT:
             dest->type = OT_INSERT;
-            dest->value.insert.text = rope_copy(src->value.insert.text);
+            strcpy(dest->value.insert.text, src->value.insert.text);
             break;
         case OT_DELETE:
             dest->type = OT_DELETE;
@@ -79,10 +79,12 @@ void ot_skip(ot_op* op, int64_t count) {
     comp->value.skip.count = count;
 }
 
-void ot_insert(ot_op* op, uint8_t* text) {
+void ot_insert(ot_op* op, const char* text) {
 	ot_comp* comp = array_append(&op->comps);
 	comp->type = OT_INSERT;
-	comp->value.insert.text = rope_new_with_utf8(text);
+    size_t size = sizeof(char) * (strlen(text) + 1);
+    comp->value.insert.text = malloc(size);
+    memcpy(comp->value.insert.text, text, size);
 }
 
 void ot_delete(ot_op* op, int64_t count) {
@@ -91,10 +93,12 @@ void ot_delete(ot_op* op, int64_t count) {
     comp->value.delete.count = count;
 }
 
-void ot_open_element(ot_op* op, uint8_t* elem) {
+void ot_open_element(ot_op* op, const char* elem) {
     ot_comp* comp = array_append(&op->comps);
     comp->type = OT_OPEN_ELEMENT;
-    comp->value.open_element.elem = rope_new_with_utf8(elem);
+    size_t size = sizeof(char) * (strlen(elem) + 1);
+    comp->value.open_element.elem = malloc(size);
+    memcpy(comp->value.open_element.elem, elem, size);
 }
 
 void ot_close_element(ot_op* op) {
@@ -102,7 +106,7 @@ void ot_close_element(ot_op* op) {
     comp->type = OT_CLOSE_ELEMENT;
 }
 
-void ot_start_fmt(ot_op* op, uint8_t* name, uint8_t* value) {
+void ot_start_fmt(ot_op* op, const char* name, const char* value) {
     ot_comp* cur_comp;
     ot_comp* comps = op->comps.data;
     ot_comp_fmtbound* fmtbound;
@@ -126,11 +130,17 @@ void ot_start_fmt(ot_op* op, uint8_t* name, uint8_t* value) {
     }
     
     ot_fmt* fmt = array_append(&fmtbound->start);
-    fmt->name = rope_new_with_utf8(name);
-    fmt->value = rope_new_with_utf8(value);
+    
+    size_t name_size = sizeof(char) * (strlen(name) + 1);
+    fmt->name = malloc(name_size);
+    memcpy(fmt->name, name, name_size);
+
+    size_t value_size = sizeof(char) * (strlen(value) + 1);
+    fmt->value = malloc(value_size);
+    memcpy(fmt->value, value, value_size);
 }
 
-void ot_end_fmt(ot_op* op, uint8_t* name, uint8_t* value) {
+void ot_end_fmt(ot_op* op, const char* name, const char* value) {
     ot_comp* cur_comp;
     ot_comp* comps = op->comps.data;
     ot_comp_fmtbound* fmtbound;
@@ -154,8 +164,14 @@ void ot_end_fmt(ot_op* op, uint8_t* name, uint8_t* value) {
     }
     
     ot_fmt* fmt = array_append(&fmtbound->end);
-    fmt->name = rope_new_with_utf8(name);
-    fmt->value = rope_new_with_utf8(value);
+    
+    size_t name_size = sizeof(char) * (strlen(name) + 1);
+    fmt->name = malloc(name_size);
+    memcpy(fmt->name, name, name_size);
+    
+    size_t value_size = sizeof(char) * (strlen(value) + 1);
+    fmt->value = malloc(value_size);
+    memcpy(fmt->value, value, value_size);
 }
 
 ot_op* ot_compose(ot_op* op1, ot_op* op2) {
@@ -204,7 +220,7 @@ ot_op* ot_compose(ot_op* op1, ot_op* op2) {
 }
 
 char* ot_snapshot(ot_op* op) {
-    size_t size = sizeof(uint8_t);
+    size_t size = sizeof(char);
 	char* snapshot = NULL;
 	int64_t written = 0;
     ot_comp* comps = op->comps.data;
@@ -212,10 +228,12 @@ char* ot_snapshot(ot_op* op) {
 	for (int i = 0; i < op->comps.len; ++i)
 	{
 		if (comps[i].type == OT_INSERT) {
-            rope* r = comps[i].value.insert.text;
-            size += rope_byte_count(r);
+            char* t = comps[i].value.insert.text;
+            size += sizeof(char) * strlen(t);
             snapshot = realloc(snapshot, size);
-			written += rope_write_cstr(r, (uint8_t*) snapshot + written) - 1;
+            memcpy(snapshot, t, size);
+            written += strlen(t);
+            
 		}
 	}
     
