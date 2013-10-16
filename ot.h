@@ -2,6 +2,7 @@
 #define OT_H
 
 #include <stdint.h>
+#include <stdbool.h>
 #include "array.h"
 
 typedef struct ot_fmt {
@@ -80,7 +81,7 @@ typedef struct ot_iter {
     size_t offset;  // Offset within current component.
 } ot_iter;
 
-void ot_iter_init(ot_iter* iter);
-void ot_iter_next(ot_iter* iter);
+void ot_iter_init(ot_iter* iter, ot_op* op);
+bool ot_iter_next(ot_iter* iter);
 
 #endif

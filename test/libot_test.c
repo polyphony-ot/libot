@@ -102,12 +102,65 @@ MU_TEST(test_end_fmt_does_not_append_another_fmtbound_when_last_component_is_fmt
     mu_assert(expected_comp_count == actual_comp_count, "Appended format did not have the correct name and value.");
 }
 
+MU_TEST(iter_next_on_empty_op) {
+    char parent[64] = { 0 };
+	ot_op* op = ot_new_op(0, parent);
+    ot_iter iter;
+    int64_t expected_count = 0;
+    int64_t actual_count = 0;
+    
+    ot_iter_init(&iter, op);
+    while (ot_iter_next(&iter)) {
+        actual_count++;
+        mu_assert(actual_count <= expected_count, "Actual number of iterations was greater than the expected number of iterations.");
+    }
+    
+    mu_assert(expected_count == actual_count, "Expected number of iterations did not equal actual number of iterations");
+}
+
+MU_TEST(iter_next_on_skip_with_count_one) {
+    char parent[64] = { 0 };
+	ot_op* op = ot_new_op(0, parent);
+    ot_skip(op, 1);
+    ot_iter iter;
+    int64_t expected_count = 1;
+    int64_t actual_count = 0;
+    
+    ot_iter_init(&iter, op);
+    while (ot_iter_next(&iter)) {
+        actual_count++;
+        mu_assert(actual_count <= expected_count, "Actual number of iterations was greater than the expected number of iterations.");
+    }
+    
+    mu_assert(expected_count == actual_count, "Expected number of iterations did not equal actual number of iterations");
+}
+
+MU_TEST(iter_next_on_skip_with_count_greater_than_one) {
+    char parent[64] = { 0 };
+	ot_op* op = ot_new_op(0, parent);
+    ot_skip(op, 2);
+    ot_iter iter;
+    int64_t expected_count = 2;
+    int64_t actual_count = 0;
+    
+    ot_iter_init(&iter, op);
+    while (ot_iter_next(&iter)) {
+        actual_count++;
+        mu_assert(actual_count <= expected_count, "Actual number of iterations was greater than the expected number of iterations.");
+    }
+    
+    mu_assert(expected_count == actual_count, "Expected number of iterations did not equal actual number of iterations");
+}
+
 MU_TEST_SUITE(ot_test_suite) {
     MU_RUN_TEST(test_start_fmt_appends_correct_comp_type);
     MU_RUN_TEST(test_start_fmt_appends_correct_name_and_value);
     MU_RUN_TEST(test_start_fmt_does_not_append_another_fmtbound_when_last_component_is_fmtbound);
     MU_RUN_TEST(test_end_fmt_appends_correct_name_and_value);
     MU_RUN_TEST(test_end_fmt_does_not_append_another_fmtbound_when_last_component_is_fmtbound);
+    MU_RUN_TEST(iter_next_on_empty_op);
+    MU_RUN_TEST(iter_next_on_skip_with_count_one);
+    MU_RUN_TEST(iter_next_on_skip_with_count_greater_than_one);
 }
 
 /* otdecode tests */

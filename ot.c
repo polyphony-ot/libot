@@ -239,3 +239,42 @@ char* ot_snapshot(ot_op* op) {
     
 	return snapshot;
 }
+
+void ot_iter_init(ot_iter* iter, ot_op* op) {
+    iter->op = op;
+    iter->pos = -1;
+    iter->offset = -1;
+}
+
+static bool ot_iter_adv(ot_iter* iter, size_t max) {
+    if (iter->offset < max) {
+        iter->offset++;
+        return true;
+    }
+    if (iter->pos < iter->op->comps.len - 1) {
+        iter->pos++;
+        iter->offset = 0;
+        return true;
+    }
+    return false;
+}
+
+bool ot_iter_next(ot_iter* iter) {
+    if (iter->op->comps.len == 0) {
+        return false;
+    }
+    
+    if (iter->pos == -1 && iter->offset == -1) {
+        iter->pos = 0;
+        iter->offset = 0;
+        return true;
+    }
+    
+    ot_comp* comp = ((ot_comp*) iter->op->comps.data) + iter->pos;
+    if (comp->type == OT_SKIP) {
+        ot_comp_skip skip = comp->value.skip;
+        return ot_iter_adv(iter, skip.count - 1);
+    }
+    
+    return false;
+}
