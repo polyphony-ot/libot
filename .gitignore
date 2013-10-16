@@ -1,2 +1,5 @@
 xcuserdata/
 bin
+*.o
+*.gcda
+*.gcno
