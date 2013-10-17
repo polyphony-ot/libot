@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 #include "minunit.h"
 #include "../ot.h"
 #include "../array.h"
@@ -106,50 +107,100 @@ MU_TEST(iter_next_on_empty_op) {
     char parent[64] = { 0 };
 	ot_op* op = ot_new_op(0, parent);
     ot_iter iter;
-    int64_t expected_count = 0;
-    int64_t actual_count = 0;
     
     ot_iter_init(&iter, op);
-    while (ot_iter_next(&iter)) {
-        actual_count++;
-        mu_assert(actual_count <= expected_count, "Actual number of iterations was greater than the expected number of iterations.");
-    }
+    bool actual = ot_iter_next(&iter);
     
-    mu_assert(expected_count == actual_count, "Expected number of iterations did not equal actual number of iterations");
+    mu_assert(actual == false, "Expected number of iterations did not equal actual number of iterations");
 }
 
-MU_TEST(iter_next_on_skip_with_count_one) {
+MU_TEST(iter_next_iterates_once_over_skip_with_count_one) {
     char parent[64] = { 0 };
 	ot_op* op = ot_new_op(0, parent);
     ot_skip(op, 1);
     ot_iter iter;
-    int64_t expected_count = 1;
-    int64_t actual_count = 0;
     
     ot_iter_init(&iter, op);
-    while (ot_iter_next(&iter)) {
-        actual_count++;
-        mu_assert(actual_count <= expected_count, "Actual number of iterations was greater than the expected number of iterations.");
-    }
+    bool first = ot_iter_next(&iter);
+    bool second = ot_iter_next(&iter);
     
-    mu_assert(expected_count == actual_count, "Expected number of iterations did not equal actual number of iterations");
+    mu_assert(first && !second, "Expected number of iterations did not equal actual number of iterations");
 }
 
-MU_TEST(iter_next_on_skip_with_count_greater_than_one) {
+MU_TEST(iter_next_iterates_correct_number_of_times_over_skip_with_count_greater_than_one) {
     char parent[64] = { 0 };
 	ot_op* op = ot_new_op(0, parent);
     ot_skip(op, 2);
     ot_iter iter;
-    int64_t expected_count = 2;
-    int64_t actual_count = 0;
     
     ot_iter_init(&iter, op);
-    while (ot_iter_next(&iter)) {
-        actual_count++;
-        mu_assert(actual_count <= expected_count, "Actual number of iterations was greater than the expected number of iterations.");
-    }
+    bool first = ot_iter_next(&iter);
+    bool second = ot_iter_next(&iter);
+    bool third = ot_iter_next(&iter);
     
-    mu_assert(expected_count == actual_count, "Expected number of iterations did not equal actual number of iterations");
+    mu_assert(first && second && !third, "Expected number of iterations did not equal actual number of iterations");
+}
+
+MU_TEST(iter_next_iterates_correctly_over_multiple_skip_components) {
+    char parent[64] = { 0 };
+	ot_op* op = ot_new_op(0, parent);
+    ot_skip(op, 2);
+    ot_skip(op, 2);
+    ot_iter iter;
+    
+    ot_iter_init(&iter, op);
+    ot_iter_next(&iter);
+    mu_assert(iter.pos == 0, "Iterator position was not 0.");
+    mu_assert(iter.offset == 0, "Iterator offset was not 0.");
+    ot_iter_next(&iter);
+    mu_assert(iter.pos == 0, "Iterator position was not 0.");
+    mu_assert(iter.offset == 1, "Iterator offset was not 1.");
+    ot_iter_next(&iter);
+    mu_assert(iter.pos == 1, "Iterator position was not 1.");
+    mu_assert(iter.offset == 0, "Iterator offset was not 0.");
+    ot_iter_next(&iter);
+    mu_assert(iter.pos == 1, "Iterator position was not 1.");
+    mu_assert(iter.offset == 1, "Iterator offset was not 1.");
+}
+
+MU_TEST(iter_next_iterates_correctly_over_single_insert_component) {
+    char parent[64] = { 0 };
+	ot_op* op = ot_new_op(0, parent);
+    ot_insert(op, "012");
+    ot_iter iter;
+    
+    ot_iter_init(&iter, op);
+    ot_iter_next(&iter);
+    mu_assert(iter.pos == 0, "Iterator position was not 0.");
+    mu_assert(iter.offset == 0, "Iterator offset was not 0.");
+    ot_iter_next(&iter);
+    mu_assert(iter.pos == 0, "Iterator position was not 0.");
+    mu_assert(iter.offset == 1, "Iterator offset was not 1.");
+    ot_iter_next(&iter);
+    mu_assert(iter.pos == 0, "Iterator position was not 1.");
+    mu_assert(iter.offset == 2, "Iterator offset was not 2.");
+}
+
+MU_TEST(iter_next_iterates_correctly_over_multiple_insert_components) {
+    char parent[64] = { 0 };
+	ot_op* op = ot_new_op(0, parent);
+    ot_insert(op, "01");
+    ot_insert(op, "01");
+    ot_iter iter;
+    
+    ot_iter_init(&iter, op);
+    ot_iter_next(&iter);
+    mu_assert(iter.pos == 0, "Iterator position was not 0.");
+    mu_assert(iter.offset == 0, "Iterator offset was not 0.");
+    ot_iter_next(&iter);
+    mu_assert(iter.pos == 0, "Iterator position was not 0.");
+    mu_assert(iter.offset == 1, "Iterator offset was not 1.");
+    ot_iter_next(&iter);
+    mu_assert(iter.pos == 1, "Iterator position was not 1.");
+    mu_assert(iter.offset == 0, "Iterator offset was not 0.");
+    ot_iter_next(&iter);
+    mu_assert(iter.pos == 1, "Iterator position was not 1.");
+    mu_assert(iter.offset == 1, "Iterator offset was not 2.");
 }
 
 MU_TEST_SUITE(ot_test_suite) {
@@ -159,8 +210,11 @@ MU_TEST_SUITE(ot_test_suite) {
     MU_RUN_TEST(test_end_fmt_appends_correct_name_and_value);
     MU_RUN_TEST(test_end_fmt_does_not_append_another_fmtbound_when_last_component_is_fmtbound);
     MU_RUN_TEST(iter_next_on_empty_op);
-    MU_RUN_TEST(iter_next_on_skip_with_count_one);
-    MU_RUN_TEST(iter_next_on_skip_with_count_greater_than_one);
+    MU_RUN_TEST(iter_next_iterates_once_over_skip_with_count_one);
+    MU_RUN_TEST(iter_next_iterates_correct_number_of_times_over_skip_with_count_greater_than_one);
+    MU_RUN_TEST(iter_next_iterates_correctly_over_multiple_skip_components);
+    MU_RUN_TEST(iter_next_iterates_correctly_over_single_insert_component);
+    MU_RUN_TEST(iter_next_iterates_correctly_over_multiple_insert_components);
 }
 
 /* otdecode tests */

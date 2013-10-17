@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <assert.h>
 #include "ot.h"
 #include "hex.h"
 
@@ -243,7 +244,6 @@ char* ot_snapshot(ot_op* op) {
 void ot_iter_init(ot_iter* iter, ot_op* op) {
     iter->op = op;
     iter->pos = -1;
-    iter->offset = -1;
 }
 
 static bool ot_iter_adv(ot_iter* iter, size_t max) {
@@ -264,7 +264,7 @@ bool ot_iter_next(ot_iter* iter) {
         return false;
     }
     
-    if (iter->pos == -1 && iter->offset == -1) {
+    if (iter->pos == -1) {
         iter->pos = 0;
         iter->offset = 0;
         return true;
@@ -274,7 +274,19 @@ bool ot_iter_next(ot_iter* iter) {
     if (comp->type == OT_SKIP) {
         ot_comp_skip skip = comp->value.skip;
         return ot_iter_adv(iter, skip.count - 1);
+    } else if (comp->type == OT_INSERT) {
+        ot_comp_insert insert = comp->value.insert;
+        return ot_iter_adv(iter, strlen(insert.text) - 1);
+    } else if (comp->type == OT_DELETE) {
+        ot_comp_delete delete = comp->value.delete;
+        return ot_iter_adv(iter, delete.count - 1);
+    } else if (comp->type == OT_OPEN_ELEMENT) {
+        return ot_iter_adv(iter, 0);
+    } else if (comp->type == OT_CLOSE_ELEMENT) {
+        return ot_iter_adv(iter, 0);
+    } else if (comp->type == OT_FORMATTING_BOUNDARY) {
+        return ot_iter_adv(iter, 0);
     }
     
-    return false;
+    assert(!"Iterator doesn't know how to handle this component type.");
 }

@@ -16,7 +16,7 @@ debug: $(SOURCES)
 	rm *.o
 
 release: $(SOURCES) clean
-	$(CC) $(CFLAGS) -c -O4 -Icjson $(SOURCES)
+	$(CC) $(CFLAGS) -DNDEBUG -c -O4 -Icjson $(SOURCES)
 	mkdir -p $(BIN)
 	ar rs bin/$(LIB) *.o
 	rm *.o
