@@ -21,9 +21,14 @@ release: $(SOURCES) clean
 	ar rs bin/$(LIB) *.o
 	rm *.o
 
-test: debug test/libot_test.c
+test: clean debug test/libot_test.c
 	$(CC) $(CFLAGS) -g -O0 -Icjson -o "$(BIN)/runtests" test/libot_test.c $(BIN)/$(LIB)
 	$(BIN)/runtests
+ifdef COVERAGE
+	lcov --capture --directory . --output-file $(BIN)/coverage.info --rc lcov_branch_coverage=1
+	genhtml $(BIN)/coverage.info --output-directory $(BIN)/coverage --function-coverage --branch-coverage
+	rm *.gcno *.gcda
+endif
 
 clean:
 	rm -rf $(BIN) *.gcno *.gcda *.o
