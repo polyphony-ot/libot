@@ -16,7 +16,7 @@ B's parent document is still X, **not** A.
 
 	{
 		"clientId": n,
-		"parentDoc": "0b9cda76238570e1d5790452620b1df31dedf75d",
+		"parent": "0b9cda76238570e1d5790452620b1df31dedf75d",
 		"components": []
 	}
 
