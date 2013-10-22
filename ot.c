@@ -75,23 +75,45 @@ void ot_free_op(ot_op* op) {
 }
 
 void ot_skip(ot_op* op, int64_t count) {
-    ot_comp* comp = array_append(&op->comps);
-	comp->type = OT_SKIP;
-    comp->value.skip.count = count;
+    ot_comp* comps = op->comps.data;
+    ot_comp* last = comps + (op->comps.len - 1);
+    if (op->comps.len > 0 && last->type == OT_SKIP) {
+        last->value.skip.count += count;
+    } else {
+        ot_comp* comp = array_append(&op->comps);
+        comp->type = OT_SKIP;
+        comp->value.skip.count = count;
+    }
 }
 
 void ot_insert(ot_op* op, const char* text) {
-	ot_comp* comp = array_append(&op->comps);
-	comp->type = OT_INSERT;
-    size_t size = sizeof(char) * (strlen(text) + 1);
-    comp->value.insert.text = malloc(size);
-    memcpy(comp->value.insert.text, text, size);
+    ot_comp* comps = op->comps.data;
+    ot_comp* last = comps + (op->comps.len - 1);
+    if (op->comps.len > 0 && last->type == OT_INSERT) {
+        size_t len1 = strlen(last->value.insert.text);
+        size_t len2 = strlen(text);
+        last->value.insert.text = realloc(last->value.insert.text,
+                                          len1 + len2 + 1);
+        strcat(last->value.insert.text, text);
+    } else {
+        ot_comp* comp = array_append(&op->comps);
+        comp->type = OT_INSERT;
+        size_t size = sizeof(char) * (strlen(text) + 1);
+        comp->value.insert.text = malloc(size);
+        memcpy(comp->value.insert.text, text, size);
+    }
 }
 
 void ot_delete(ot_op* op, int64_t count) {
-    ot_comp* comp = array_append(&op->comps);
-    comp->type = OT_DELETE;
-    comp->value.delete.count = count;
+    ot_comp* comps = op->comps.data;
+    ot_comp* last = comps + (op->comps.len - 1);
+    if (op->comps.len > 0 && last->type == OT_DELETE) {
+        last->value.delete.count += count;
+    } else {
+        ot_comp* comp = array_append(&op->comps);
+        comp->type = OT_DELETE;
+        comp->value.delete.count = count;
+    }
 }
 
 void ot_open_element(ot_op* op, const char* elem) {
@@ -180,40 +202,89 @@ ot_op* ot_compose(ot_op* op1, ot_op* op2) {
     memcpy(parent, op1->parent, 64);
     ot_op* composed = ot_new_op(op1->client_id, parent);
     
-    size_t op1_cur = 0;
     ot_comp* op1_comps = op1->comps.data;
-    size_t op2_cur = 0;
     ot_comp* op2_comps = op2->comps.data;
-    while (op1_cur < op1->comps.len || op2_cur < op2->comps.len) {
+    
+    ot_iter op1_iter;
+    ot_iter_init(&op1_iter, op1);
+    
+    ot_iter op2_iter;
+    ot_iter_init(&op2_iter, op2);
+    
+    bool op1_next = ot_iter_next(&op1_iter);
+    bool op2_next = ot_iter_next(&op2_iter);
+    while (op1_next || op2_next) {
         ot_comp* op1_comp;
-        if (op1_cur < op1->comps.len) {
-            op1_comp = op1_comps + op1_cur;
+        if (op1_next) {
+            op1_comp = op1_comps + op1_iter.pos;
         } else {
             op1_comp = NULL;
         }
         
         ot_comp* op2_comp;
-        if (op2_cur < op2->comps.len) {
-            op2_comp = op2_comps + op2_cur;
+        if (op2_next) {
+            op2_comp = op2_comps + op2_iter.pos;
         } else {
             op2_comp = NULL;
         }
         
-        if (op2_comp->type == OT_SKIP) {
-            if (op1_comp == NULL) {
-                // ERROR
+        if (op1_comp->type == OT_SKIP) {
+            if (op2_comp->type == OT_SKIP) {
+                int64_t min;
+                if (op1_comp->value.skip.count < op2_comp->value.skip.count) {
+                    min = op1_comp->value.skip.count;
+                } else {
+                    min = op2_comp->value.skip.count;
+                }
+                ot_skip(composed, min);
+                op1_next = ot_iter_skip(&op1_iter, min);
+                op2_next = ot_iter_skip(&op2_iter, min);
+            } else if (op2_comp->type == OT_INSERT) {
+                ot_insert(composed, op2_comp->value.insert.text);
+                ot_skip(composed, op1_comp->value.skip.count);
+                int64_t total = strlen(op2_comp->value.insert.text) +
+                                op1_comp->value.skip.count;
+                
             }
+        } else if (op1_comp->type == OT_DELETE) {
+            // There is no way the second operation could've modified the
+            // deleted characters, so we append the delete to the composed
+            // operation and move on.
+            ot_delete(composed, op1_comp->value.delete.count);
+            op1_next = ot_iter_skip(&op1_iter, op1_comp->value.delete.count);
+        } else if (op2_comp->type == OT_SKIP) {
+            if (op1_comp == NULL) {
+                // ERROR - Can't skip a component that doesn't exist.
+            }
+            
+            if (op1_comp->type == OT_INSERT) {
+                
+            }
+            
+            /*
+             When op2 == SKIP:
+             
+             if (op1 == INSERT) 
+                res = INSERT
+             if (op1 == DELETE)
+                res = DELETE
+             if (op1 = SKIP)
+                res = SKIP
+             
+             */
+            
             ot_comp* res = array_append(&composed->comps);
             ot_copy_comp(res, op1_comp);
-            op1_cur++;
-            op2_cur++;
+            
+            op1_next = ot_iter_next(&op1_iter);
+            op2_next = ot_iter_next(&op2_iter);
         } else if (op2_comp->type == OT_INSERT) {
             ot_comp* res = array_append(&composed->comps);
             ot_copy_comp(res, op2_comp);
-            op2_cur++;
+            op2_next = ot_iter_next(&op2_iter);
         } else if (op2_comp->type == OT_DELETE) {
-            op1_cur++;
-            op2_cur++;
+            op1_next = ot_iter_next(&op1_iter);
+            op2_next = ot_iter_next(&op2_iter);
         }
     }
     
@@ -256,6 +327,7 @@ static bool ot_iter_adv(ot_iter* iter, size_t max) {
         iter->offset = 0;
         return true;
     }
+    
     return false;
 }
 
@@ -289,4 +361,16 @@ bool ot_iter_next(ot_iter* iter) {
     }
     
     assert(!"Iterator doesn't know how to handle this component type.");
+}
+
+// This can be made more efficient instead of simply calling ot_iter_next()
+// "count" times.
+bool ot_iter_skip(ot_iter* iter, size_t count) {
+    for (size_t i = 0; i < count; ++i) {
+        if (!ot_iter_next(iter)) {
+            return false;
+        }
+    }
+    
+    return true;
 }

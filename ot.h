@@ -64,6 +64,13 @@ typedef struct ot_op {
 ot_op* ot_new_op(int64_t client_id, char parent[64]);
 void ot_free_op(ot_op* op);
 void ot_skip(ot_op* op, int64_t count);
+
+// Appends an insert component to an operation. text is copied and not freed, so
+// the caller must free it manually.
+//
+// If op already ends with an insert component, this function will append text
+// to the existing insert. Otherwise, it will create a new insert component and
+// append it to op.
 void ot_insert(ot_op* op, const char* text);
 void ot_delete(ot_op* op, int64_t count);
 void ot_open_element(ot_op* op, const char* elem);
@@ -81,7 +88,13 @@ typedef struct ot_iter {
     size_t offset;  // Offset within current component.
 } ot_iter;
 
+// Initializes a new iterator pointing to the -1 position. This means that
+// ot_iter_next must also be called before using the iterator.
+//
+// This was done on purpose so the iterator can be easily used in a while loop.
+// I.e. - ot_iter_init(&iter); while(ot_iter_next(ot_iter* iter)) { .. }
 void ot_iter_init(ot_iter* iter, ot_op* op);
 bool ot_iter_next(ot_iter* iter);
+bool ot_iter_skip(ot_iter* iter, size_t count);
 
 #endif

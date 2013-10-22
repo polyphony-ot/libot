@@ -141,28 +141,6 @@ MU_TEST(iter_next_iterates_correct_number_of_times_over_skip_with_count_greater_
     mu_assert(first && second && !third, "Expected number of iterations did not equal actual number of iterations");
 }
 
-MU_TEST(iter_next_iterates_correctly_over_multiple_skip_components) {
-    char parent[64] = { 0 };
-	ot_op* op = ot_new_op(0, parent);
-    ot_skip(op, 2);
-    ot_skip(op, 2);
-    ot_iter iter;
-    
-    ot_iter_init(&iter, op);
-    ot_iter_next(&iter);
-    mu_assert(iter.pos == 0, "Iterator position was not 0.");
-    mu_assert(iter.offset == 0, "Iterator offset was not 0.");
-    ot_iter_next(&iter);
-    mu_assert(iter.pos == 0, "Iterator position was not 0.");
-    mu_assert(iter.offset == 1, "Iterator offset was not 1.");
-    ot_iter_next(&iter);
-    mu_assert(iter.pos == 1, "Iterator position was not 1.");
-    mu_assert(iter.offset == 0, "Iterator offset was not 0.");
-    ot_iter_next(&iter);
-    mu_assert(iter.pos == 1, "Iterator position was not 1.");
-    mu_assert(iter.offset == 1, "Iterator offset was not 1.");
-}
-
 MU_TEST(iter_next_iterates_correctly_over_single_insert_component) {
     char parent[64] = { 0 };
 	ot_op* op = ot_new_op(0, parent);
@@ -181,28 +159,6 @@ MU_TEST(iter_next_iterates_correctly_over_single_insert_component) {
     mu_assert(iter.offset == 2, "Iterator offset was not 2.");
 }
 
-MU_TEST(iter_next_iterates_correctly_over_multiple_insert_components) {
-    char parent[64] = { 0 };
-	ot_op* op = ot_new_op(0, parent);
-    ot_insert(op, "01");
-    ot_insert(op, "01");
-    ot_iter iter;
-    
-    ot_iter_init(&iter, op);
-    ot_iter_next(&iter);
-    mu_assert(iter.pos == 0, "Iterator position was not 0.");
-    mu_assert(iter.offset == 0, "Iterator offset was not 0.");
-    ot_iter_next(&iter);
-    mu_assert(iter.pos == 0, "Iterator position was not 0.");
-    mu_assert(iter.offset == 1, "Iterator offset was not 1.");
-    ot_iter_next(&iter);
-    mu_assert(iter.pos == 1, "Iterator position was not 1.");
-    mu_assert(iter.offset == 0, "Iterator offset was not 0.");
-    ot_iter_next(&iter);
-    mu_assert(iter.pos == 1, "Iterator position was not 1.");
-    mu_assert(iter.offset == 1, "Iterator offset was not 2.");
-}
-
 MU_TEST_SUITE(ot_test_suite) {
     MU_RUN_TEST(test_start_fmt_appends_correct_comp_type);
     MU_RUN_TEST(test_start_fmt_appends_correct_name_and_value);
@@ -212,9 +168,7 @@ MU_TEST_SUITE(ot_test_suite) {
     MU_RUN_TEST(iter_next_on_empty_op);
     MU_RUN_TEST(iter_next_iterates_once_over_skip_with_count_one);
     MU_RUN_TEST(iter_next_iterates_correct_number_of_times_over_skip_with_count_greater_than_one);
-    MU_RUN_TEST(iter_next_iterates_correctly_over_multiple_skip_components);
     MU_RUN_TEST(iter_next_iterates_correctly_over_single_insert_component);
-    MU_RUN_TEST(iter_next_iterates_correctly_over_multiple_insert_components);
 }
 
 /* otdecode tests */
@@ -333,11 +287,11 @@ MU_TEST(test_serialize_single_insert) {
 }
 
 MU_TEST(test_serialize_two_inserts) {
-    const char* const EXPECTED = "{ \"clientId\": 0, \"parent\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"any string\" }, { \"type\": \"insert\", \"text\": \"any other string\" } ] }";
+    const char* const EXPECTED = "{ \"clientId\": 0, \"parent\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"any string any other string\" } ] }";
 	char parent[64] = { 0 };
 	ot_op* op = ot_new_op(0, parent);
     ot_insert(op, "any string");
-    ot_insert(op, "any other string");
+    ot_insert(op, " any other string");
     
     char* actual = ot_encode(op);
     int cmp = strcmp(EXPECTED, (char*) actual);
