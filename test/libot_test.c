@@ -171,6 +171,47 @@ MU_TEST_SUITE(ot_test_suite) {
     MU_RUN_TEST(iter_next_iterates_correctly_over_single_insert_component);
 }
 
+/* compose tests */
+
+MU_TEST(compose_skip_and_skip) {
+    char parent[64] = { 0 };
+	ot_op* op1 = ot_new_op(0, parent);
+    ot_skip(op1, 1);
+    ot_op* op2 = ot_new_op(0, parent);
+    ot_skip(op2, 1);
+    
+    ot_op* composed = ot_compose(op1, op2);
+    
+    mu_assert(composed->comps.len == 1, "Composed op didn't have a length of 1.");
+    ot_comp comp = ((ot_comp*) composed->comps.data)[0];
+    mu_assert(comp.type == OT_SKIP, "Component type wasn't OT_SKIP.");
+    mu_assert(comp.value.skip.count == 1, "Skip count wasn't 1.");
+}
+
+MU_TEST(compose_skip_and_insert) {
+    char parent[64] = { 0 };
+	ot_op* op1 = ot_new_op(0, parent);
+    ot_skip(op1, 1);
+    ot_op* op2 = ot_new_op(0, parent);
+    ot_insert(op2, "x");
+    ot_skip(op2, 1);
+    
+    ot_op* composed = ot_compose(op1, op2);
+    
+    mu_assert(composed->comps.len == 2, "Composed op didn't have a length of 2.");
+    ot_comp first_comp = ((ot_comp*) composed->comps.data)[0];
+    mu_assert(first_comp.type == OT_INSERT, "First component type wasn't OT_INSERT.");
+    mu_assert(strcmp(first_comp.value.insert.text, "x") == 0, "Insert text wasn't \"x\".");
+    ot_comp second_comp = ((ot_comp*) composed->comps.data)[1];
+    mu_assert(second_comp.type == OT_SKIP, "First component type wasn't OT_SKIP.");
+    mu_assert(second_comp.value.skip.count == 1, "Skip count wasn't 1.");
+}
+
+MU_TEST_SUITE(compose_test_suite) {
+    MU_RUN_TEST(compose_skip_and_skip);
+    MU_RUN_TEST(compose_skip_and_insert);
+}
+
 /* otdecode tests */
 
 MU_TEST(decode_skip) {
@@ -518,6 +559,7 @@ MU_TEST_SUITE(hex_test_suite) {
 
 int main() {
 	MU_RUN_SUITE(ot_test_suite);
+    MU_RUN_SUITE(compose_test_suite);
     MU_RUN_SUITE(otdecode_test_suite);
     MU_RUN_SUITE(otencode_test_suite);
     MU_RUN_SUITE(array_test_suite);

@@ -83,7 +83,7 @@ char* ot_snapshot(ot_op* op);
 ot_comp_fmtbound* ot_new_fmtbound();
 
 typedef struct ot_iter {
-    ot_op* op;      // Op to iterator over.
+    const ot_op* op;      // Op to iterator over.
     size_t pos;     // Current component position.
     size_t offset;  // Offset within current component.
 } ot_iter;
@@ -93,7 +93,7 @@ typedef struct ot_iter {
 //
 // This was done on purpose so the iterator can be easily used in a while loop.
 // I.e. - ot_iter_init(&iter); while(ot_iter_next(ot_iter* iter)) { .. }
-void ot_iter_init(ot_iter* iter, ot_op* op);
+void ot_iter_init(ot_iter* iter, const ot_op* op);
 bool ot_iter_next(ot_iter* iter);
 bool ot_iter_skip(ot_iter* iter, size_t count);
 
