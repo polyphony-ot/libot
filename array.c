@@ -1,4 +1,3 @@
-#include <stdlib.h>
 #include "array.h"
 
 void array_init(array* arr, size_t size) {
@@ -28,4 +27,14 @@ void* array_append(array* arr) {
     arr->len++;
     
     return ((char*)arr->data) + (arr->size * temp);
+}
+
+bool array_equal(const array* arr1, const array* arr2) {
+    size_t size1 = arr1->size * arr1->len;
+    size_t size2 = arr2->size * arr2->len;
+    if (size1 != size2) {
+        return false;
+    }
+    
+    return (memcmp(arr1->data, arr2->data, size1) == 0);
 }

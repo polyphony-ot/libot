@@ -1,6 +1,10 @@
 #ifndef LIBOT_ARRAY_H
 #define LIBOT_ARRAY_H
 
+#include <stdlib.h>
+#include <stdbool.h>
+#include <string.h>
+
 // Implements a dynamically resizing array.
 //
 // An array has a length and a capacity. The length is the actual number of
@@ -26,5 +30,11 @@ void array_ensure_size(array* arr);
 // Allocates space for another item at the end of the array and returns a
 // pointer to it. The amount of space allocated is at least equal to size.
 void* array_append(array* arr);
+
+// Compares the contents of two arrays. The sizes, lengths, and capacities of
+// the arrays are not taken into account when determining equality. Therefore,
+// it is possible to have two arrays with different lengths and sizes, but still
+// have their contents be equal.
+bool array_equal(const array* arr1, const array* arr2);
 
 #endif
