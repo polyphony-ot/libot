@@ -159,6 +159,74 @@ MU_TEST(iter_next_iterates_correctly_over_single_insert_component) {
     mu_assert(iter.offset == 2, "Iterator offset was not 2.");
 }
 
+typedef struct ot_equals_test {
+    char* op1;
+    char* op2;
+    bool equal;
+} ot_equals_test;
+
+ot_equals_test ot_equals_tests[] = {
+    (ot_equals_test) {
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" } ] }",
+        true
+    },
+    (ot_equals_test) {
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 0 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 0 } ] }",
+        true
+    },
+    (ot_equals_test) {
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 0 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 1 } ] }",
+        false
+    },
+    (ot_equals_test) {
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ ] }",
+        true
+    },
+    (ot_equals_test) {
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ ] }",
+        "{ \"clientId\": 1, \"parent\": \"0\", \"components\": [ ] }",
+        false
+    },
+    (ot_equals_test) {
+        "{ \"clientId\": 0, \"parent\": \"cafebabe\", \"components\": [ ] }",
+        "{ \"clientId\": 0, \"parent\": \"cafebabe\", \"components\": [ ] }",
+        true
+    },
+    (ot_equals_test) {
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" }, { \"type\": \"skip\", \"count\": 0 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" }, { \"type\": \"skip\", \"count\": 0 } ] }",
+        true
+    },
+    (ot_equals_test) {
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" }, { \"type\": \"skip\", \"count\": 0 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" } ] }",
+        false
+    },
+};
+
+MU_TEST(test_ot_equal) {
+    size_t num_tests = sizeof(ot_equals_tests) / sizeof(ot_equals_test);
+    for (size_t i = 0; i < num_tests; ++i) {
+        ot_equals_test t = ot_equals_tests[i];
+        
+        char p[64];
+        ot_op* op1 = ot_new_op(0, p);
+        ot_decode_err err = ot_decode(op1, t.op1);
+        mu_assert(err == OT_ERR_NONE, "Error decoding test JSON.");
+        
+        ot_op* op2 = ot_new_op(0, p);
+        err = ot_decode(op2, t.op2);
+        mu_assert(err == OT_ERR_NONE, "Error decoding test JSON.");
+        
+        bool actual = ot_equal(op1, op2);
+        mu_check(t.equal == actual);
+    }
+}
+
 MU_TEST_SUITE(ot_test_suite) {
     MU_RUN_TEST(test_start_fmt_appends_correct_comp_type);
     MU_RUN_TEST(test_start_fmt_appends_correct_name_and_value);
@@ -169,6 +237,7 @@ MU_TEST_SUITE(ot_test_suite) {
     MU_RUN_TEST(iter_next_iterates_once_over_skip_with_count_one);
     MU_RUN_TEST(iter_next_iterates_correct_number_of_times_over_skip_with_count_greater_than_one);
     MU_RUN_TEST(iter_next_iterates_correctly_over_single_insert_component);
+    MU_RUN_TEST(test_ot_equal);
 }
 
 /* compose tests */

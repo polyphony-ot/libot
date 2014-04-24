@@ -74,6 +74,77 @@ void ot_free_op(ot_op* op) {
     free(op);
 }
 
+// TODO: Implement equality for formatting boundaries.
+bool ot_equal(const ot_op* op1, const ot_op* op2) {
+    if (op1 == NULL || op2 == NULL) {
+        return op1 == op2;
+    }
+    
+    if (op1->client_id != op2->client_id) {
+        return false;
+    }
+    
+    if (memcmp(op1->parent, op2->parent, sizeof(op1->parent)) != 0) {
+        return false;
+    }
+    
+    if (op1->comps.len != op2->comps.len) {
+        return false;
+    }
+    
+    for (size_t i = 0; i < op1->comps.len; ++i) {
+        ot_comp comp1 = ((ot_comp*)op1->comps.data)[i];
+        ot_comp comp2 = ((ot_comp*)op2->comps.data)[i];
+        
+        if (comp1.type != comp2.type) {
+            return false;
+        }
+        
+        switch (comp1.type) {
+            case OT_SKIP:
+                if (comp1.value.skip.count != comp2.value.skip.count) {
+                    return false;
+                }
+                
+                break;
+            case OT_INSERT:
+            {
+                char* text1 = comp1.value.insert.text;
+                char* text2 = comp2.value.insert.text;
+                if (strcmp(text1, text2) != 0) {
+                    return false;
+                }
+                
+                break;
+            }
+            case OT_DELETE:
+                if (comp1.value.delete.count != comp2.value.delete.count) {
+                    return false;
+                }
+                
+                break;
+            case OT_OPEN_ELEMENT:
+            {
+                char* elem1 = comp1.value.open_element.elem;
+                char* elem2 = comp2.value.open_element.elem;
+                if (strcmp(elem1, elem2) != 0) {
+                    return false;
+                }
+                
+                break;
+            }
+            case OT_CLOSE_ELEMENT:
+                break;
+            case OT_FORMATTING_BOUNDARY:
+                break;
+            default:
+                return false;
+        }
+    }
+    
+    return true;
+}
+
 void ot_skip(ot_op* op, int64_t count) {
     ot_comp* comps = op->comps.data;
     ot_comp* last = comps + (op->comps.len - 1);

@@ -63,6 +63,7 @@ typedef struct ot_op {
 
 ot_op* ot_new_op(int64_t client_id, char parent[64]);
 void ot_free_op(ot_op* op);
+bool ot_equal(const ot_op* op1, const ot_op* op2);
 void ot_skip(ot_op* op, int64_t count);
 
 // Appends an insert component to an operation. text is copied and not freed, so
