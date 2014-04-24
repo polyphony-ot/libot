@@ -42,7 +42,11 @@ ot_decode_err ot_decode(ot_op* op, const char* json) {
         } else if (memcmp(type, "insert", 6) == 0) {
             ot_comp* insert = array_append(&op->comps);
             insert->type = OT_INSERT;
-            insert->value.insert.text = cJSON_GetObjectItem(item, "text")->valuestring;
+            
+            char* text = cJSON_GetObjectItem(item, "text")->valuestring;
+            size_t size = sizeof(char) * (strlen(text) + 1);
+            insert->value.insert.text = malloc(size);
+            memcpy(insert->value.insert.text, text, size);
         } else if (memcmp(type, "delete", 6) == 0) {
             ot_comp* delete = array_append(&op->comps);
             delete->type = OT_DELETE;
