@@ -23,7 +23,7 @@ ot_decode_err ot_decode(ot_op* op, const char* json) {
         cJSON_Delete(root);
         return OT_ERR_PARENT_MISSING;
     }
-    hextoa(op->parent, parentf->valuestring, 128);
+    hextoa(op->parent, parentf->valuestring, strlen(parentf->valuestring));
     
     cJSON* components = cJSON_GetObjectItem(root, "components");
     if (components == NULL) {
