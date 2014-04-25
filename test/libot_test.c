@@ -242,6 +242,43 @@ MU_TEST_SUITE(ot_test_suite) {
 
 /* compose tests */
 
+typedef struct ot_compose_test {
+    char* op1;
+    char* op2;
+    char* expected;
+} ot_compose_test;
+
+ot_compose_test ot_compose_tests[] = {
+    (ot_compose_test) {
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 1 }, { \"type\": \"skip\", \"count\": 2 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" } ] }"
+    }
+};
+
+MU_TEST(compose_tests) {
+    size_t max = sizeof(ot_compose_tests) / sizeof(ot_compose_test);
+    for (size_t i = 0; i < max; ++i) {
+        ot_compose_test t = ot_compose_tests[i];
+        
+        char p[64];
+        ot_op* op1 = ot_new_op(0, p);
+        ot_decode_err err = ot_decode(op1, t.op1);
+        mu_assert(err == OT_ERR_NONE, "Error decoding test JSON.");
+        
+        ot_op* op2 = ot_new_op(0, p);
+        err = ot_decode(op2, t.op2);
+        mu_assert(err == OT_ERR_NONE, "Error decoding test JSON.");
+        
+        ot_op* expected = ot_new_op(0, p);
+        err = ot_decode(expected, t.expected);
+        mu_assert(err == OT_ERR_NONE, "Error decoding test JSON.");
+        
+        ot_op* actual = ot_compose(op1, op2);
+        mu_assert(ot_equal(expected, actual), "Composed JSON wasn't correct.");
+    }
+}
+
 MU_TEST(compose_skip_and_skip) {
     char parent[64] = { 0 };
 	ot_op* op1 = ot_new_op(0, parent);
@@ -258,6 +295,7 @@ MU_TEST(compose_skip_and_skip) {
 }
 
 MU_TEST(compose_skip_and_insert) {
+    mu_fail("Skipping test");
     char parent[64] = { 0 };
 	ot_op* op1 = ot_new_op(0, parent);
     ot_skip(op1, 1);
@@ -279,6 +317,7 @@ MU_TEST(compose_skip_and_insert) {
 MU_TEST_SUITE(compose_test_suite) {
     MU_RUN_TEST(compose_skip_and_skip);
     MU_RUN_TEST(compose_skip_and_insert);
+    MU_RUN_TEST(compose_tests);
 }
 
 /* otdecode tests */
