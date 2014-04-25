@@ -78,7 +78,6 @@ void ot_open_element(ot_op* op, const char* elem);
 void ot_close_element(ot_op* op);
 void ot_start_fmt(ot_op* op, const char* name, const char* value);
 void ot_end_fmt(ot_op* op, const char* name, const char* value);
-ot_op* ot_compose(ot_op* op1, ot_op* op2);
 char* ot_snapshot(ot_op* op);
 
 ot_comp_fmtbound* ot_new_fmtbound();

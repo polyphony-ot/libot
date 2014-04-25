@@ -27,6 +27,8 @@
 		3BE91B5C17E11A6D0040313D /* otencode.c in Sources */ = {isa = PBXBuildFile; fileRef = 3BE91B5B17E11A6D0040313D /* otencode.c */; };
 		3BE9FEDD17CFEBBF00F8B9F0 /* array.h in Headers */ = {isa = PBXBuildFile; fileRef = 3BE9FEDC17CFEBBF00F8B9F0 /* array.h */; };
 		3BE9FEE017CFEBCE00F8B9F0 /* array.c in Sources */ = {isa = PBXBuildFile; fileRef = 3BE9FEDF17CFEBCE00F8B9F0 /* array.c */; };
+		3BF921051909F8D8009DD206 /* compose.h in Headers */ = {isa = PBXBuildFile; fileRef = 3BF921041909F8D8009DD206 /* compose.h */; };
+		3BF92107190A079B009DD206 /* compose.c in Sources */ = {isa = PBXBuildFile; fileRef = 3BF92106190A079B009DD206 /* compose.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -91,6 +93,8 @@
 		3BE91B5B17E11A6D0040313D /* otencode.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = otencode.c; sourceTree = "<group>"; };
 		3BE9FEDC17CFEBBF00F8B9F0 /* array.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = array.h; sourceTree = "<group>"; };
 		3BE9FEDF17CFEBCE00F8B9F0 /* array.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = array.c; sourceTree = "<group>"; };
+		3BF921041909F8D8009DD206 /* compose.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = compose.h; sourceTree = "<group>"; };
+		3BF92106190A079B009DD206 /* compose.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = compose.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -138,6 +142,8 @@
 				3B204AB517DFD1D400C9AB99 /* hex.h */,
 				3B204AB817DFD1DD00C9AB99 /* hex.c */,
 				3B4EC5BF17CAA82400B254EB /* ot.h */,
+				3BF92106190A079B009DD206 /* compose.c */,
+				3BF921041909F8D8009DD206 /* compose.h */,
 				3B4EC5C017CAA82400B254EB /* ot.c */,
 				3BD0401D17E7A70A000A7567 /* otdecode.c */,
 				3BD0402017E7A717000A7567 /* otdecode.h */,
@@ -193,6 +199,7 @@
 				3B14450017ECCEA500A5784D /* cJSON.h in Headers */,
 				3BE9FEDD17CFEBBF00F8B9F0 /* array.h in Headers */,
 				3B4EC5CD17CAA82400B254EB /* ot.h in Headers */,
+				3BF921051909F8D8009DD206 /* compose.h in Headers */,
 				3B4EC5D017CAA82400B254EB /* client.h in Headers */,
 				3B4EC5D117CAA82400B254EB /* server.h in Headers */,
 			);
@@ -293,6 +300,7 @@
 				3B4EC5D217CAA82400B254EB /* server.c in Sources */,
 				3B14450117ECCEA500A5784D /* test.c in Sources */,
 				3B4EC5CF17CAA82400B254EB /* client.c in Sources */,
+				3BF92107190A079B009DD206 /* compose.c in Sources */,
 				3B204AB917DFD1DD00C9AB99 /* hex.c in Sources */,
 				3B4EC5CE17CAA82400B254EB /* ot.c in Sources */,
 				3BE9FEE017CFEBCE00F8B9F0 /* array.c in Sources */,

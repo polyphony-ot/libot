@@ -4,6 +4,7 @@
 #include <assert.h>
 #include "minunit.h"
 #include "../ot.h"
+#include "../compose.h"
 #include "../array.h"
 #include "../hex.h"
 #include "../otdecode.h"
@@ -249,10 +250,32 @@ typedef struct ot_compose_test {
 } ot_compose_test;
 
 ot_compose_test ot_compose_tests[] = {
+    /* skip, skip */
     (ot_compose_test) {
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" } ] }",
         "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 1 }, { \"type\": \"skip\", \"count\": 2 } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" } ] }"
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 1 }, { \"type\": \"skip\", \"count\": 2 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 3 } ] }"
+    },
+    (ot_compose_test) {
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 1 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 1 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 1 } ] }"
+    },
+    (ot_compose_test) {
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 1 }, { \"type\": \"skip\", \"count\": 2 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 3 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 3 } ] }"
+    },
+    /* skip, insert */
+    (ot_compose_test) {
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 3 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" }, { \"type\": \"skip\", \"count\": 3 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" }, { \"type\": \"skip\", \"count\": 3 } ] }"
+    },
+    (ot_compose_test) {
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 3 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 3 }, { \"type\": \"insert\", \"text\": \"abc\" } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 3 }, { \"type\": \"insert\", \"text\": \"abc\" } ] }"
     }
 };
 
@@ -264,18 +287,18 @@ MU_TEST(compose_tests) {
         char p[64];
         ot_op* op1 = ot_new_op(0, p);
         ot_decode_err err = ot_decode(op1, t.op1);
-        mu_assert(err == OT_ERR_NONE, "Error decoding test JSON.");
+        mu_assert(err == OT_ERR_NONE, "Error decoding first test op.");
         
         ot_op* op2 = ot_new_op(0, p);
         err = ot_decode(op2, t.op2);
-        mu_assert(err == OT_ERR_NONE, "Error decoding test JSON.");
+        mu_assert(err == OT_ERR_NONE, "Error decoding second test op.");
         
         ot_op* expected = ot_new_op(0, p);
         err = ot_decode(expected, t.expected);
-        mu_assert(err == OT_ERR_NONE, "Error decoding test JSON.");
+        mu_assert(err == OT_ERR_NONE, "Error decoding expected test op.");
         
         ot_op* actual = ot_compose(op1, op2);
-        mu_assert(ot_equal(expected, actual), "Composed JSON wasn't correct.");
+        mu_assert(ot_equal(expected, actual), "Composed op wasn't correct.");
     }
 }
 
