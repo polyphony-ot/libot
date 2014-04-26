@@ -43,6 +43,19 @@ static pair ot_compose_skip_insert(ot_comp_skip skip, size_t skip_offset,
     return (pair) { 0, min_len };
 }
 
+static pair ot_compose_skip_delete(ot_comp_skip skip, size_t skip_offset,
+                                   ot_comp_delete delete, size_t delete_offset,
+                                   ot_op* composed) {
+    
+    size_t skip_len = skip.count - skip_offset;
+    size_t delete_len = delete.count - delete_offset;
+    size_t min_len = min(skip_len, delete_len);
+    
+    ot_delete(composed, min_len);
+    
+    return (pair) { min_len, min_len };
+}
+
 ot_op* ot_compose(ot_op* op1, ot_op* op2) {
     char parent[64];
     memcpy(parent, op1->parent, 64);
@@ -102,6 +115,7 @@ ot_op* ot_compose(ot_op* op1, ot_op* op2) {
                 pair p = ot_compose_skip_skip(op1_skip, op1_iter.offset,
                                               op2_skip, op2_iter.offset,
                                               composed);
+                
                 op1_next = ot_iter_skip(&op1_iter, p.first);
                 op2_next = ot_iter_skip(&op2_iter, p.second);
             } else if (op2_comp->type == OT_INSERT) {
@@ -116,16 +130,12 @@ ot_op* ot_compose(ot_op* op1, ot_op* op2) {
             } else if (op2_comp->type == OT_DELETE) {
                 ot_comp_delete op2_delete = op2_comp->value.delete;
                 
-                int64_t min;
-                if (op1_skip.count < op2_delete.count) {
-                    min = op1_skip.count;
-                } else {
-                    min = op2_delete.count;
-                }
+                pair p = ot_compose_skip_delete(op1_skip, op1_iter.offset,
+                                                op2_delete, op2_iter.offset,
+                                                composed);
                 
-                ot_delete(composed, min);
-                op1_next = ot_iter_skip(&op1_iter, min);
-                op2_next = ot_iter_skip(&op2_iter, min);
+                op1_next = ot_iter_skip(&op1_iter, p.first);
+                op2_next = ot_iter_skip(&op2_iter, p.second);
             }
         } else if (op1_comp->type == OT_INSERT) {
             ot_comp_insert op1_insert = op1_comp->value.insert;
