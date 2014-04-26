@@ -73,6 +73,23 @@ static pair ot_compose_insert_skip(ot_comp_insert insert, size_t insert_offset,
     return (pair) { min_len, min_len };
 }
 
+static pair ot_compose_insert_insert(ot_comp_insert insert1, size_t offset1,
+                                     ot_comp_insert insert2, size_t offset2,
+                                     ot_op* composed) {
+    
+    size_t insert1_len = strlen(insert1.text) - offset1;
+    size_t insert2_len = strlen(insert2.text) - offset2;
+    size_t min_len = min(insert1_len, insert2_len);
+    
+    char* substr = malloc(sizeof(char) * min_len + 1);
+    memcpy(substr, insert2.text + offset2, min_len);
+    substr[min_len] = '\0';
+    ot_insert(composed, substr);
+    free(substr);
+    
+    return (pair) { 0, min_len };
+}
+
 ot_op* ot_compose(ot_op* op1, ot_op* op2) {
     char parent[64];
     memcpy(parent, op1->parent, 64);
@@ -163,6 +180,15 @@ ot_op* ot_compose(ot_op* op1, ot_op* op2) {
                 pair p = ot_compose_insert_skip(op1_insert, op1_iter.offset,
                                                 op2_skip, op2_iter.offset,
                                                 composed);
+                
+                op1_next = ot_iter_skip(&op1_iter, p.first);
+                op2_next = ot_iter_skip(&op2_iter, p.second);
+            } else if (op2_comp->type == OT_INSERT) {
+                ot_comp_insert op2_insert = op2_comp->value.insert;
+                
+                pair p = ot_compose_insert_insert(op1_insert, op1_iter.offset,
+                                                  op2_insert, op2_iter.offset,
+                                                  composed);
                 
                 op1_next = ot_iter_skip(&op1_iter, p.first);
                 op2_next = ot_iter_skip(&op2_iter, p.second);

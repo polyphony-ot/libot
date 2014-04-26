@@ -304,12 +304,29 @@ ot_compose_test ot_compose_tests[] = {
         "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 3 }, { \"type\": \"insert\", \"text\": \"def\" } ] }",
         "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abcdef\" } ] }"
     },
+    /* insert, insert */
+    (ot_compose_test) {
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"def\" } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" }, { \"type\": \"skip\", \"count\": 3 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abcdef\" } ] }"
+    },
+    (ot_compose_test) {
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"def\" }, { \"type\": \"skip\", \"count\": 3 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" }, { \"type\": \"skip\", \"count\": 6 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abcdef\" }, { \"type\": \"skip\", \"count\": 3 } ] }"
+    },
+    (ot_compose_test) {
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"def\" } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" }, { \"type\": \"skip\", \"count\": 3 }, { \"type\": \"insert\", \"text\": \"ghi\" } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abcdefghi\" } ] }"
+    }
 };
 
 MU_TEST(compose_tests) {
     size_t max = sizeof(ot_compose_tests) / sizeof(ot_compose_test);
     for (size_t i = 0; i < max; ++i) {
         ot_compose_test t = ot_compose_tests[i];
+        char errmsg[128];
         
         char p[64];
         ot_op* op1 = ot_new_op(0, p);
@@ -325,7 +342,8 @@ MU_TEST(compose_tests) {
         mu_assert(err == OT_ERR_NONE, "Error decoding expected test op.");
         
         ot_op* actual = ot_compose(op1, op2);
-        mu_assert(ot_equal(expected, actual), "Composed op wasn't correct.");
+        sprintf(errmsg, "[%zu] Composed op wasn't correct.", i);
+        mu_assert(ot_equal(expected, actual), errmsg);
     }
 }
 
