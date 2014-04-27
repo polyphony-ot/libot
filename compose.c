@@ -90,6 +90,17 @@ static pair ot_compose_insert_insert(ot_comp_insert insert1, size_t offset1,
     return (pair) { 0, min_len };
 }
 
+static pair ot_compose_insert_delete(ot_comp_insert ins, size_t ins_offset,
+                                     ot_comp_delete del, size_t del_offset,
+                                     ot_op* composed) {
+    
+    size_t ins_len = strlen(ins.text) - ins_offset;
+    size_t del_len = del.count - del_offset;
+    size_t min_len = min(ins_len, del_len);
+    
+    return (pair) { min_len, min_len };
+}
+
 ot_op* ot_compose(ot_op* op1, ot_op* op2) {
     char parent[64];
     memcpy(parent, op1->parent, 64);
@@ -188,6 +199,15 @@ ot_op* ot_compose(ot_op* op1, ot_op* op2) {
                 
                 pair p = ot_compose_insert_insert(op1_insert, op1_iter.offset,
                                                   op2_insert, op2_iter.offset,
+                                                  composed);
+                
+                op1_next = ot_iter_skip(&op1_iter, p.first);
+                op2_next = ot_iter_skip(&op2_iter, p.second);
+            } else if (op2_comp->type == OT_DELETE) {
+                ot_comp_delete op2_delete = op2_comp->value.delete;
+                
+                pair p = ot_compose_insert_delete(op1_insert, op1_iter.offset,
+                                                  op2_delete, op2_iter.offset,
                                                   composed);
                 
                 op1_next = ot_iter_skip(&op1_iter, p.first);
