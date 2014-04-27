@@ -331,6 +331,17 @@ ot_compose_test ot_compose_tests[] = {
         "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 3 }, { \"type\": \"delete\", \"count\": 3 } ] }",
         "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" } ] }"
     },
+    /* delete, skip/insert/delete */
+    (ot_compose_test) {
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"delete\", \"count\": 3 }, { \"type\": \"insert\", \"text\": \"abc\" } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"delete\", \"count\": 3 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"delete\", \"count\": 3 } ] }"
+    },
+    (ot_compose_test) {
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"delete\", \"count\": 3 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"delete\", \"count\": 3 }, { \"type\": \"insert\", \"text\": \"abc\" } ] }"
+    }
 };
 
 MU_TEST(compose_tests) {

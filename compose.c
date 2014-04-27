@@ -101,6 +101,15 @@ static pair ot_compose_insert_delete(ot_comp_insert ins, size_t ins_offset,
     return (pair) { min_len, min_len };
 }
 
+static pair ot_compose_delete(ot_comp_delete del, size_t del_offset,
+                              ot_op* composed) {
+    
+    size_t del_len = del.count - del_offset;
+    ot_delete(composed, del_len);
+    
+    return (pair) { del_len, 0 };
+}
+
 ot_op* ot_compose(ot_op* op1, ot_op* op2) {
     char parent[64];
     memcpy(parent, op1->parent, 64);
@@ -214,11 +223,12 @@ ot_op* ot_compose(ot_op* op1, ot_op* op2) {
                 op2_next = ot_iter_skip(&op2_iter, p.second);
             }
         } else if (op1_comp->type == OT_DELETE) {
-            // There is no way the second operation could've modified the
-            // deleted characters, so we append the delete to the composed
-            // operation and move on.
-            ot_delete(composed, op1_comp->value.delete.count);
-            op1_next = ot_iter_skip(&op1_iter, op1_comp->value.delete.count);
+            ot_comp_delete op1_delete = op1_comp->value.delete;
+            
+            pair p = ot_compose_delete(op1_delete, op1_iter.offset, composed);
+            
+            op1_next = ot_iter_skip(&op1_iter, p.first);
+            op2_next = ot_iter_skip(&op2_iter, p.second);
         }
     }
     
