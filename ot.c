@@ -270,21 +270,26 @@ void ot_end_fmt(ot_op* op, const char* name, const char* value) {
 
 char* ot_snapshot(ot_op* op) {
     size_t size = sizeof(char);
+    size_t written = 0;
 	char* snapshot = NULL;
-	int64_t written = 0;
     ot_comp* comps = op->comps.data;
     
 	for (int i = 0; i < op->comps.len; ++i)
 	{
 		if (comps[i].type == OT_INSERT) {
+            size_t oldsize = size;
             char* t = comps[i].value.insert.text;
-            size += sizeof(char) * strlen(t);
+            size_t comp_len = strlen(t);
+            size += sizeof(char) * comp_len;
             snapshot = realloc(snapshot, size);
-            memcpy(snapshot, t, size);
-            written += strlen(t);
-            
+            memcpy(snapshot + oldsize - 1, t, comp_len);
+            written += comp_len;
 		}
 	}
+    
+    if (snapshot != NULL) {
+        snapshot[written] = 0;
+    }
     
 	return snapshot;
 }

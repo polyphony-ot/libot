@@ -160,6 +160,20 @@ ot_op* ot_compose(ot_op* op1, ot_op* op2) {
                 ot_free_op(composed);
                 return NULL;
             }
+        } else if (op2_comp == NULL) {
+            if (op1_comp == NULL) {
+                assert(!"Both op components should never be NULL.");
+            } else if (op1_comp->type == OT_DELETE) {
+                uint64_t count = op1_comp->value.delete.count;
+                ot_delete(composed, count);
+                op1_next = ot_iter_skip(&op1_iter, count);
+            } else {
+                // Error out since these two components are not composable. The
+                // second op must span the entire first op. Deletes are the only
+                // component that the second op cannot span.
+                ot_free_op(composed);
+                return NULL;
+            }
         } else if (op1_comp->type == OT_SKIP) {
             ot_comp_skip op1_skip = op1_comp->value.skip;
             

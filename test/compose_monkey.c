@@ -9,13 +9,16 @@
 // seed is used to seed rand().
 const int seed = 0;
 
+// num_docs is the number of documents to generate.
+const int num_docs = 128;
+
 // max_ins is maximum number of characters that will be inserted with any insert
 // component.
 const int max_ins = 64;
 
-// max_ops is the maximum number of operations that will be generated and
-// composed.
-const int max_ops = 1000000;
+// max_ops is the maximum number of operations that will be generated for a
+// document.
+const int max_ops = 64;
 
 // min_docsize is the minimum number of characters the composed document can
 // contain.
@@ -90,33 +93,42 @@ static void assert_doc(const char* expected, const char* actual) {
     exit(1);
 }
 
-int main(int argc, const char * argv[])
-{
-    srand(seed);
+// gen_doc generates a new document string and a new document operation. It then
+// generates a random number of components, modifying the document string as it
+// goes. At the end, all of the generated operations are composed together and
+// then applied to the original document operation. If the snapshot of the
+// composed document operation isn't equal to the document string, then it exits
+// with a non-zero exit code.
+static void gen_doc(int docnum) {
+    sprintf(msg, "[INFO] Generating document %d.", docnum + 1);
+    puts(msg);
     
     // Generate an initial document, which is just a string. This document
     // string is used as the expected state.
-    int init_len = rand() % max_ins;
+    int init_len = rand() % max_ins + 1;
     char* docstr = malloc(sizeof(char) * init_len + 1);
     randstr(docstr, init_len);
     
-    // Create the initial operation which is just an insert of the entire
-    // initial document.
+    // Create the initial operation which is just an insert of the document
+    // string.
     char parent[64] = {0};
-    ot_op* composed = ot_new_op(0, parent);
-    ot_insert(composed, docstr);
-    char* snapshot = ot_snapshot(composed);
+    ot_op* docop = ot_new_op(0, parent);
+    ot_insert(docop, docstr);
+    char* snapshot = ot_snapshot(docop);
     assert_doc(docstr, snapshot);
     free(snapshot);
     
+    ot_op* composed = NULL;
     size_t num_skips = 0;
     size_t num_inserts = 0;
     size_t num_deletes = 0;
     size_t max_reached = 0;
-    for (size_t i = 0; i < max_ops; ++i) {
+    size_t num_ops = rand() % max_ops + 2;
+    for (size_t i = 0; i < num_ops; ++i) {
         ot_op* op = ot_new_op(0, parent);
         
-        sprintf(msg, "[INFO] Generating operation #%zu.", i + 1);
+        sprintf(msg, "[INFO] Generating operation %zu out of %zu.", i + 1,
+                num_ops);
         puts(msg);
         
         // doclen is the length of the current (composed) document.
@@ -193,35 +205,60 @@ int main(int argc, const char * argv[])
             }
         }
         
-        char* composed_json = ot_encode(composed);
-        char* op_json = ot_encode(op);
-        sprintf(msg, "[INFO] Composing \"%s\" and \"%s\".", composed_json,
-                op_json);
-        free(composed_json);
-        free(op_json);
-        puts(msg);
-        
-        ot_op* new_composed = ot_compose(composed, op);
-        ot_free_op(composed);
-        ot_free_op(op);
-        composed = new_composed;
         if (composed == NULL) {
-            sprintf(msg, "[FATAL] Compose(op%zu, op%zu) failed.", i - 1, i);
+            composed = op;
+        } else {
+            char* composed_json = ot_encode(composed);
+            char* op_json = ot_encode(op);
+            sprintf(msg, "[INFO] Composing \"%s\" and \"%s\".", composed_json,
+                    op_json);
+            free(composed_json);
+            free(op_json);
             puts(msg);
-            exit(1);
-        }
-        
-        snapshot = ot_snapshot(composed);
-        assert_doc(docstr, snapshot);
-        if (snapshot != NULL) {
-            free(snapshot);
+            
+            ot_op* new_composed = ot_compose(composed, op);
+            composed_json = ot_encode(new_composed);
+            sprintf(msg, "[INFO] Compose(op%zu, op%zu) succeeded: \"%s\".",
+                    i - 1, i, composed_json);
+            puts(msg);
+            free(composed_json);
+            ot_free_op(composed);
+            ot_free_op(op);
+            composed = new_composed;
+            if (composed == NULL) {
+                sprintf(msg, "[FATAL] Compose(op%zu, op%zu) failed.", i - 1, i);
+                puts(msg);
+                exit(1);
+            }
         }
     }
     
-    free(docstr);
+    // Compose the original document operation with the composed operation. If
+    // the snapshot of the result doesn't equal the original document string,
+    // then we exit with an error.
+    char* doc_json = ot_encode(docop);
+    char* composed_json = ot_encode(composed);
+    sprintf(msg, "[INFO] Composing document \"%s\" and \"%s\".", doc_json,
+            composed_json);
+    free(doc_json);
+    free(composed_json);
+    puts(msg);
+    
+    ot_op* new_docop = ot_compose(docop, composed);
+    ot_free_op(docop);
     ot_free_op(composed);
     
-    sprintf(msg, "[INFO] Completed successfully without any errors.");
+    snapshot = ot_snapshot(new_docop);
+    assert_doc(docstr, snapshot);
+    if (snapshot != NULL) {
+        free(snapshot);
+    }
+    
+    free(docstr);
+    ot_free_op(new_docop);
+    
+    sprintf(msg, "[INFO] Document #%d composed without any errors.",
+            docnum + 1);
     puts(msg);
     sprintf(msg, "[INFO] Total characters skipped: %zu.", num_skips);
     puts(msg);
@@ -231,6 +268,15 @@ int main(int argc, const char * argv[])
     puts(msg);
     sprintf(msg, "[INFO] Maximum document size reached: %zu.", max_reached);
     puts(msg);
+}
+
+int main(int argc, const char * argv[])
+{
+    srand(seed);
+    
+    for (int i = 0; i < num_docs; ++i) {
+        gen_doc(i);
+    }
     
     return 0;
 }
