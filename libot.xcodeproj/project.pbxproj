@@ -21,12 +21,14 @@
 		3B4EC60017CAB41C00B254EB /* libot_test.c in Sources */ = {isa = PBXBuildFile; fileRef = 3B4EC5F117CAB30200B254EB /* libot_test.c */; };
 		3B4EC60417CAB86600B254EB /* libot.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B4EC5A617CAA72400B254EB /* libot.a */; };
 		3B9A39DD17F12A24008BDDFE /* libot.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B4EC5A617CAA72400B254EB /* libot.a */; };
+		3BCA65FE190DB35100A21791 /* compose_monkey.c in Sources */ = {isa = PBXBuildFile; fileRef = 3BCA65FD190DB35100A21791 /* compose_monkey.c */; };
 		3BD0401E17E7A70A000A7567 /* otdecode.c in Sources */ = {isa = PBXBuildFile; fileRef = 3BD0401D17E7A70A000A7567 /* otdecode.c */; };
 		3BDA029D17D92EA90039A78C /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 3BDA029C17D92EA90039A78C /* main.c */; };
 		3BE91B5A17E11A610040313D /* otencode.h in Headers */ = {isa = PBXBuildFile; fileRef = 3BE91B5917E11A610040313D /* otencode.h */; };
 		3BE91B5C17E11A6D0040313D /* otencode.c in Sources */ = {isa = PBXBuildFile; fileRef = 3BE91B5B17E11A6D0040313D /* otencode.c */; };
 		3BE9FEDD17CFEBBF00F8B9F0 /* array.h in Headers */ = {isa = PBXBuildFile; fileRef = 3BE9FEDC17CFEBBF00F8B9F0 /* array.h */; };
 		3BE9FEE017CFEBCE00F8B9F0 /* array.c in Sources */ = {isa = PBXBuildFile; fileRef = 3BE9FEDF17CFEBCE00F8B9F0 /* array.c */; };
+		3BEE541A190DB2AF008B55C0 /* libot.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B4EC5A617CAA72400B254EB /* libot.a */; };
 		3BF921051909F8D8009DD206 /* compose.h in Headers */ = {isa = PBXBuildFile; fileRef = 3BF921041909F8D8009DD206 /* compose.h */; };
 		3BF92107190A079B009DD206 /* compose.c in Sources */ = {isa = PBXBuildFile; fileRef = 3BF92106190A079B009DD206 /* compose.c */; };
 /* End PBXBuildFile section */
@@ -40,6 +42,13 @@
 			remoteInfo = ot;
 		};
 		3B9A39DA17F12A1C008BDDFE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3B4EC59E17CAA72400B254EB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3B4EC5A517CAA72400B254EB;
+			remoteInfo = ot;
+		};
+		3BEE5416190DB2AF008B55C0 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 3B4EC59E17CAA72400B254EB /* Project object */;
 			proxyType = 1;
@@ -67,6 +76,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 		};
+		3BEE541B190DB2AF008B55C0 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
@@ -85,6 +103,7 @@
 		3B4EC5F017CAB30200B254EB /* minunit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = minunit.h; sourceTree = "<group>"; };
 		3B4EC5F117CAB30200B254EB /* libot_test.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = libot_test.c; sourceTree = "<group>"; };
 		3B4EC5F617CAB3AF00B254EB /* tests */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = tests; sourceTree = BUILT_PRODUCTS_DIR; };
+		3BCA65FD190DB35100A21791 /* compose_monkey.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = compose_monkey.c; sourceTree = "<group>"; };
 		3BD0401D17E7A70A000A7567 /* otdecode.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = otdecode.c; sourceTree = "<group>"; };
 		3BD0402017E7A717000A7567 /* otdecode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = otdecode.h; sourceTree = "<group>"; };
 		3BDA029A17D92EA90039A78C /* cli */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = cli; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -93,6 +112,7 @@
 		3BE91B5B17E11A6D0040313D /* otencode.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = otencode.c; sourceTree = "<group>"; };
 		3BE9FEDC17CFEBBF00F8B9F0 /* array.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = array.h; sourceTree = "<group>"; };
 		3BE9FEDF17CFEBCE00F8B9F0 /* array.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = array.c; sourceTree = "<group>"; };
+		3BEE541F190DB2AF008B55C0 /* compose-monkey */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "compose-monkey"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3BF921041909F8D8009DD206 /* compose.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = compose.h; sourceTree = "<group>"; };
 		3BF92106190A079B009DD206 /* compose.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = compose.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -118,6 +138,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				3B9A39DD17F12A24008BDDFE /* libot.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3BEE5419190DB2AF008B55C0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3BEE541A190DB2AF008B55C0 /* libot.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -166,6 +194,7 @@
 				3B4EC5A617CAA72400B254EB /* libot.a */,
 				3B4EC5F617CAB3AF00B254EB /* tests */,
 				3BDA029A17D92EA90039A78C /* cli */,
+				3BEE541F190DB2AF008B55C0 /* compose-monkey */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -175,6 +204,7 @@
 			children = (
 				3B4EC5F017CAB30200B254EB /* minunit.h */,
 				3B4EC5F117CAB30200B254EB /* libot_test.c */,
+				3BCA65FD190DB35100A21791 /* compose_monkey.c */,
 			);
 			path = test;
 			sourceTree = "<group>";
@@ -261,6 +291,24 @@
 			productReference = 3BDA029A17D92EA90039A78C /* cli */;
 			productType = "com.apple.product-type.tool";
 		};
+		3BEE5414190DB2AF008B55C0 /* compose-monkey */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3BEE541C190DB2AF008B55C0 /* Build configuration list for PBXNativeTarget "compose-monkey" */;
+			buildPhases = (
+				3BEE5417190DB2AF008B55C0 /* Sources */,
+				3BEE5419190DB2AF008B55C0 /* Frameworks */,
+				3BEE541B190DB2AF008B55C0 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3BEE5415190DB2AF008B55C0 /* PBXTargetDependency */,
+			);
+			name = "compose-monkey";
+			productName = cli;
+			productReference = 3BEE541F190DB2AF008B55C0 /* compose-monkey */;
+			productType = "com.apple.product-type.tool";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -285,6 +333,7 @@
 				3B4EC5A517CAA72400B254EB /* ot */,
 				3B4EC5F517CAB3AF00B254EB /* tests */,
 				3BDA029917D92EA90039A78C /* cli */,
+				3BEE5414190DB2AF008B55C0 /* compose-monkey */,
 			);
 		};
 /* End PBXProject section */
@@ -323,6 +372,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		3BEE5417190DB2AF008B55C0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3BCA65FE190DB35100A21791 /* compose_monkey.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -335,6 +392,11 @@
 			isa = PBXTargetDependency;
 			target = 3B4EC5A517CAA72400B254EB /* ot */;
 			targetProxy = 3B9A39DA17F12A1C008BDDFE /* PBXContainerItemProxy */;
+		};
+		3BEE5415190DB2AF008B55C0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3B4EC5A517CAA72400B254EB /* ot */;
+			targetProxy = 3BEE5416190DB2AF008B55C0 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -467,6 +529,26 @@
 			};
 			name = Release;
 		};
+		3BEE541D190DB2AF008B55C0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_PEDANTIC = YES;
+				PRODUCT_NAME = "compose-monkey";
+			};
+			name = Debug;
+		};
+		3BEE541E190DB2AF008B55C0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_WARN_PEDANTIC = YES;
+				PRODUCT_NAME = "compose-monkey";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -502,6 +584,15 @@
 			buildConfigurations = (
 				3BDA02A117D92EA90039A78C /* Debug */,
 				3BDA02A217D92EA90039A78C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3BEE541C190DB2AF008B55C0 /* Build configuration list for PBXNativeTarget "compose-monkey" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3BEE541D190DB2AF008B55C0 /* Debug */,
+				3BEE541E190DB2AF008B55C0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
