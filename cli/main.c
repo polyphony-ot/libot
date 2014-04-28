@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "ot.h"
+#include "compose.h"
 #include "otdecode.h"
 
 int main(int argc, const char * argv[])
