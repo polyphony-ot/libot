@@ -23,13 +23,13 @@ static void append_str(char** buf,
 // bufsize will be udpated with the new buffer size. written will contain the
 // number of bytes writen to buf.
 static void append_fmtstr(char** buf,
-                             size_t* const bufsize,
-                             size_t* const written,
-                             const char* const fmt,
-                             ...) {
+                          size_t* const bufsize,
+                          size_t* const written,
+                          const char* const fmt,
+                          ...) {
     va_list args;
     va_start(args, fmt);
-    *bufsize += vsnprintf(NULL, 0, (char*) fmt, args);
+    *bufsize += (size_t) vsnprintf(NULL, 0, (char*) fmt, args);
     va_end(args);
     
     *buf = realloc(*buf, *bufsize);
@@ -38,15 +38,10 @@ static void append_fmtstr(char** buf,
     // declare a new va_list.
     va_list args2;
     va_start(args2, fmt);
-    *written += vsprintf((char*) *buf + *written, (char*) fmt, args2);
+    *written += (size_t) vsprintf((char*) *buf + *written, (char*) fmt, args2);
     va_end(args2);
 }
 
-static void encode_fmtbound(const ot_comp_fmtbound* fmtbound) {
-    
-}
-
-// TODO: Implement encoding formatting boundaries.
 char* ot_encode(const ot_op* const op) {
     ot_comp* comps = op->comps.data;
     
@@ -61,7 +56,7 @@ char* ot_encode(const ot_op* const op) {
     atohex(hex, op->parent, 64);
     append_fmtstr(&buf, &bufsize, &written, init_fmt, op->client_id, hex);
     
-	for (int i = 0; i < op->comps.len; ++i)
+	for (size_t i = 0; i < op->comps.len; ++i)
 	{
         ot_comp_type t = comps[i].type;
         if (t == OT_SKIP) {
@@ -84,7 +79,7 @@ char* ot_encode(const ot_op* const op) {
             char* fmt = "{ \"type\": \"closeElement\" }, ";
             append_fmtstr(&buf, &bufsize, &written, fmt);
         } else if (t == OT_FORMATTING_BOUNDARY) {
-            encode_fmtbound(&comps[i].value.fmtbound);
+            // TODO: Implement encoding formatting boundaries.
         }
 	}
     

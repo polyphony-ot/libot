@@ -7,14 +7,14 @@
 
 static void ot_free_fmtbound(ot_comp_fmtbound* fmtbound) {
     ot_fmt* start_data = fmtbound->start.data;
-    for (int i = 0; i < fmtbound->start.len; ++i) {
+    for (size_t i = 0; i < fmtbound->start.len; ++i) {
         free(start_data[i].name);
         free(start_data[i].value);
     }
     array_free(&fmtbound->start);
     
     ot_fmt* end_data = fmtbound->end.data;
-    for (int i = 0; i < fmtbound->end.len; ++i) {
+    for (size_t i = 0; i < fmtbound->end.len; ++i) {
         free(end_data[i].name);
         free(end_data[i].value);
     }
@@ -36,25 +36,6 @@ static void ot_free_comp(ot_comp* comp) {
     }
 }
 
-static void ot_copy_comp(ot_comp* dest, ot_comp* src) {
-    switch (src->type) {
-        case OT_SKIP:
-            dest->type = OT_SKIP;
-            dest->value.skip.count = src->value.skip.count;
-            break;
-        case OT_INSERT:
-            dest->type = OT_INSERT;
-            strcpy(dest->value.insert.text, src->value.insert.text);
-            break;
-        case OT_DELETE:
-            dest->type = OT_DELETE;
-            dest->value.delete.count = src->value.delete.count;
-            break;
-        default:
-            break;
-    }
-}
-
 ot_op* ot_new_op(int64_t client_id, char parent[64]) {
 	ot_op* op = (ot_op*) malloc(sizeof(ot_op));
 	op->client_id = client_id;
@@ -66,7 +47,7 @@ ot_op* ot_new_op(int64_t client_id, char parent[64]) {
 
 void ot_free_op(ot_op* op) {
     ot_comp* comps = op->comps.data;
-    for (int i = 0; i < op->comps.len; ++i)
+    for (size_t i = 0; i < op->comps.len; ++i)
 	{
         ot_free_comp(comps + i);
     }
@@ -274,7 +255,7 @@ char* ot_snapshot(ot_op* op) {
 	char* snapshot = NULL;
     ot_comp* comps = op->comps.data;
     
-	for (int i = 0; i < op->comps.len; ++i)
+	for (size_t i = 0; i < op->comps.len; ++i)
 	{
 		if (comps[i].type == OT_INSERT) {
             size_t oldsize = size;
@@ -296,7 +277,7 @@ char* ot_snapshot(ot_op* op) {
 
 void ot_iter_init(ot_iter* iter, const ot_op* op) {
     iter->op = op;
-    iter->pos = -1;
+    iter->started = false;
 }
 
 static bool ot_iter_adv(ot_iter* iter, size_t max) {
@@ -318,22 +299,23 @@ bool ot_iter_next(ot_iter* iter) {
         return false;
     }
     
-    if (iter->pos == -1) {
+    if (!iter->started) {
         iter->pos = 0;
         iter->offset = 0;
+        iter->started = true;
         return true;
     }
     
     ot_comp* comp = ((ot_comp*) iter->op->comps.data) + iter->pos;
     if (comp->type == OT_SKIP) {
         ot_comp_skip skip = comp->value.skip;
-        return ot_iter_adv(iter, skip.count - 1);
+        return ot_iter_adv(iter, (size_t) skip.count - 1);
     } else if (comp->type == OT_INSERT) {
         ot_comp_insert insert = comp->value.insert;
         return ot_iter_adv(iter, strlen(insert.text) - 1);
     } else if (comp->type == OT_DELETE) {
         ot_comp_delete delete = comp->value.delete;
-        return ot_iter_adv(iter, delete.count - 1);
+        return ot_iter_adv(iter, (size_t) delete.count - 1);
     } else if (comp->type == OT_OPEN_ELEMENT) {
         return ot_iter_adv(iter, 0);
     } else if (comp->type == OT_CLOSE_ELEMENT) {

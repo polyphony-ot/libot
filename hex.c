@@ -6,11 +6,11 @@ int hextoa(char* const a, const char* const hex, size_t len) {
     for (size_t i = 0; i < len; ++i) {
         char c;
         if (hex[i] >= 0x61) {           // Lowercase letter
-            c = (hex[i] - 0x57) << 4;
+            c = (char) ((hex[i] - 0x57) << 4);
         } else if (hex[i] >= 0x41) {    // Uppercase letter
-            c = (hex[i] - 0x37) << 4;
+            c = (char) ((hex[i] - 0x37) << 4);
         } else {                        // Number
-            c = (hex[i] - 0x30) << 4;
+            c = (char) ((hex[i] - 0x30) << 4);
         }
         
         ++i;

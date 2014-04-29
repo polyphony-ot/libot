@@ -8,17 +8,13 @@
 
 /* Begin PBXBuildFile section */
 		3B12DA06190F29FD0081F568 /* xform.c in Sources */ = {isa = PBXBuildFile; fileRef = 3B12DA05190F29FD0081F568 /* xform.c */; };
-		3B1444FF17ECCEA500A5784D /* cJSON.c in Sources */ = {isa = PBXBuildFile; fileRef = 3B1444FC17ECCEA500A5784D /* cJSON.c */; };
+		3B1444FF17ECCEA500A5784D /* cJSON.c in Sources */ = {isa = PBXBuildFile; fileRef = 3B1444FC17ECCEA500A5784D /* cJSON.c */; settings = {COMPILER_FLAGS = "-w"; }; };
 		3B14450017ECCEA500A5784D /* cJSON.h in Headers */ = {isa = PBXBuildFile; fileRef = 3B1444FD17ECCEA500A5784D /* cJSON.h */; };
-		3B14450117ECCEA500A5784D /* test.c in Sources */ = {isa = PBXBuildFile; fileRef = 3B1444FE17ECCEA500A5784D /* test.c */; };
+		3B14450117ECCEA500A5784D /* test.c in Sources */ = {isa = PBXBuildFile; fileRef = 3B1444FE17ECCEA500A5784D /* test.c */; settings = {COMPILER_FLAGS = "-w"; }; };
 		3B204AB617DFD1D400C9AB99 /* hex.h in Headers */ = {isa = PBXBuildFile; fileRef = 3B204AB517DFD1D400C9AB99 /* hex.h */; };
 		3B204AB917DFD1DD00C9AB99 /* hex.c in Sources */ = {isa = PBXBuildFile; fileRef = 3B204AB817DFD1DD00C9AB99 /* hex.c */; };
 		3B4EC5CD17CAA82400B254EB /* ot.h in Headers */ = {isa = PBXBuildFile; fileRef = 3B4EC5BF17CAA82400B254EB /* ot.h */; };
 		3B4EC5CE17CAA82400B254EB /* ot.c in Sources */ = {isa = PBXBuildFile; fileRef = 3B4EC5C017CAA82400B254EB /* ot.c */; };
-		3B4EC5CF17CAA82400B254EB /* client.c in Sources */ = {isa = PBXBuildFile; fileRef = 3B4EC5C117CAA82400B254EB /* client.c */; };
-		3B4EC5D017CAA82400B254EB /* client.h in Headers */ = {isa = PBXBuildFile; fileRef = 3B4EC5C217CAA82400B254EB /* client.h */; };
-		3B4EC5D117CAA82400B254EB /* server.h in Headers */ = {isa = PBXBuildFile; fileRef = 3B4EC5C317CAA82400B254EB /* server.h */; };
-		3B4EC5D217CAA82400B254EB /* server.c in Sources */ = {isa = PBXBuildFile; fileRef = 3B4EC5C417CAA82400B254EB /* server.c */; };
 		3B4EC60017CAB41C00B254EB /* libot_test.c in Sources */ = {isa = PBXBuildFile; fileRef = 3B4EC5F117CAB30200B254EB /* libot_test.c */; };
 		3B4EC60417CAB86600B254EB /* libot.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B4EC5A617CAA72400B254EB /* libot.a */; };
 		3B9A39DD17F12A24008BDDFE /* libot.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B4EC5A617CAA72400B254EB /* libot.a */; };
@@ -99,10 +95,6 @@
 		3B4EC5A617CAA72400B254EB /* libot.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libot.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B4EC5BF17CAA82400B254EB /* ot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ot.h; sourceTree = "<group>"; };
 		3B4EC5C017CAA82400B254EB /* ot.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ot.c; sourceTree = "<group>"; };
-		3B4EC5C117CAA82400B254EB /* client.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = client.c; sourceTree = "<group>"; };
-		3B4EC5C217CAA82400B254EB /* client.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = client.h; sourceTree = "<group>"; };
-		3B4EC5C317CAA82400B254EB /* server.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = server.h; sourceTree = "<group>"; };
-		3B4EC5C417CAA82400B254EB /* server.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = server.c; sourceTree = "<group>"; };
 		3B4EC5F017CAB30200B254EB /* minunit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = minunit.h; sourceTree = "<group>"; };
 		3B4EC5F117CAB30200B254EB /* libot_test.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = libot_test.c; sourceTree = "<group>"; };
 		3B4EC5F617CAB3AF00B254EB /* tests */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = tests; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -169,22 +161,18 @@
 			isa = PBXGroup;
 			children = (
 				3BE9FEDF17CFEBCE00F8B9F0 /* array.c */,
-				3B4EC5C117CAA82400B254EB /* client.c */,
 				3BF92106190A079B009DD206 /* compose.c */,
 				3B204AB817DFD1DD00C9AB99 /* hex.c */,
 				3B4EC5C017CAA82400B254EB /* ot.c */,
 				3BD0401D17E7A70A000A7567 /* otdecode.c */,
 				3BE91B5B17E11A6D0040313D /* otencode.c */,
-				3B4EC5C417CAA82400B254EB /* server.c */,
 				3B12DA05190F29FD0081F568 /* xform.c */,
 				3BE9FEDC17CFEBBF00F8B9F0 /* array.h */,
-				3B4EC5C217CAA82400B254EB /* client.h */,
 				3BF921041909F8D8009DD206 /* compose.h */,
 				3B204AB517DFD1D400C9AB99 /* hex.h */,
 				3B4EC5BF17CAA82400B254EB /* ot.h */,
 				3BD0402017E7A717000A7567 /* otdecode.h */,
 				3BE91B5917E11A610040313D /* otencode.h */,
-				3B4EC5C317CAA82400B254EB /* server.h */,
 				3B12DA07190F2A0A0081F568 /* xform.h */,
 				3B1444FB17ECCEA500A5784D /* cjson */,
 				3BDA029B17D92EA90039A78C /* cli */,
@@ -235,8 +223,6 @@
 				3BE9FEDD17CFEBBF00F8B9F0 /* array.h in Headers */,
 				3B4EC5CD17CAA82400B254EB /* ot.h in Headers */,
 				3BF921051909F8D8009DD206 /* compose.h in Headers */,
-				3B4EC5D017CAA82400B254EB /* client.h in Headers */,
-				3B4EC5D117CAA82400B254EB /* server.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -352,9 +338,7 @@
 				3BE91B5C17E11A6D0040313D /* otencode.c in Sources */,
 				3BD0401E17E7A70A000A7567 /* otdecode.c in Sources */,
 				3B1444FF17ECCEA500A5784D /* cJSON.c in Sources */,
-				3B4EC5D217CAA82400B254EB /* server.c in Sources */,
 				3B14450117ECCEA500A5784D /* test.c in Sources */,
-				3B4EC5CF17CAA82400B254EB /* client.c in Sources */,
 				3BF92107190A079B009DD206 /* compose.c in Sources */,
 				3B204AB917DFD1DD00C9AB99 /* hex.c in Sources */,
 				3B4EC5CE17CAA82400B254EB /* ot.c in Sources */,
@@ -420,8 +404,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_IMPLICIT_SIGN_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				GCC_CHAR_IS_UNSIGNED_CHAR = YES;
@@ -434,11 +420,24 @@
 					"$(inherited)",
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_TREAT_IMPLICIT_FUNCTION_DECLARATIONS_AS_ERRORS = YES;
+				GCC_TREAT_INCOMPATIBLE_POINTER_TYPE_WARNINGS_AS_ERRORS = YES;
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_FIELD_INITIALIZERS = YES;
+				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_INITIALIZER_NOT_FULLY_BRACKETED = YES;
+				GCC_WARN_PEDANTIC = YES;
+				GCC_WARN_SHADOW = YES;
+				GCC_WARN_SIGN_COMPARE = YES;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNKNOWN_PRAGMAS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_LABEL = YES;
+				GCC_WARN_UNUSED_PARAMETER = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				ONLY_ACTIVE_ARCH = YES;
@@ -458,8 +457,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_IMPLICIT_SIGN_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -467,11 +468,24 @@
 				GCC_CHAR_IS_UNSIGNED_CHAR = YES;
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_TREAT_IMPLICIT_FUNCTION_DECLARATIONS_AS_ERRORS = YES;
+				GCC_TREAT_INCOMPATIBLE_POINTER_TYPE_WARNINGS_AS_ERRORS = YES;
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_FIELD_INITIALIZERS = YES;
+				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_INITIALIZER_NOT_FULLY_BRACKETED = YES;
+				GCC_WARN_PEDANTIC = YES;
+				GCC_WARN_SHADOW = YES;
+				GCC_WARN_SIGN_COMPARE = YES;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNKNOWN_PRAGMAS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_LABEL = YES;
+				GCC_WARN_UNUSED_PARAMETER = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 			};
@@ -481,7 +495,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				EXECUTABLE_PREFIX = lib;
-				GCC_WARN_PEDANTIC = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -490,7 +503,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				EXECUTABLE_PREFIX = lib;
-				GCC_WARN_PEDANTIC = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -502,7 +514,6 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				GCC_WARN_PEDANTIC = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -510,7 +521,6 @@
 		3B4EC5FE17CAB3AF00B254EB /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_WARN_PEDANTIC = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -522,7 +532,6 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				GCC_WARN_PEDANTIC = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -530,7 +539,6 @@
 		3BDA02A217D92EA90039A78C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_WARN_PEDANTIC = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -542,7 +550,6 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				GCC_WARN_PEDANTIC = YES;
 				PRODUCT_NAME = "compose-monkey";
 			};
 			name = Debug;
@@ -550,7 +557,6 @@
 		3BEE541E190DB2AF008B55C0 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_WARN_PEDANTIC = YES;
 				PRODUCT_NAME = "compose-monkey";
 			};
 			name = Release;

@@ -40,7 +40,7 @@ static void randstr(char* str, size_t len) {
     "abcdefghijklmnopqrstuvwxyz";
     
     for (size_t i = 0; i < len; ++i) {
-        str[i] = alphanum[rand() % (sizeof(alphanum) - 1)];
+        str[i] = alphanum[(size_t) rand() % (sizeof(alphanum) - 1)];
     }
     
     str[len] = 0;
@@ -105,7 +105,7 @@ static void gen_doc(int docnum) {
     
     // Generate an initial document, which is just a string. This document
     // string is used as the expected state.
-    int init_len = rand() % max_ins + 1;
+    size_t init_len = rand() % max_ins + 1;
     char* docstr = malloc(sizeof(char) * init_len + 1);
     randstr(docstr, init_len);
     
@@ -157,16 +157,16 @@ static void gen_doc(int docnum) {
                 // We can only perform a skip if we haven't already spanned the
                 // entire document.
                 
-                size_t count = (rand() % (doclen - pos)) + 1;
+                int64_t count = (int64_t) ((uint) rand() % (doclen - pos)) + 1;
                 ot_skip(op, count);
                 
-                sprintf(msg, "[INFO] Skipping %zu characters at position %zu.",
+                sprintf(msg, "[INFO] Skipping %lld characters at position %zu.",
                         count, newpos);
                 puts(msg);
                 
-                pos += count;
-                newpos += count;
-                num_skips += count;
+                pos += (size_t) count;
+                newpos += (size_t) count;
+                num_skips += (size_t) count;
             } else if (type == OT_INSERT && newlen < max_docsize) {
                 // We can only perform an insert if the new document length
                 // doesn't exceed max_docsize.
@@ -191,17 +191,18 @@ static void gen_doc(int docnum) {
             } else if (type == OT_DELETE && pos < doclen) {
                 // We can only perform a delete if we haven't already spanned
                 // the entire document.
-                
-                size_t count = (rand() % (doclen - pos)) + 1;
+
+                uint r = (uint) rand();
+                int64_t count = (int64_t) (r % (doclen - pos)) + 1;
                 ot_delete(op, count);
-                docstr = delete_substr(docstr, newpos, count);
+                docstr = delete_substr(docstr, newpos, (size_t) count);
                 
-                sprintf(msg, "[INFO] Deleting %zu characters at position %zu.",
+                sprintf(msg, "[INFO] Deleting %lld characters at position %zu.",
                         count, newpos);
                 puts(msg);
                 
-                pos += count;
-                num_deletes += count;
+                pos += (size_t) count;
+                num_deletes += (size_t) count;
             }
         }
         
@@ -270,7 +271,7 @@ static void gen_doc(int docnum) {
     puts(msg);
 }
 
-int main(int argc, const char * argv[])
+int main()
 {
     srand(seed);
     

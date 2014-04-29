@@ -164,6 +164,8 @@ printf(".");\
      * from http://NadeauSoftware.com/ and distributed under the
      * Creative Commons Attribution 3.0 Unported License
      */
+
+    double mu_timer_real(void);
     
     /**
      * Returns the real time, in seconds, or -1.0 if an error occurred.
@@ -242,7 +244,9 @@ printf(".");\
         return -1.0;		/* Failed. */
 #endif
     }
-    
+
+    double mu_timer_cpu(void);
+
     /**
      * Returns the amount of CPU time used by the current process,
      * in seconds, or -1.0 if an error occurred.

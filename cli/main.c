@@ -3,7 +3,7 @@
 #include "compose.h"
 #include "otdecode.h"
 
-int main(int argc, const char * argv[])
+int main()
 {
     char buf[1024];
     fputs("Operation 1: ", stdout);

@@ -83,9 +83,10 @@ char* ot_snapshot(ot_op* op);
 ot_comp_fmtbound* ot_new_fmtbound();
 
 typedef struct ot_iter {
-    const ot_op* op;      // Op to iterator over.
-    size_t pos;     // Current component position.
-    size_t offset;  // Offset within current component.
+    const ot_op* op;    // Op to iterator over.
+    size_t pos;         // Current component position.
+    size_t offset;      // Offset within current component.
+    bool started;       // Set true when ot_iter_next is called the first time.
 } ot_iter;
 
 // Initializes a new iterator pointing to the -1 position. This means that

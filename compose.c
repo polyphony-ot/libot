@@ -17,11 +17,11 @@ static pair ot_compose_skip_skip(ot_comp_skip skip1, size_t offset1,
                                  ot_comp_skip skip2, size_t offset2,
                                  ot_op* composed) {
     
-    size_t skip1_count = skip1.count - offset1;
-    size_t skip2_count = skip2.count - offset2;
+    size_t skip1_count = (size_t) skip1.count - offset1;
+    size_t skip2_count = (size_t) skip2.count - offset2;
     size_t min_len = min(skip1_count, skip2_count);
     
-    ot_skip(composed, min_len);
+    ot_skip(composed, (int64_t) min_len);
     
     return (pair) { min_len, min_len };
 }
@@ -31,7 +31,7 @@ static pair ot_compose_skip_insert(ot_comp_skip skip, size_t skip_offset,
                                    ot_op* composed) {
 
     size_t insert_len = strlen(insert.text) - insert_offset;
-    size_t skip_len = skip.count - skip_offset;
+    size_t skip_len = (size_t) skip.count - skip_offset;
     size_t min_len = min(skip_len, insert_len);
 
     char* substr = malloc(sizeof(char) * min_len + 1);
@@ -47,11 +47,11 @@ static pair ot_compose_skip_delete(ot_comp_skip skip, size_t skip_offset,
                                    ot_comp_delete delete, size_t delete_offset,
                                    ot_op* composed) {
     
-    size_t skip_len = skip.count - skip_offset;
-    size_t delete_len = delete.count - delete_offset;
+    size_t skip_len = (size_t) skip.count - skip_offset;
+    size_t delete_len = (size_t) delete.count - delete_offset;
     size_t min_len = min(skip_len, delete_len);
     
-    ot_delete(composed, min_len);
+    ot_delete(composed, (int64_t) min_len);
     
     return (pair) { min_len, min_len };
 }
@@ -61,7 +61,7 @@ static pair ot_compose_insert_skip(ot_comp_insert insert, size_t insert_offset,
                                    ot_op* composed) {
     
     size_t insert_len = strlen(insert.text) - insert_offset;
-    size_t skip_len = skip.count - skip_offset;
+    size_t skip_len = (size_t) skip.count - skip_offset;
     size_t min_len = min(skip_len, insert_len);
     
     char* substr = malloc(sizeof(char) * min_len + 1);
@@ -91,11 +91,10 @@ static pair ot_compose_insert_insert(ot_comp_insert insert1, size_t offset1,
 }
 
 static pair ot_compose_insert_delete(ot_comp_insert ins, size_t ins_offset,
-                                     ot_comp_delete del, size_t del_offset,
-                                     ot_op* composed) {
+                                     ot_comp_delete del, size_t del_offset) {
     
     size_t ins_len = strlen(ins.text) - ins_offset;
-    size_t del_len = del.count - del_offset;
+    size_t del_len = (size_t) del.count - del_offset;
     size_t min_len = min(ins_len, del_len);
     
     return (pair) { min_len, min_len };
@@ -104,8 +103,8 @@ static pair ot_compose_insert_delete(ot_comp_insert ins, size_t ins_offset,
 static pair ot_compose_delete(ot_comp_delete del, size_t del_offset,
                               ot_op* composed) {
     
-    size_t del_len = del.count - del_offset;
-    ot_delete(composed, del_len);
+    size_t del_len = (size_t) del.count - del_offset;
+    ot_delete(composed, (int64_t) del_len);
     
     return (pair) { del_len, 0 };
 }
@@ -164,9 +163,9 @@ ot_op* ot_compose(ot_op* op1, ot_op* op2) {
             if (op1_comp == NULL) {
                 assert(!"Both op components should never be NULL.");
             } else if (op1_comp->type == OT_DELETE) {
-                uint64_t count = op1_comp->value.delete.count;
+                int64_t count = op1_comp->value.delete.count;
                 ot_delete(composed, count);
-                op1_next = ot_iter_skip(&op1_iter, count);
+                op1_next = ot_iter_skip(&op1_iter, (size_t) count);
             } else {
                 // Error out since these two components are not composable. The
                 // second op must span the entire first op. Deletes are the only
@@ -230,8 +229,7 @@ ot_op* ot_compose(ot_op* op1, ot_op* op2) {
                 ot_comp_delete op2_delete = op2_comp->value.delete;
                 
                 pair p = ot_compose_insert_delete(op1_insert, op1_iter.offset,
-                                                  op2_delete, op2_iter.offset,
-                                                  composed);
+                                                  op2_delete, op2_iter.offset);
                 
                 op1_next = ot_iter_skip(&op1_iter, p.first);
                 op2_next = ot_iter_skip(&op2_iter, p.second);
