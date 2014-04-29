@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3B12DA06190F29FD0081F568 /* xform.c in Sources */ = {isa = PBXBuildFile; fileRef = 3B12DA05190F29FD0081F568 /* xform.c */; };
 		3B1444FF17ECCEA500A5784D /* cJSON.c in Sources */ = {isa = PBXBuildFile; fileRef = 3B1444FC17ECCEA500A5784D /* cJSON.c */; };
 		3B14450017ECCEA500A5784D /* cJSON.h in Headers */ = {isa = PBXBuildFile; fileRef = 3B1444FD17ECCEA500A5784D /* cJSON.h */; };
 		3B14450117ECCEA500A5784D /* test.c in Sources */ = {isa = PBXBuildFile; fileRef = 3B1444FE17ECCEA500A5784D /* test.c */; };
@@ -88,6 +89,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		3B12DA05190F29FD0081F568 /* xform.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = xform.c; sourceTree = "<group>"; };
+		3B12DA07190F2A0A0081F568 /* xform.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = xform.h; sourceTree = "<group>"; };
 		3B1444FC17ECCEA500A5784D /* cJSON.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = cJSON.c; sourceTree = "<group>"; };
 		3B1444FD17ECCEA500A5784D /* cJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cJSON.h; sourceTree = "<group>"; };
 		3B1444FE17ECCEA500A5784D /* test.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = test.c; sourceTree = "<group>"; };
@@ -166,25 +169,27 @@
 			isa = PBXGroup;
 			children = (
 				3BE9FEDF17CFEBCE00F8B9F0 /* array.c */,
-				3BE9FEDC17CFEBBF00F8B9F0 /* array.h */,
-				3B204AB517DFD1D400C9AB99 /* hex.h */,
-				3B204AB817DFD1DD00C9AB99 /* hex.c */,
-				3B4EC5BF17CAA82400B254EB /* ot.h */,
+				3B4EC5C117CAA82400B254EB /* client.c */,
 				3BF92106190A079B009DD206 /* compose.c */,
-				3BF921041909F8D8009DD206 /* compose.h */,
+				3B204AB817DFD1DD00C9AB99 /* hex.c */,
 				3B4EC5C017CAA82400B254EB /* ot.c */,
 				3BD0401D17E7A70A000A7567 /* otdecode.c */,
-				3BD0402017E7A717000A7567 /* otdecode.h */,
 				3BE91B5B17E11A6D0040313D /* otencode.c */,
-				3BE91B5917E11A610040313D /* otencode.h */,
-				3B4EC5C117CAA82400B254EB /* client.c */,
-				3B4EC5C217CAA82400B254EB /* client.h */,
-				3B4EC5C317CAA82400B254EB /* server.h */,
 				3B4EC5C417CAA82400B254EB /* server.c */,
+				3B12DA05190F29FD0081F568 /* xform.c */,
+				3BE9FEDC17CFEBBF00F8B9F0 /* array.h */,
+				3B4EC5C217CAA82400B254EB /* client.h */,
+				3BF921041909F8D8009DD206 /* compose.h */,
+				3B204AB517DFD1D400C9AB99 /* hex.h */,
+				3B4EC5BF17CAA82400B254EB /* ot.h */,
+				3BD0402017E7A717000A7567 /* otdecode.h */,
+				3BE91B5917E11A610040313D /* otencode.h */,
+				3B4EC5C317CAA82400B254EB /* server.h */,
+				3B12DA07190F2A0A0081F568 /* xform.h */,
 				3B1444FB17ECCEA500A5784D /* cjson */,
-				3B4EC5EF17CAB30200B254EB /* test */,
 				3BDA029B17D92EA90039A78C /* cli */,
 				3B4EC5A717CAA72400B254EB /* Products */,
+				3B4EC5EF17CAB30200B254EB /* test */,
 			);
 			sourceTree = "<group>";
 		};
@@ -343,6 +348,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3B12DA06190F29FD0081F568 /* xform.c in Sources */,
 				3BE91B5C17E11A6D0040313D /* otencode.c in Sources */,
 				3BD0401E17E7A70A000A7567 /* otdecode.c in Sources */,
 				3B1444FF17ECCEA500A5784D /* cJSON.c in Sources */,
