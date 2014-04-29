@@ -34,15 +34,14 @@ char msg[5242880];
 // randstr generates a random string of alphanumeric characters and places them
 // in str.
 static void randstr(char* str, size_t len) {
-    static const char alphanum[] =
-    "0123456789"
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    "abcdefghijklmnopqrstuvwxyz";
-    
+    static const char alphanum[] = "0123456789"
+                                   "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                                   "abcdefghijklmnopqrstuvwxyz";
+
     for (size_t i = 0; i < len; ++i) {
-        str[i] = alphanum[(size_t) rand() % (sizeof(alphanum) - 1)];
+        str[i] = alphanum[(size_t)rand() % (sizeof(alphanum) - 1)];
     }
-    
+
     str[len] = 0;
 }
 
@@ -51,16 +50,16 @@ static char* insert_substr(char* str, const char* substr, size_t pos) {
     size_t str_len = strlen(str);
     size_t substr_len = strlen(substr);
     str = realloc(str, str_len + substr_len + 1);
-    
+
     char* substr_start = str + pos;
     char* substr_end = str + pos + substr_len;
-    
+
     // Make room for the substring by making a gap in the string.
     memmove(substr_end, substr_start, str_len - pos);
     // Copy the substring into the string.
     memcpy(substr_start, substr, substr_len);
     str[str_len + substr_len] = 0;
-    
+
     return str;
 }
 
@@ -68,7 +67,7 @@ static char* insert_substr(char* str, const char* substr, size_t pos) {
 static char* delete_substr(char* str, size_t pos, size_t len) {
     size_t str_len = strlen(str);
     memmove(str + pos, str + pos + len, str_len - (pos + len) + 1);
-    
+
     return str;
 }
 
@@ -79,16 +78,18 @@ static void assert_doc(const char* expected, const char* actual) {
     if (actual == NULL) {
         actual = "";
     }
-    
+
     if (strcmp(expected, actual) == 0) {
         sprintf(msg, "[INFO] Document state verified. Expected = \"%s\". Actual"
-                " = \"%s\".", expected, actual);
+                     " = \"%s\".",
+                expected, actual);
         puts(msg);
         return;
     }
-    
+
     sprintf(msg, "[FATAL] Unexpected document state. Expected = \"%s\". Actual "
-            "= \"%s\".", expected, actual);
+                 "= \"%s\".",
+            expected, actual);
     puts(msg);
     exit(1);
 }
@@ -102,22 +103,22 @@ static void assert_doc(const char* expected, const char* actual) {
 static void gen_doc(int docnum) {
     sprintf(msg, "[INFO] Generating document %d.", docnum + 1);
     puts(msg);
-    
+
     // Generate an initial document, which is just a string. This document
     // string is used as the expected state.
     size_t init_len = rand() % max_ins + 1;
     char* docstr = malloc(sizeof(char) * init_len + 1);
     randstr(docstr, init_len);
-    
+
     // Create the initial operation which is just an insert of the document
     // string.
-    char parent[64] = {0};
+    char parent[64] = { 0 };
     ot_op* docop = ot_new_op(0, parent);
     ot_insert(docop, docstr);
     char* snapshot = ot_snapshot(docop);
     assert_doc(docstr, snapshot);
     free(snapshot);
-    
+
     ot_op* composed = NULL;
     size_t num_skips = 0;
     size_t num_inserts = 0;
@@ -126,23 +127,23 @@ static void gen_doc(int docnum) {
     size_t num_ops = rand() % max_ops + 2;
     for (size_t i = 0; i < num_ops; ++i) {
         ot_op* op = ot_new_op(0, parent);
-        
+
         sprintf(msg, "[INFO] Generating operation %zu out of %zu.", i + 1,
                 num_ops);
         puts(msg);
-        
+
         // doclen is the length of the current (composed) document.
         size_t doclen = strlen(docstr);
-        
+
         // pos is our current position in current (composed) document.
         size_t pos = 0;
-        
+
         // newpos is our current position in the new (edited) document.
         size_t newpos = 0;
-        
+
         // newlen is the length of the new (edited) document.
         size_t newlen = 0;
-        
+
         // Generate components for the current operation until we've spanned the
         // entire document. An operation must span the entire document in order
         // for it to be valid.
@@ -152,39 +153,40 @@ static void gen_doc(int docnum) {
             if (newlen > max_reached) {
                 max_reached = newlen;
             }
-            
+
             if (type == OT_SKIP && pos < doclen) {
                 // We can only perform a skip if we haven't already spanned the
                 // entire document.
-                
-                int64_t count = (int64_t) ((uint) rand() % (doclen - pos)) + 1;
+
+                int64_t count = (int64_t)((uint)rand() % (doclen - pos)) + 1;
                 ot_skip(op, count);
-                
+
                 sprintf(msg, "[INFO] Skipping %lld characters at position %zu.",
                         count, newpos);
                 puts(msg);
-                
-                pos += (size_t) count;
-                newpos += (size_t) count;
-                num_skips += (size_t) count;
+
+                pos += (size_t)count;
+                newpos += (size_t)count;
+                num_skips += (size_t)count;
             } else if (type == OT_INSERT && newlen < max_docsize) {
                 // We can only perform an insert if the new document length
                 // doesn't exceed max_docsize.
-                
+
                 size_t count = (rand() % max_ins) + 1;
                 if (newlen + count >= max_docsize) {
                     count = max_docsize - newlen;
                 }
-                
+
                 char* substr = malloc(sizeof(char) * count + 1);
                 randstr(substr, count);
                 docstr = insert_substr(docstr, substr, newpos);
                 ot_insert(op, substr);
-                
+
                 sprintf(msg, "[INFO] Inserting the characters \"%s\" at "
-                        "position %zu.", substr, newpos);
+                             "position %zu.",
+                        substr, newpos);
                 puts(msg);
-                
+
                 newpos += count;
                 num_inserts += count;
                 free(substr);
@@ -192,20 +194,20 @@ static void gen_doc(int docnum) {
                 // We can only perform a delete if we haven't already spanned
                 // the entire document.
 
-                uint r = (uint) rand();
-                int64_t count = (int64_t) (r % (doclen - pos)) + 1;
+                uint r = (uint)rand();
+                int64_t count = (int64_t)(r % (doclen - pos)) + 1;
                 ot_delete(op, count);
-                docstr = delete_substr(docstr, newpos, (size_t) count);
-                
+                docstr = delete_substr(docstr, newpos, (size_t)count);
+
                 sprintf(msg, "[INFO] Deleting %lld characters at position %zu.",
                         count, newpos);
                 puts(msg);
-                
-                pos += (size_t) count;
-                num_deletes += (size_t) count;
+
+                pos += (size_t)count;
+                num_deletes += (size_t)count;
             }
         }
-        
+
         if (composed == NULL) {
             composed = op;
         } else {
@@ -216,7 +218,7 @@ static void gen_doc(int docnum) {
             free(composed_json);
             free(op_json);
             puts(msg);
-            
+
             ot_op* new_composed = ot_compose(composed, op);
             composed_json = ot_encode(new_composed);
             sprintf(msg, "[INFO] Compose(op%zu, op%zu) succeeded: \"%s\".",
@@ -233,7 +235,7 @@ static void gen_doc(int docnum) {
             }
         }
     }
-    
+
     // Compose the original document operation with the composed operation. If
     // the snapshot of the result doesn't equal the original document string,
     // then we exit with an error.
@@ -244,20 +246,20 @@ static void gen_doc(int docnum) {
     free(doc_json);
     free(composed_json);
     puts(msg);
-    
+
     ot_op* new_docop = ot_compose(docop, composed);
     ot_free_op(docop);
     ot_free_op(composed);
-    
+
     snapshot = ot_snapshot(new_docop);
     assert_doc(docstr, snapshot);
     if (snapshot != NULL) {
         free(snapshot);
     }
-    
+
     free(docstr);
     ot_free_op(new_docop);
-    
+
     sprintf(msg, "[INFO] Document #%d composed without any errors.",
             docnum + 1);
     puts(msg);
@@ -271,13 +273,12 @@ static void gen_doc(int docnum) {
     puts(msg);
 }
 
-int main()
-{
+int main() {
     srand(seed);
-    
+
     for (int i = 0; i < num_docs; ++i) {
         gen_doc(i);
     }
-    
+
     return 0;
 }

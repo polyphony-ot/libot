@@ -8,9 +8,9 @@
 // hold. Therefore, capacity >= len. The array capacity will grow by 2 * cap
 // whenever the length reaches capacity.
 typedef struct array {
-	size_t len;     // The number of items.
-    size_t cap;     // The max capacity.
-    size_t size;    // The size of each item.
+    size_t len;  // The number of items.
+    size_t cap;  // The max capacity.
+    size_t size; // The size of each item.
     void* data;
 } array;
 

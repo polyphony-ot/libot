@@ -5,16 +5,16 @@ int hextoa(char* const a, const char* const hex, size_t len) {
     size_t j = 0;
     for (size_t i = 0; i < len; ++i) {
         char c;
-        if (hex[i] >= 0x61) {           // Lowercase letter
-            c = (char) ((hex[i] - 0x57) << 4);
-        } else if (hex[i] >= 0x41) {    // Uppercase letter
-            c = (char) ((hex[i] - 0x37) << 4);
-        } else {                        // Number
-            c = (char) ((hex[i] - 0x30) << 4);
+        if (hex[i] >= 0x61) { // Lowercase letter
+            c = (char)((hex[i] - 0x57) << 4);
+        } else if (hex[i] >= 0x41) { // Uppercase letter
+            c = (char)((hex[i] - 0x37) << 4);
+        } else { // Number
+            c = (char)((hex[i] - 0x30) << 4);
         }
-        
+
         ++i;
-        
+
         if (hex[i] >= 0x61) {
             c += hex[i] - 0x57;
         } else if (hex[i] >= 0x41) {
@@ -22,11 +22,11 @@ int hextoa(char* const a, const char* const hex, size_t len) {
         } else {
             c += hex[i] - 0x30;
         }
-        
+
         a[j] = c;
         ++j;
     }
-    
+
     return 0;
 }
 
@@ -46,7 +46,7 @@ int atohex(char* const hex, const char* const a, size_t len) {
             hex[j] = high + 0x57;
         }
         ++j;
-        
+
         if (low <= 0x9) {
             hex[j] += low + 0x30;
         } else {
@@ -54,6 +54,6 @@ int atohex(char* const hex, const char* const a, size_t len) {
         }
         ++j;
     }
-    
+
     return 0;
 }

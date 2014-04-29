@@ -8,9 +8,7 @@ void array_init(array* arr, size_t size) {
     arr->data = NULL;
 }
 
-void array_free(array* arr) {
-    free(arr->data);
-}
+void array_free(array* arr) { free(arr->data); }
 
 void array_ensure_size(array* arr) {
     if (arr->len == 0) {
@@ -26,6 +24,6 @@ void* array_append(array* arr) {
     array_ensure_size(arr);
     size_t temp = arr->len;
     arr->len++;
-    
+
     return ((char*)arr->data) + (arr->size * temp);
 }
