@@ -5,6 +5,7 @@
 #include "minunit.h"
 #include "../ot.h"
 #include "../compose.h"
+#include "../xform.h"
 #include "../array.h"
 #include "../hex.h"
 #include "../otdecode.h"
@@ -373,6 +374,64 @@ MU_TEST_SUITE(compose_test_suite) {
     MU_RUN_TEST(compose_tests);
 }
 
+/* xform tests */
+
+typedef struct ot_xform_test {
+    char* initial;
+    char* op1;
+    char* op2;
+    char* expected;
+} ot_xform_test;
+
+ot_xform_test ot_xform_tests[] = {
+    /* skip, skip */
+    (ot_xform_test) {
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 3 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 1 }, { \"type\": \"skip\", \"count\": 2 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 2 }, { \"type\": \"skip\", \"count\": 1 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 3 } ] }"
+    },
+};
+
+MU_TEST(xform_tests) {
+    char errmsg[128];
+    size_t max = sizeof(ot_xform_test) / sizeof(ot_xform_test);
+    for (size_t i = 0; i < max; ++i) {
+        ot_xform_test t = ot_xform_tests[i];
+
+        char p[64];
+        ot_op* initial = ot_new_op(0, p);
+        ot_decode_err err = ot_decode(initial, t.initial);
+        mu_assert(err == OT_ERR_NONE, "Error decoding initial test op.");
+
+        ot_op* op1 = ot_new_op(0, p);
+        err = ot_decode(op1, t.op1);
+        mu_assert(err == OT_ERR_NONE, "Error decoding first test op.");
+
+        ot_op* op2 = ot_new_op(0, p);
+        err = ot_decode(op2, t.op2);
+        mu_assert(err == OT_ERR_NONE, "Error decoding second test op.");
+
+        ot_op* expected = ot_new_op(0, p);
+        err = ot_decode(expected, t.expected);
+        mu_assert(err == OT_ERR_NONE, "Error decoding expected test op.");
+
+        ot_xform_pair xform = ot_xform(op1, op2);
+
+        ot_op* actual1 = ot_compose(ot_compose(initial, op1), xform.op2_prime);
+        sprintf(errmsg, "[%zu] op2' wasn't correct.", i);
+        mu_assert(ot_equal(expected, actual1), errmsg);
+
+        ot_op* actual2 = ot_compose(ot_compose(initial, op2), xform.op1_prime);
+        sprintf(errmsg, "[%zu] op1' wasn't correct.", i);
+        mu_assert(ot_equal(expected, actual2), errmsg);
+    }
+}
+
+MU_TEST_SUITE(xform_test_suite) {
+    MU_RUN_TEST(xform_tests);
+}
+
 /* otdecode tests */
 
 MU_TEST(decode_skip) {
@@ -721,6 +780,7 @@ MU_TEST_SUITE(hex_test_suite) {
 int main() {
     MU_RUN_SUITE(ot_test_suite);
     MU_RUN_SUITE(compose_test_suite);
+    MU_RUN_SUITE(xform_test_suite);
     MU_RUN_SUITE(otdecode_test_suite);
     MU_RUN_SUITE(otencode_test_suite);
     MU_RUN_SUITE(array_test_suite);
