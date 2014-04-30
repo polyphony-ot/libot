@@ -2,6 +2,7 @@
 #define libot_xform_h
 
 #include <stdlib.h>
+#include <string.h>
 #include "ot.h"
 
 typedef struct ot_xform_pair {

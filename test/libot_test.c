@@ -391,11 +391,24 @@ ot_xform_test ot_xform_tests[] = {
         "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 2 }, { \"type\": \"skip\", \"count\": 1 } ] }",
         "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 3 } ] }"
     },
+    /* skip, insert */
+    (ot_xform_test) {
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"def\" } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 3 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" }, { \"type\": \"skip\", \"count\": 3 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abcdef\" } ] }"
+    },
+    (ot_xform_test) {
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 3 }, { \"type\": \"insert\", \"text\": \"ghi\" } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" }, { \"type\": \"skip\", \"count\": 6 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 6 }, { \"type\": \"insert\", \"text\": \"jkl\" } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" }, { \"type\": \"skip\", \"count\": 3 }, { \"type\": \"insert\", \"text\": \"ghijkl\" } ] }"
+    }
 };
 
 MU_TEST(xform_tests) {
     char errmsg[128];
-    size_t max = sizeof(ot_xform_test) / sizeof(ot_xform_test);
+    size_t max = sizeof(ot_xform_tests) / sizeof(ot_xform_test);
     for (size_t i = 0; i < max; ++i) {
         ot_xform_test t = ot_xform_tests[i];
 
