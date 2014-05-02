@@ -429,6 +429,19 @@ ot_xform_test ot_xform_tests[] = {
         "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 3 }, { \"type\": \"insert\", \"text\": \"def\" } ] }",
         "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 3 }, { \"type\": \"insert\", \"text\": \"ghi\" } ] }",
         "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abcdefghi\" } ] }"
+    },
+    /* insert, delete */
+    (ot_xform_test) {
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"def\" } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" }, { \"type\": \"skip\", \"count\": 3 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"delete\", \"count\": 3 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" } ] }"
+    },
+    (ot_xform_test) {
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"def\" } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"delete\", \"count\": 3 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" }, { \"type\": \"skip\", \"count\": 3 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" } ] }"
     }
 };
 
