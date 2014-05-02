@@ -52,6 +52,29 @@ static delta_pair ot_xform_insert_skip(ot_comp_insert ins, size_t ins_offset,
     return (delta_pair) { p.delta2, p.delta1 };
 }
 
+static delta_pair ot_xform_skip_delete(ot_comp_skip skip, size_t skip_offset,
+                                       ot_comp_delete del, size_t del_offset,
+                                       ot_xform_pair xform) {
+
+    size_t skip_len = (size_t)skip.count - skip_offset;
+    size_t del_len = (size_t)del.count - del_offset;
+    size_t min_len = min(skip_len, del_len);
+
+    ot_delete(xform.op2_prime, (int64_t)min_len);
+
+    return (delta_pair) { min_len, min_len };
+}
+
+static delta_pair ot_xform_delete_skip(ot_comp_delete del, size_t del_offset,
+                                       ot_comp_skip skip, size_t skip_offset,
+                                       ot_xform_pair xform) {
+
+    ot_xform_pair flip = (ot_xform_pair) { xform.op2_prime, xform.op1_prime };
+    delta_pair p =
+        ot_xform_skip_delete(skip, skip_offset, del, del_offset, flip);
+    return (delta_pair) { p.delta2, p.delta1 };
+}
+
 static delta_pair ot_xform_insert_insert(ot_comp_insert op1_insert,
                                          size_t op1_offset,
                                          ot_xform_pair xform) {
@@ -120,6 +143,15 @@ ot_xform_pair ot_xform(ot_op* op1, ot_op* op2) {
         } else if (op2_comp == NULL) {
             if (op1_comp == NULL) {
                 assert(!"Both op components should never be NULL.");
+            } else if (op1_comp->type == OT_INSERT) {
+                // If we've reached the end of the second operation but not the
+                // first, then just act like the second operation is skipping
+                // whatever the first operation did.
+                ot_comp_insert op1_insert = op1_comp->value.insert;
+                delta_pair p =
+                    ot_xform_insert_skip(op1_insert, op1_iter.offset, xform);
+
+                op1_next = ot_iter_skip(&op1_iter, p.delta1);
             } else {
                 ot_free_op(op1_prime);
                 ot_free_op(op2_prime);
@@ -145,6 +177,15 @@ ot_xform_pair ot_xform(ot_op* op1, ot_op* op2) {
 
                 op1_next = ot_iter_skip(&op1_iter, p.delta1);
                 op2_next = ot_iter_skip(&op2_iter, p.delta2);
+            } else if (op2_comp->type == OT_DELETE) {
+                ot_comp_delete op2_delete = op2_comp->value.delete;
+
+                delta_pair p =
+                    ot_xform_skip_delete(op1_skip, op1_iter.offset, op2_delete,
+                                         op2_iter.offset, xform);
+
+                op1_next = ot_iter_skip(&op1_iter, p.delta1);
+                op2_next = ot_iter_skip(&op2_iter, p.delta2);
             }
         } else if (op1_comp->type == OT_INSERT) {
             ot_comp_insert op1_insert = op1_comp->value.insert;
@@ -158,6 +199,19 @@ ot_xform_pair ot_xform(ot_op* op1, ot_op* op2) {
             } else if (op2_comp->type == OT_INSERT) {
                 delta_pair p =
                     ot_xform_insert_insert(op1_insert, op1_iter.offset, xform);
+
+                op1_next = ot_iter_skip(&op1_iter, p.delta1);
+                op2_next = ot_iter_skip(&op2_iter, p.delta2);
+            }
+        } else if (op1_comp->type == OT_DELETE) {
+            ot_comp_delete op1_delete = op1_comp->value.delete;
+
+            if (op2_comp->type == OT_SKIP) {
+                ot_comp_skip op2_skip = op2_comp->value.skip;
+
+                delta_pair p =
+                    ot_xform_delete_skip(op1_delete, op1_iter.offset, op2_skip,
+                                         op2_iter.offset, xform);
 
                 op1_next = ot_iter_skip(&op1_iter, p.delta1);
                 op2_next = ot_iter_skip(&op2_iter, p.delta2);
