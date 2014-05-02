@@ -442,7 +442,26 @@ ot_xform_test ot_xform_tests[] = {
         "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"delete\", \"count\": 3 } ] }",
         "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" }, { \"type\": \"skip\", \"count\": 3 } ] }",
         "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" } ] }"
-    }
+    },
+    /* delete, delete */
+    (ot_xform_test) {
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"def\" } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"delete\", \"count\": 3 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"delete\", \"count\": 3 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ ] }"
+    },
+    (ot_xform_test) {
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"def\" } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"delete\", \"count\": 2 }, { \"type\": \"skip\", \"count\": 1 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"delete\", \"count\": 1 }, { \"type\": \"delete\", \"count\": 2 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ ] }"
+    },
+    (ot_xform_test) {
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"def\" } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" }, { \"type\": \"delete\", \"count\": 3 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"delete\", \"count\": 2 }, { \"type\": \"skip\", \"count\": 1 }, { \"type\": \"insert\", \"text\": \"gh\" } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abcgh\" } ] }"
+    },
 };
 
 MU_TEST(xform_tests) {
