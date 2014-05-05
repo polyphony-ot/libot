@@ -1,7 +1,13 @@
 #ifndef libot_otdecode_h
 #define libot_otdecode_h
 
+#include <string.h>
+#include <stdlib.h>
+#include <stdbool.h>
 #include "ot.h"
+#include "array.h"
+#include "hex.h"
+#include "cJSON.h"
 
 typedef enum {
     OT_ERR_NONE = 0,

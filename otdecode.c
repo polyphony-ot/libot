@@ -1,11 +1,4 @@
-#include <strings.h>
-#include <stdlib.h>
-#include <stdbool.h>
-#include "ot.h"
-#include "array.h"
 #include "otdecode.h"
-#include "hex.h"
-#include "cJSON.h"
 
 // TODO: Finish implementing decoding of formatting boundaries.
 ot_decode_err ot_decode(ot_op* op, const char* json) {
