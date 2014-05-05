@@ -54,6 +54,7 @@ int atohex(char* const hex, const char* const a, size_t len) {
         }
         ++j;
     }
+    hex[j] = '\0';
 
     return 0;
 }

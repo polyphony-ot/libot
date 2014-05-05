@@ -597,10 +597,12 @@ MU_TEST(test_serialize_empty_op) {
     char* actual = ot_encode(op);
     int cmp = strcmp(EXPECTED, (char*)actual);
 
+    char msg[1024];
+    sprintf(msg, "Serializing empty op did not create expected string. Expected = \"%s\". Actual = \"%s\".", EXPECTED, actual);
     free(actual);
     ot_free_op(op);
 
-    mu_assert(cmp == 0, "Serializing empty op did not create expected string.");
+    mu_assert(cmp == 0, msg);
 }
 
 MU_TEST(test_serialize_single_insert) {
@@ -612,10 +614,12 @@ MU_TEST(test_serialize_single_insert) {
     char* actual = ot_encode(op);
     int cmp = strcmp(EXPECTED, (char*)actual);
 
+    char msg[1024];
+    sprintf(msg, "Serializing a single insert did not create expected string. Expected = \"%s\". Actual = \"%s\".", EXPECTED, actual);
     free(actual);
     ot_free_op(op);
 
-    mu_assert(cmp == 0, "Serializing a single insert did not create expected string.");
+    mu_assert(cmp == 0, msg);
 }
 
 MU_TEST(test_serialize_two_inserts) {
@@ -819,22 +823,26 @@ MU_TEST(atohex_encodes_single_byte) {
     const char* const EXPECTED = "01";
     const char ARRAY[] = { 0x01 };
 
-    char actual[2];
+    char actual[3] = { 0 };
     atohex(actual, ARRAY, sizeof(ARRAY));
     int cmp = memcmp(EXPECTED, actual, sizeof(actual));
 
-    mu_assert(cmp == 0, "Encoding a single byte gave an incorrect result.");
+    char msg[1024];
+    sprintf(msg, "Encoding a single byte gave an incorrect result. Expected = \"%s\". Actual = \"%.2s\".", EXPECTED, actual);
+    mu_assert(cmp == 0, msg);
 }
 
 MU_TEST(atohex_encodes_multiple_bytes) {
     const char* const EXPECTED = "01ff1a";
     const char ARRAY[] = { 0x01, 0xFF, 0x1A };
 
-    char actual[6];
+    char actual[7] = { 0 };
     atohex(actual, ARRAY, sizeof(ARRAY));
     int cmp = memcmp(EXPECTED, actual, sizeof(actual));
 
-    mu_assert(cmp == 0, "Encoding multiple bytes gave an incorrect result.");
+    char msg[1024];
+    sprintf(msg, "Encoding multiple bytes gave an incorrect result. Expected = \"%s\". Actual = \"%.6s\".", EXPECTED, actual);
+    mu_assert(cmp == 0, msg);
 }
 
 MU_TEST_SUITE(hex_test_suite) {

@@ -46,7 +46,7 @@ char* ot_encode(const ot_op* const op) {
     char* init_fmt = "{ \"clientId\": %d, "
                      "\"parent\": \"%s\", "
                      "\"components\": [ ";
-    char hex[128] = { 0 };
+    char hex[129] = { 0 };
     atohex(hex, op->parent, 64);
     append_fmtstr(&buf, &bufsize, &written, init_fmt, op->client_id, hex);
 
