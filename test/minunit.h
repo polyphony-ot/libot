@@ -278,10 +278,6 @@ printf(".");\
         {
             clockid_t id;
             struct timespec ts;
-#if _POSIX_CPUTIME > 0
-            /* Clock ids vary by OS.  Query the id, if possible. */
-            if ( clock_getcpuclockid( 0, &id ) == -1 )
-#endif
 #if defined(CLOCK_PROCESS_CPUTIME_ID)
 			/* Use known clock id for AIX, Linux, or Solaris. */
                 id = CLOCK_PROCESS_CPUTIME_ID;
