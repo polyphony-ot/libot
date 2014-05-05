@@ -43,7 +43,7 @@ char* ot_encode(const ot_op* const op) {
     size_t written = 0;
     // Start the buffer size at 1 to accommodate the terminating NULL.
     size_t bufsize = 1;
-    char* init_fmt = "{ \"clientId\": %d, "
+    char* init_fmt = "{ \"clientId\": %" PRId64 ", "
                      "\"parent\": \"%s\", "
                      "\"components\": [ ";
     char hex[129] = { 0 };
@@ -54,7 +54,7 @@ char* ot_encode(const ot_op* const op) {
         ot_comp_type t = comps[i].type;
         if (t == OT_SKIP) {
             int64_t count = comps[i].value.skip.count;
-            char* fmt = "{ \"type\": \"skip\", \"count\": %d }, ";
+            char* fmt = "{ \"type\": \"skip\", \"count\": %" PRId64 " }, ";
             append_fmtstr(&buf, &bufsize, &written, fmt, count);
         } else if (t == OT_INSERT) {
             char* text = comps[i].value.insert.text;
@@ -62,7 +62,7 @@ char* ot_encode(const ot_op* const op) {
             append_fmtstr(&buf, &bufsize, &written, fmt, text);
         } else if (t == OT_DELETE) {
             int64_t count = comps[i].value.delete.count;
-            char* fmt = "{ \"type\": \"delete\", \"count\": %d }, ";
+            char* fmt = "{ \"type\": \"delete\", \"count\": %" PRId64 " }, ";
             append_fmtstr(&buf, &bufsize, &written, fmt, count);
         } else if (t == OT_OPEN_ELEMENT) {
             char* elem = comps[i].value.open_element.elem;
