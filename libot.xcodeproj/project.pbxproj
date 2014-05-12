@@ -26,6 +26,8 @@
 		3BE9FEDD17CFEBBF00F8B9F0 /* array.h in Headers */ = {isa = PBXBuildFile; fileRef = 3BE9FEDC17CFEBBF00F8B9F0 /* array.h */; };
 		3BE9FEE017CFEBCE00F8B9F0 /* array.c in Sources */ = {isa = PBXBuildFile; fileRef = 3BE9FEDF17CFEBCE00F8B9F0 /* array.c */; };
 		3BEE541A190DB2AF008B55C0 /* libot.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B4EC5A617CAA72400B254EB /* libot.a */; };
+		3BF0DD3C19175A94000B0E96 /* client.c in Sources */ = {isa = PBXBuildFile; fileRef = 3BF0DD3B19175A94000B0E96 /* client.c */; };
+		3BF0DD3F19175E9D000B0E96 /* server.c in Sources */ = {isa = PBXBuildFile; fileRef = 3BF0DD3E19175E9D000B0E96 /* server.c */; };
 		3BF921051909F8D8009DD206 /* compose.h in Headers */ = {isa = PBXBuildFile; fileRef = 3BF921041909F8D8009DD206 /* compose.h */; };
 		3BF92107190A079B009DD206 /* compose.c in Sources */ = {isa = PBXBuildFile; fileRef = 3BF92106190A079B009DD206 /* compose.c */; };
 /* End PBXBuildFile section */
@@ -108,6 +110,10 @@
 		3BE9FEDC17CFEBBF00F8B9F0 /* array.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = array.h; sourceTree = "<group>"; };
 		3BE9FEDF17CFEBCE00F8B9F0 /* array.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = array.c; sourceTree = "<group>"; };
 		3BEE541F190DB2AF008B55C0 /* compose-monkey */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "compose-monkey"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3BF0DD3A19175A8A000B0E96 /* client.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = client.h; sourceTree = "<group>"; };
+		3BF0DD3B19175A94000B0E96 /* client.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = client.c; sourceTree = "<group>"; };
+		3BF0DD3D19175E95000B0E96 /* server.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = server.h; sourceTree = "<group>"; };
+		3BF0DD3E19175E9D000B0E96 /* server.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = server.c; sourceTree = "<group>"; };
 		3BF921041909F8D8009DD206 /* compose.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = compose.h; sourceTree = "<group>"; };
 		3BF92106190A079B009DD206 /* compose.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = compose.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -161,18 +167,22 @@
 			isa = PBXGroup;
 			children = (
 				3BE9FEDF17CFEBCE00F8B9F0 /* array.c */,
+				3BF0DD3B19175A94000B0E96 /* client.c */,
 				3BF92106190A079B009DD206 /* compose.c */,
 				3B204AB817DFD1DD00C9AB99 /* hex.c */,
 				3B4EC5C017CAA82400B254EB /* ot.c */,
 				3BD0401D17E7A70A000A7567 /* otdecode.c */,
 				3BE91B5B17E11A6D0040313D /* otencode.c */,
+				3BF0DD3E19175E9D000B0E96 /* server.c */,
 				3B12DA05190F29FD0081F568 /* xform.c */,
 				3BE9FEDC17CFEBBF00F8B9F0 /* array.h */,
+				3BF0DD3A19175A8A000B0E96 /* client.h */,
 				3BF921041909F8D8009DD206 /* compose.h */,
 				3B204AB517DFD1D400C9AB99 /* hex.h */,
 				3B4EC5BF17CAA82400B254EB /* ot.h */,
 				3BD0402017E7A717000A7567 /* otdecode.h */,
 				3BE91B5917E11A610040313D /* otencode.h */,
+				3BF0DD3D19175E95000B0E96 /* server.h */,
 				3B12DA07190F2A0A0081F568 /* xform.h */,
 				3B1444FB17ECCEA500A5784D /* cjson */,
 				3BDA029B17D92EA90039A78C /* cli */,
@@ -334,6 +344,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3BF0DD3F19175E9D000B0E96 /* server.c in Sources */,
 				3B12DA06190F29FD0081F568 /* xform.c in Sources */,
 				3BE91B5C17E11A6D0040313D /* otencode.c in Sources */,
 				3BD0401E17E7A70A000A7567 /* otdecode.c in Sources */,
@@ -342,6 +353,7 @@
 				3BF92107190A079B009DD206 /* compose.c in Sources */,
 				3B204AB917DFD1DD00C9AB99 /* hex.c in Sources */,
 				3B4EC5CE17CAA82400B254EB /* ot.c in Sources */,
+				3BF0DD3C19175A94000B0E96 /* client.c in Sources */,
 				3BE9FEE017CFEBCE00F8B9F0 /* array.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
