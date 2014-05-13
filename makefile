@@ -1,5 +1,5 @@
 CC=clang
-CFLAGS=-std=c99 -Wall -funsigned-char -pedantic
+CFLAGS=-std=c99 -Wall -funsigned-char -pedantic -fpic
 SOURCES=\
 	array.c \
 	client.c \
@@ -11,36 +11,59 @@ SOURCES=\
 	server.c \
 	xform.c \
 	cjson/cjson.c
-OBJDIR=obj
 BIN=bin
 LIB=libot.a
+SONAME=libot.so.0
+SOSUFFIX=.0.1
+OS:=$(shell uname)
 
 ifdef COVERAGE
 CFLAGS += -coverage
 endif
 
-all: clean debug release test
+ifdef LLVM
+EMITLLVM=-emit-llvm
+LLC=llc
+LLVMLINK=llvm-link
+endif
+
+all: debug release test
 
 debug: $(SOURCES)
-	$(CC) $(CFLAGS) -c -g -O0 -Icjson $(SOURCES)
-	mkdir -p $(BIN)/debug
-	ar rs $(BIN)/debug/$(LIB) *.o
+	$(CC) $(CFLAGS) $(EMITLLVM) -c -g -Icjson $(SOURCES)
+	mkdir -p $(BIN)/$@
+ifdef LLVM
+	$(LLVMLINK) -o $(BIN)/$@/libot.bc *.bc
+	$(LLC) -filetype=obj -o libot.o $(BIN)/$@/libot.bc
+	rm *.bc
+endif
+	ar rs $(BIN)/$@/$(LIB) *.o
+ifeq ($(OS), Darwin)
+	$(CC) $(CFLAGS) -g -shared -Wl,-install_name,$(SONAME) -o $(BIN)/$@/$(SONAME)$(SOSUFFIX) *.o
+endif
 	rm *.o
 
 release: $(SOURCES)
-	$(CC) $(CFLAGS) -DNDEBUG -c -O3 -Icjson $(SOURCES)
-	mkdir -p $(BIN)/release
-	ar rs $(BIN)/release/$(LIB) *.o
+	$(CC) $(CFLAGS) $(EMITLLVM) -DNDEBUG -c -O3 -Icjson $(SOURCES)
+	mkdir -p $(BIN)/$@
+ifdef LLVM
+	$(LLVMLINK) -o $(BIN)/$@/libot.bc *.bc
+	$(LLC) -filetype=obj -O3 -o libot.o $(BIN)/$@/libot.bc
+	rm *.bc
+endif
+	ar rs $(BIN)/$@/$(LIB) *.o
+ifeq ($(OS), Darwin)
+	$(CC) $(CFLAGS) -shared -Wl,-install_name,$(SONAME) -o $(BIN)/$@/$(SONAME)$(SOSUFFIX) *.o
+endif
 	rm *.o
 
 test: debug test/libot_test.c
-	$(CC) $(CFLAGS) -g -O0 -Icjson -o "$(BIN)/runtests" test/libot_test.c $(BIN)/debug/$(LIB)
-	$(BIN)/runtests
+	$(CC) $(CFLAGS) -g -Icjson -o "$(BIN)/debug/test" test/libot_test.c $(BIN)/debug/$(LIB)
+	$(BIN)/debug/test
 ifdef COVERAGE
-	lcov --capture --directory . --output-file $(BIN)/coverage.info --rc lcov_branch_coverage=1
-	genhtml $(BIN)/coverage.info --output-directory $(BIN)/coverage --function-coverage --branch-coverage
+	@echo "Code coverage is temporarily disabled due to an incompatibility between lcov and Apple's (buggy) version of gcov."
 	rm *.gcno *.gcda
 endif
 
 clean:
-	rm -rf $(BIN) *.gcno *.gcda *.o
+	rm -rf $(BIN) *.gcno *.gcda *.o *.bc
