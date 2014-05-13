@@ -27,22 +27,11 @@ ifdef COVERAGE
 CFLAGS += -coverage
 endif
 
-ifdef LLVM
-EMITLLVM=-emit-llvm
-LLC=llc
-LLVMLINK=llvm-link
-endif
-
 all: debug release test
 
 debug: $(SOURCES)
-	$(CC) $(CFLAGS) $(EMITLLVM) -c -g -Icjson $(SOURCES)
+	$(CC) $(CFLAGS) -c -g -Icjson $(SOURCES)
 	mkdir -p $(BIN)/$@
-ifdef LLVM
-	$(LLVMLINK) -o $(BIN)/$@/libot.bc *.bc
-	$(LLC) -filetype=obj -o libot.o $(BIN)/$@/libot.bc
-	rm *.bc
-endif
 	$(AR) rs $(BIN)/$@/$(LIB) *.o
 ifeq ($(OS), Darwin)
 	$(CC) $(CFLAGS) -g -shared -Wl,-install_name,$(SONAME) -o $(BIN)/$@/$(SONAME)$(SOSUFFIX) *.o
@@ -50,13 +39,8 @@ endif
 	rm *.o
 
 release: $(SOURCES)
-	$(CC) $(CFLAGS) $(EMITLLVM) -DNDEBUG -c -O3 -Icjson $(SOURCES)
+	$(CC) $(CFLAGS) -DNDEBUG -c -O3 -Icjson $(SOURCES)
 	mkdir -p $(BIN)/$@
-ifdef LLVM
-	$(LLVMLINK) -o $(BIN)/$@/libot.bc *.bc
-	$(LLC) -filetype=obj -O3 -o libot.o $(BIN)/$@/libot.bc
-	rm *.bc
-endif
 	$(AR) rs $(BIN)/$@/$(LIB) *.o
 ifeq ($(OS), Darwin)
 	$(CC) $(CFLAGS) -shared -Wl,-install_name,$(SONAME) -o $(BIN)/$@/$(SONAME)$(SOSUFFIX) *.o
