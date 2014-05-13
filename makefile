@@ -1,5 +1,6 @@
 CC=clang
 CFLAGS=-std=c99 -Wall -funsigned-char -pedantic -fpic
+AR=ar
 SOURCES=\
 	array.c \
 	client.c \
@@ -15,7 +16,12 @@ BIN=bin
 LIB=libot.a
 SONAME=libot.so.0
 SOSUFFIX=.0.1
+EXESUFFIX=
+TESTRUNNER=
+
+ifndef OS
 OS:=$(shell uname)
+endif
 
 ifdef COVERAGE
 CFLAGS += -coverage
@@ -37,7 +43,7 @@ ifdef LLVM
 	$(LLC) -filetype=obj -o libot.o $(BIN)/$@/libot.bc
 	rm *.bc
 endif
-	ar rs $(BIN)/$@/$(LIB) *.o
+	$(AR) rs $(BIN)/$@/$(LIB) *.o
 ifeq ($(OS), Darwin)
 	$(CC) $(CFLAGS) -g -shared -Wl,-install_name,$(SONAME) -o $(BIN)/$@/$(SONAME)$(SOSUFFIX) *.o
 endif
@@ -51,15 +57,15 @@ ifdef LLVM
 	$(LLC) -filetype=obj -O3 -o libot.o $(BIN)/$@/libot.bc
 	rm *.bc
 endif
-	ar rs $(BIN)/$@/$(LIB) *.o
+	$(AR) rs $(BIN)/$@/$(LIB) *.o
 ifeq ($(OS), Darwin)
 	$(CC) $(CFLAGS) -shared -Wl,-install_name,$(SONAME) -o $(BIN)/$@/$(SONAME)$(SOSUFFIX) *.o
 endif
 	rm *.o
 
 test: debug test/libot_test.c
-	$(CC) $(CFLAGS) -g -Icjson -o "$(BIN)/debug/test" test/libot_test.c $(BIN)/debug/$(LIB)
-	$(BIN)/debug/test
+	$(CC) $(CFLAGS) -g -Icjson -o "$(BIN)/debug/test$(EXESUFFIX)" test/libot_test.c $(BIN)/debug/$(LIB)
+	$(TESTRUNNER) $(BIN)/debug/test$(EXESUFFIX)
 ifdef COVERAGE
 	@echo "Code coverage is temporarily disabled due to an incompatibility between lcov and Apple's (buggy) version of gcov."
 	rm *.gcno *.gcda
