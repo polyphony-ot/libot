@@ -25,6 +25,7 @@ SOURCES=\
 	otencode.c \
 	server.c \
 	xform.c \
+	sha1.c \
 	cjson/cjson.c
 
 # Output directory where binaries and build artifacts will be placed.
