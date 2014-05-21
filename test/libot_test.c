@@ -10,6 +10,7 @@
 #include "../hex.h"
 #include "../otdecode.h"
 #include "../otencode.h"
+#include "../sha1.h"
 
 MU_TEST(test_start_fmt_appends_correct_comp_type) {
     ot_comp_type expected_type = OT_FORMATTING_BOUNDARY;
@@ -856,6 +857,47 @@ MU_TEST_SUITE(hex_test_suite) {
     MU_RUN_TEST(atohex_encodes_multiple_bytes);
 }
 
+/* sha1 tests */
+
+typedef struct sha1_test {
+    char* in;
+    char* hash;
+} sha1_test;
+
+sha1_test sha1_tests[] = {
+    (sha1_test) { "", (char[20]) { 0xda, 0x39, 0xa3, 0xee, 0x5e, 0x6b, 0x4b, 0x0d, 0x32, 0x55, 0xbf, 0xef, 0x95, 0x60, 0x18, 0x90, 0xaf, 0xd8, 0x07, 0x09 } },
+    (sha1_test) { "hello world", (char[20]) { 0x2a, 0xae, 0x6c, 0x35, 0xc9, 0x4f, 0xcf, 0xb4, 0x15, 0xdb, 0xe9, 0x5f, 0x40, 0x8b, 0x9c, 0xe9, 0x1e, 0xe8, 0x46, 0xed } },
+    (sha1_test) { "lorem ipsum dolor sit amet consetetur sadipscing elitr sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam", (char[20]) { 0x78, 0x34, 0x63, 0x8a, 0xa8, 0xeb, 0x18, 0xbb, 0x43, 0x95, 0x2d, 0x91, 0x9e, 0xfb, 0x49, 0x1e, 0xe4, 0x82, 0x56, 0x45 } }
+};
+
+MU_TEST(sha1) {
+    size_t max = sizeof(sha1_tests) / sizeof(sha1_test);
+    for (size_t i = 0; i < max; ++i) {
+        sha1_test t = sha1_tests[i];
+        hash_state hs;
+
+        int result = sha1_init(&hs);
+        mu_assert(result == CRYPT_OK, "An error occurred initializing the hash state.");
+
+        result = sha1_process(&hs, t.in, (uint32_t)strlen(t.in));
+        mu_assert(result == CRYPT_OK, "An error occurred processing the hash input.");
+
+        char hash[20];
+        result = sha1_done(&hs, hash);
+        mu_assert(result == CRYPT_OK, "An error occurred getting the hash.");
+
+        for (size_t j = 0; j < 20; ++j) {
+            if (hash[j] != t.hash[j]) {
+                mu_fail("Computed hash was incorrect.");
+            }
+        }
+    }
+}
+
+MU_TEST_SUITE(sha1_test_suite) {
+    MU_RUN_TEST(sha1);
+}
+
 int main() {
     MU_RUN_SUITE(ot_test_suite);
     MU_RUN_SUITE(compose_test_suite);
@@ -864,6 +906,7 @@ int main() {
     MU_RUN_SUITE(otencode_test_suite);
     MU_RUN_SUITE(array_test_suite);
     MU_RUN_SUITE(hex_test_suite);
+    MU_RUN_SUITE(sha1_test_suite);
     MU_REPORT();
     return 0;
 }
