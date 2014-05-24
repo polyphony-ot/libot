@@ -507,14 +507,14 @@ MU_TEST_SUITE(xform_test_suite) {
 /* otdecode tests */
 
 MU_TEST(decode_skip) {
-    const int64_t expected_client_id = 1234;
+    const uint32_t expected_client_id = 1234;
     char* expected_json = "{ \"clientId\": 1234, \"parent\": \"6162636465666768696a6b6c6d6e6f707172737475767778797a6162636465666768696a6b6c6d6e6f707172737475767778797a6162636465666768696a6b6c\", \"components\": [ { \"type\": \"skip\", \"count\": 1 } ] }";
 
     char p[64];
     ot_op* op = ot_new_op(0, p);
     ot_decode_err err = ot_decode(op, expected_json);
     mu_check(err == OT_ERR_NONE);
-    int64_t actual_client_id = op->client_id;
+    uint32_t actual_client_id = op->client_id;
 
     ot_free_op(op);
 
@@ -522,14 +522,14 @@ MU_TEST(decode_skip) {
 }
 
 MU_TEST(decode_client_id) {
-    const int64_t expected_client_id = 1234;
+    const uint32_t expected_client_id = 1234;
     char* expected_json = "{ \"clientId\": 1234, \"parent\": \"0\", \"components\": [ ] }";
 
     char p[64];
     ot_op* op = ot_new_op(0, p);
     ot_decode_err err = ot_decode(op, expected_json);
     mu_check(err == OT_ERR_NONE);
-    int64_t actual_client_id = op->client_id;
+    uint32_t actual_client_id = op->client_id;
 
     ot_free_op(op);
 

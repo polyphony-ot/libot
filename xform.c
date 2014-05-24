@@ -22,8 +22,8 @@ static delta_pair ot_xform_skip_skip(ot_comp_skip skip1, size_t offset1,
     size_t skip2_count = (size_t)skip2.count - offset2;
     size_t min_len = min(skip1_count, skip2_count);
 
-    ot_skip(xform.op1_prime, (int64_t)min_len);
-    ot_skip(xform.op2_prime, (int64_t)min_len);
+    ot_skip(xform.op1_prime, (uint32_t)min_len);
+    ot_skip(xform.op2_prime, (uint32_t)min_len);
 
     return (delta_pair) { min_len, min_len };
 }
@@ -33,7 +33,7 @@ static delta_pair ot_xform_skip_insert(ot_comp_insert ins, size_t ins_offset,
 
     size_t ins_len = strlen(ins.text) - ins_offset;
 
-    ot_skip(xform.op1_prime, (int64_t)ins_len);
+    ot_skip(xform.op1_prime, (uint32_t)ins_len);
 
     char* substr = malloc(sizeof(char) * ins_len + 1);
     memcpy(substr, ins.text + ins_offset, ins_len);
@@ -60,7 +60,7 @@ static delta_pair ot_xform_skip_delete(ot_comp_skip skip, size_t skip_offset,
     size_t del_len = (size_t)del.count - del_offset;
     size_t min_len = min(skip_len, del_len);
 
-    ot_delete(xform.op2_prime, (int64_t)min_len);
+    ot_delete(xform.op2_prime, (uint32_t)min_len);
 
     return (delta_pair) { min_len, min_len };
 }
@@ -81,7 +81,7 @@ static delta_pair ot_xform_insert_insert(ot_comp_insert op1_insert,
 
     size_t len = strlen(op1_insert.text) - op1_offset;
 
-    ot_skip(xform.op2_prime, (int64_t)len);
+    ot_skip(xform.op2_prime, (uint32_t)len);
 
     char* substr = malloc(sizeof(char) * len + 1);
     memcpy(substr, op1_insert.text + op1_offset, len);
@@ -97,7 +97,7 @@ static delta_pair ot_xform_insert_delete(ot_comp_insert ins, size_t ins_offset,
 
     size_t ins_len = strlen(ins.text) - ins_offset;
 
-    ot_skip(xform.op2_prime, (int64_t)ins_len);
+    ot_skip(xform.op2_prime, (uint32_t)ins_len);
 
     char* substr = malloc(sizeof(char) * ins_len + 1);
     memcpy(substr, ins.text + ins_offset, ins_len);

@@ -36,7 +36,7 @@ static void ot_free_comp(ot_comp* comp) {
     }
 }
 
-ot_op* ot_new_op(int64_t client_id, char parent[64]) {
+ot_op* ot_new_op(uint32_t client_id, char parent[64]) {
     ot_op* op = (ot_op*)malloc(sizeof(ot_op));
     op->client_id = client_id;
     array_init(&op->comps, sizeof(ot_comp));
@@ -123,7 +123,7 @@ bool ot_equal(const ot_op* op1, const ot_op* op2) {
     return true;
 }
 
-void ot_skip(ot_op* op, int64_t count) {
+void ot_skip(ot_op* op, uint32_t count) {
     ot_comp* comps = op->comps.data;
     ot_comp* last = comps + (op->comps.len - 1);
     if (op->comps.len > 0 && last->type == OT_SKIP) {
@@ -153,7 +153,7 @@ void ot_insert(ot_op* op, const char* text) {
     }
 }
 
-void ot_delete(ot_op* op, int64_t count) {
+void ot_delete(ot_op* op, uint32_t count) {
     ot_comp* comps = op->comps.data;
     ot_comp* last = comps + (op->comps.len - 1);
     if (op->comps.len > 0 && last->type == OT_DELETE) {

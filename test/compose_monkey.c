@@ -158,7 +158,7 @@ static void gen_doc(int docnum) {
                 // We can only perform a skip if we haven't already spanned the
                 // entire document.
 
-                int64_t count = (int64_t)((uint)rand() % (doclen - pos)) + 1;
+                uint32_t count = (uint32_t)((uint)rand() % (doclen - pos)) + 1;
                 ot_skip(op, count);
 
                 sprintf(msg, "[INFO] Skipping %lld characters at position %zu.",
@@ -195,7 +195,7 @@ static void gen_doc(int docnum) {
                 // the entire document.
 
                 uint r = (uint)rand();
-                int64_t count = (int64_t)(r % (doclen - pos)) + 1;
+                uint32_t count = (uint32_t)(r % (doclen - pos)) + 1;
                 ot_delete(op, count);
                 docstr = delete_substr(docstr, newpos, (size_t)count);
 

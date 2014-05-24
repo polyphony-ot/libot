@@ -9,7 +9,7 @@ ot_decode_err ot_decode(ot_op* op, const char* json) {
         cJSON_Delete(root);
         return OT_ERR_CLIENT_ID_MISSING;
     }
-    op->client_id = client_idf->valueint;
+    op->client_id = (uint32_t)client_idf->valueint;
 
     cJSON* parentf = cJSON_GetObjectItem(root, "parent");
     if (parentf == NULL) {
@@ -32,7 +32,7 @@ ot_decode_err ot_decode(ot_op* op, const char* json) {
             ot_comp* skip = array_append(&op->comps);
             skip->type = OT_SKIP;
             skip->value.skip.count =
-                cJSON_GetObjectItem(item, "count")->valueint;
+                (uint32_t)cJSON_GetObjectItem(item, "count")->valueint;
         } else if (memcmp(type, "insert", 6) == 0) {
             ot_comp* insert = array_append(&op->comps);
             insert->type = OT_INSERT;
@@ -45,7 +45,7 @@ ot_decode_err ot_decode(ot_op* op, const char* json) {
             ot_comp* delete = array_append(&op->comps);
             delete->type = OT_DELETE;
             delete->value.delete.count =
-                cJSON_GetObjectItem(item, "count")->valueint;
+                (uint32_t)cJSON_GetObjectItem(item, "count")->valueint;
         } else if (memcmp(type, "openElement", 11) == 0) {
             ot_comp* open_elem = array_append(&op->comps);
             open_elem->type = OT_OPEN_ELEMENT;

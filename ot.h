@@ -20,7 +20,7 @@ typedef enum {
 } ot_comp_type;
 
 typedef struct ot_comp_skip {
-    int64_t count;
+    uint32_t count;
 } ot_comp_skip;
 
 typedef struct ot_comp_insert {
@@ -28,7 +28,7 @@ typedef struct ot_comp_insert {
 } ot_comp_insert;
 
 typedef struct ot_comp_delete {
-    int64_t count;
+    uint32_t count;
 } ot_comp_delete;
 
 typedef struct ot_comp_open_element {
@@ -52,7 +52,7 @@ typedef struct ot_comp {
 } ot_comp;
 
 typedef struct ot_op {
-    int64_t client_id;
+    uint32_t client_id;
     char parent[64];
     array comps;
 } ot_op;
@@ -61,10 +61,10 @@ typedef int (*send_func)(char*);
 
 typedef int (*receive_func)(char*);
 
-ot_op* ot_new_op(int64_t client_id, char parent[64]);
+ot_op* ot_new_op(uint32_t client_id, char parent[64]);
 void ot_free_op(ot_op* op);
 bool ot_equal(const ot_op* op1, const ot_op* op2);
-void ot_skip(ot_op* op, int64_t count);
+void ot_skip(ot_op* op, uint32_t count);
 
 // Appends an insert component to an operation. text is copied and not freed, so
 // the caller must free it manually.
@@ -73,7 +73,7 @@ void ot_skip(ot_op* op, int64_t count);
 // to the existing insert. Otherwise, it will create a new insert component and
 // append it to op.
 void ot_insert(ot_op* op, const char* text);
-void ot_delete(ot_op* op, int64_t count);
+void ot_delete(ot_op* op, uint32_t count);
 void ot_open_element(ot_op* op, const char* elem);
 void ot_close_element(ot_op* op);
 void ot_start_fmt(ot_op* op, const char* name, const char* value);
