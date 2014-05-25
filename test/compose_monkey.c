@@ -112,7 +112,7 @@ static void gen_doc(int docnum) {
 
     // Create the initial operation which is just an insert of the document
     // string.
-    char parent[64] = { 0 };
+    char parent[20] = { 0 };
     ot_op* docop = ot_new_op(0, parent);
     ot_insert(docop, docstr);
     char* snapshot = ot_snapshot(docop);

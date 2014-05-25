@@ -17,7 +17,7 @@ MU_TEST(test_start_fmt_appends_correct_comp_type) {
     char* expected_name = "any name";
     char* expected_value = "any value";
 
-    char parent[64] = { 0 };
+    char parent[20] = { 0 };
     ot_op* op = ot_new_op(0, parent);
     ot_start_fmt(op, expected_name, expected_value);
 
@@ -34,7 +34,7 @@ MU_TEST(test_start_fmt_appends_correct_name_and_value) {
     char* expected_name = "any name";
     char* expected_value = "any value";
 
-    char parent[64] = { 0 };
+    char parent[20] = { 0 };
     ot_op* op = ot_new_op(0, parent);
     ot_start_fmt(op, expected_name, expected_value);
 
@@ -56,7 +56,7 @@ MU_TEST(test_start_fmt_does_not_append_another_fmtbound_when_last_component_is_f
     char* any_name = "any name";
     char* any_value = "any value";
 
-    char parent[64] = { 0 };
+    char parent[20] = { 0 };
     ot_op* op = ot_new_op(0, parent);
     ot_start_fmt(op, any_name, any_value);
     ot_start_fmt(op, any_name, any_value);
@@ -72,7 +72,7 @@ MU_TEST(test_end_fmt_appends_correct_name_and_value) {
     char* expected_name = "any name";
     char* expected_value = "any value";
 
-    char parent[64] = { 0 };
+    char parent[20] = { 0 };
     ot_op* op = ot_new_op(0, parent);
     ot_end_fmt(op, expected_name, expected_value);
 
@@ -94,7 +94,7 @@ MU_TEST(test_end_fmt_does_not_append_another_fmtbound_when_last_component_is_fmt
     char* any_name = "any name";
     char* any_value = "any value";
 
-    char parent[64] = { 0 };
+    char parent[20] = { 0 };
     ot_op* op = ot_new_op(0, parent);
     ot_end_fmt(op, any_name, any_value);
     ot_end_fmt(op, any_name, any_value);
@@ -107,7 +107,7 @@ MU_TEST(test_end_fmt_does_not_append_another_fmtbound_when_last_component_is_fmt
 }
 
 MU_TEST(iter_next_on_empty_op) {
-    char parent[64] = { 0 };
+    char parent[20] = { 0 };
     ot_op* op = ot_new_op(0, parent);
     ot_iter iter;
 
@@ -118,7 +118,7 @@ MU_TEST(iter_next_on_empty_op) {
 }
 
 MU_TEST(iter_next_iterates_once_over_skip_with_count_one) {
-    char parent[64] = { 0 };
+    char parent[20] = { 0 };
     ot_op* op = ot_new_op(0, parent);
     ot_skip(op, 1);
     ot_iter iter;
@@ -131,7 +131,7 @@ MU_TEST(iter_next_iterates_once_over_skip_with_count_one) {
 }
 
 MU_TEST(iter_next_iterates_correct_number_of_times_over_skip_with_count_greater_than_one) {
-    char parent[64] = { 0 };
+    char parent[20] = { 0 };
     ot_op* op = ot_new_op(0, parent);
     ot_skip(op, 2);
     ot_iter iter;
@@ -145,7 +145,7 @@ MU_TEST(iter_next_iterates_correct_number_of_times_over_skip_with_count_greater_
 }
 
 MU_TEST(iter_next_iterates_correctly_over_single_insert_component) {
-    char parent[64] = { 0 };
+    char parent[20] = { 0 };
     ot_op* op = ot_new_op(0, parent);
     ot_insert(op, "012");
     ot_iter iter;
@@ -216,7 +216,7 @@ MU_TEST(test_ot_equal) {
     for (size_t i = 0; i < num_tests; ++i) {
         ot_equals_test t = ot_equals_tests[i];
 
-        char p[64];
+        char p[20];
         ot_op* op1 = ot_new_op(0, p);
         ot_decode_err err = ot_decode(op1, t.op1);
         mu_assert(err == OT_ERR_NONE, "Error decoding test JSON.");
@@ -352,7 +352,7 @@ MU_TEST(compose_tests) {
         ot_compose_test t = ot_compose_tests[i];
         char errmsg[128];
 
-        char p[64];
+        char p[20];
         ot_op* op1 = ot_new_op(0, p);
         ot_decode_err err = ot_decode(op1, t.op1);
         mu_assert(err == OT_ERR_NONE, "Error decoding first test op.");
@@ -471,7 +471,7 @@ MU_TEST(xform_tests) {
     for (size_t i = 0; i < max; ++i) {
         ot_xform_test t = ot_xform_tests[i];
 
-        char p[64];
+        char p[20];
         ot_op* initial = ot_new_op(0, p);
         ot_decode_err err = ot_decode(initial, t.initial);
         mu_assert(err == OT_ERR_NONE, "Error decoding initial test op.");
@@ -508,9 +508,9 @@ MU_TEST_SUITE(xform_test_suite) {
 
 MU_TEST(decode_skip) {
     const uint32_t expected_client_id = 1234;
-    char* expected_json = "{ \"clientId\": 1234, \"parent\": \"6162636465666768696a6b6c6d6e6f707172737475767778797a6162636465666768696a6b6c6d6e6f707172737475767778797a6162636465666768696a6b6c\", \"components\": [ { \"type\": \"skip\", \"count\": 1 } ] }";
+    char* expected_json = "{ \"clientId\": 1234, \"parent\": \"6162636465666768696a6b6c6d6e6f7071727374\", \"components\": [ { \"type\": \"skip\", \"count\": 1 } ] }";
 
-    char p[64];
+    char p[20];
     ot_op* op = ot_new_op(0, p);
     ot_decode_err err = ot_decode(op, expected_json);
     mu_check(err == OT_ERR_NONE);
@@ -525,7 +525,7 @@ MU_TEST(decode_client_id) {
     const uint32_t expected_client_id = 1234;
     char* expected_json = "{ \"clientId\": 1234, \"parent\": \"0\", \"components\": [ ] }";
 
-    char p[64];
+    char p[20];
     ot_op* op = ot_new_op(0, p);
     ot_decode_err err = ot_decode(op, expected_json);
     mu_check(err == OT_ERR_NONE);
@@ -537,15 +537,15 @@ MU_TEST(decode_client_id) {
 }
 
 MU_TEST(decode_parent) {
-    uint8_t expected_parent[] = "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijkl";
-    char* expected_json = "{ \"clientId\": 1234, \"parent\": \"6162636465666768696a6b6c6d6e6f707172737475767778797a6162636465666768696a6b6c6d6e6f707172737475767778797a6162636465666768696a6b6c\", \"components\": [ ] }";
+    uint8_t expected_parent[] = "abcdefghijklmnopqrst";
+    char* expected_json = "{ \"clientId\": 1234, \"parent\": \"6162636465666768696a6b6c6d6e6f7071727374\", \"components\": [ ] }";
 
-    char p[64];
+    char p[20];
     ot_op* op = ot_new_op(0, p);
     ot_decode_err err = ot_decode(op, expected_json);
     mu_check(err == OT_ERR_NONE);
     char* actual_parent = op->parent;
-    int cmp = memcmp(expected_parent, actual_parent, 64);
+    int cmp = memcmp(expected_parent, actual_parent, 20);
 
     ot_free_op(op);
 
@@ -555,7 +555,7 @@ MU_TEST(decode_parent) {
 MU_TEST(decode_fails_if_client_id_is_missing) {
     char p[64] = { 0 };
     ot_op* op = ot_new_op(0, p);
-    const char* json = "{ \"parent\": \"6162636465666768696a6b6c6d6e6f707172737475767778797a6162636465666768696a6b6c6d6e6f707172737475767778797a6162636465666768696a6b6c\", \"components\": [ ] }";
+    const char* json = "{ \"parent\": \"6162636465666768696a6b6c6d6e6f7071727374\", \"components\": [ ] }";
     ot_decode_err err = ot_decode(op, json);
 
     mu_assert(err == OT_ERR_CLIENT_ID_MISSING, "Decode did not return the correct error for clientId missing.");
@@ -592,7 +592,7 @@ MU_TEST_SUITE(otdecode_test_suite) {
 
 MU_TEST(test_serialize_empty_op) {
     const char* const EXPECTED = "{ \"clientId\": 0, \"parent\": \"00\", \"components\": [ ] }";
-    char parent[64] = { 0 };
+    char parent[20] = { 0 };
     ot_op* op = ot_new_op(0, parent);
 
     char* actual = ot_encode(op);
@@ -608,7 +608,7 @@ MU_TEST(test_serialize_empty_op) {
 
 MU_TEST(test_serialize_single_insert) {
     const char* const EXPECTED = "{ \"clientId\": 0, \"parent\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"any string\" } ] }";
-    char parent[64] = { 0 };
+    char parent[20] = { 0 };
     ot_op* op = ot_new_op(0, parent);
     ot_insert(op, "any string");
 
@@ -625,7 +625,7 @@ MU_TEST(test_serialize_single_insert) {
 
 MU_TEST(test_serialize_two_inserts) {
     const char* const EXPECTED = "{ \"clientId\": 0, \"parent\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"any string any other string\" } ] }";
-    char parent[64] = { 0 };
+    char parent[20] = { 0 };
     ot_op* op = ot_new_op(0, parent);
     ot_insert(op, "any string");
     ot_insert(op, " any other string");
@@ -641,7 +641,7 @@ MU_TEST(test_serialize_two_inserts) {
 
 MU_TEST(test_serialize_single_skip) {
     const char* const EXPECTED = "{ \"clientId\": 0, \"parent\": \"00\", \"components\": [ { \"type\": \"skip\", \"count\": 1 } ] }";
-    char parent[64] = { 0 };
+    char parent[20] = { 0 };
     ot_op* op = ot_new_op(0, parent);
     ot_skip(op, 1);
 
@@ -656,7 +656,7 @@ MU_TEST(test_serialize_single_skip) {
 
 MU_TEST(test_serialize_single_delete) {
     const char* const EXPECTED = "{ \"clientId\": 0, \"parent\": \"00\", \"components\": [ { \"type\": \"delete\", \"count\": 1 } ] }";
-    char parent[64] = { 0 };
+    char parent[20] = { 0 };
     ot_op* op = ot_new_op(0, parent);
     ot_delete(op, 1);
 
@@ -671,7 +671,7 @@ MU_TEST(test_serialize_single_delete) {
 
 MU_TEST(test_serialize_single_open_element) {
     const char* const EXPECTED = "{ \"clientId\": 0, \"parent\": \"00\", \"components\": [ { \"type\": \"openElement\", \"element\": \"any string\" } ] }";
-    char parent[64] = { 0 };
+    char parent[20] = { 0 };
     ot_op* op = ot_new_op(0, parent);
     ot_open_element(op, "any string");
 
@@ -686,7 +686,7 @@ MU_TEST(test_serialize_single_open_element) {
 
 MU_TEST(test_serialize_single_close_element) {
     const char* const EXPECTED = "{ \"clientId\": 0, \"parent\": \"00\", \"components\": [ { \"type\": \"closeElement\" } ] }";
-    char parent[64] = { 0 };
+    char parent[20] = { 0 };
     ot_op* op = ot_new_op(0, parent);
     ot_close_element(op);
 

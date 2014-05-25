@@ -110,8 +110,8 @@ static pair ot_compose_delete(ot_comp_delete del, size_t del_offset,
 }
 
 ot_op* ot_compose(ot_op* op1, ot_op* op2) {
-    char parent[64];
-    memcpy(parent, op1->parent, 64);
+    char parent[20];
+    memcpy(parent, op1->parent, 20);
     ot_op* composed = ot_new_op(op1->client_id, parent);
 
     ot_comp* op1_comps = op1->comps.data;

@@ -46,8 +46,8 @@ char* ot_encode(const ot_op* const op) {
     char* init_fmt = "{ \"clientId\": %" PRIu32 ", "
                      "\"parent\": \"%s\", "
                      "\"components\": [ ";
-    char hex[129] = { 0 };
-    atohex(hex, op->parent, 64);
+    char hex[41] = { 0 };
+    atohex(hex, op->parent, 20);
     append_fmtstr(&buf, &bufsize, &written, init_fmt, op->client_id, hex);
 
     for (size_t i = 0; i < op->comps.len; ++i) {

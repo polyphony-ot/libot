@@ -53,7 +53,7 @@ typedef struct ot_comp {
 
 typedef struct ot_op {
     uint32_t client_id;
-    char parent[64];
+    char parent[20];
     array comps;
 } ot_op;
 
@@ -61,7 +61,7 @@ typedef int (*send_func)(char*);
 
 typedef int (*receive_func)(char*);
 
-ot_op* ot_new_op(uint32_t client_id, char parent[64]);
+ot_op* ot_new_op(uint32_t client_id, char parent[20]);
 void ot_free_op(ot_op* op);
 bool ot_equal(const ot_op* op1, const ot_op* op2);
 void ot_skip(ot_op* op, uint32_t count);

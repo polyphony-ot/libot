@@ -36,11 +36,11 @@ static void ot_free_comp(ot_comp* comp) {
     }
 }
 
-ot_op* ot_new_op(uint32_t client_id, char parent[64]) {
+ot_op* ot_new_op(uint32_t client_id, char parent[20]) {
     ot_op* op = (ot_op*)malloc(sizeof(ot_op));
     op->client_id = client_id;
     array_init(&op->comps, sizeof(ot_comp));
-    memcpy(op->parent, parent, 64);
+    memcpy(op->parent, parent, 20);
 
     return op;
 }

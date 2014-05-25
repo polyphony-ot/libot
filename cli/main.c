@@ -8,7 +8,7 @@ int main() {
     fputs("Operation 1: ", stdout);
     fgets(buf, 1024, stdin);
 
-    char p[64];
+    char p[20];
     ot_op* op = ot_new_op(0, p);
     ot_decode_err err = ot_decode(op, buf);
     if (err != OT_ERR_NONE) {
