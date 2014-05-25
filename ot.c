@@ -321,6 +321,7 @@ bool ot_iter_next(ot_iter* iter) {
     }
 
     assert(!"Iterator doesn't know how to handle this component type.");
+    return false;
 }
 
 // This can be made more efficient instead of simply calling ot_iter_next()
