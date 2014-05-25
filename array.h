@@ -1,6 +1,8 @@
 #ifndef LIBOT_ARRAY_H
 #define LIBOT_ARRAY_H
 
+#include <stddef.h>
+
 // Implements a dynamically resizing array.
 //
 // An array has a length and a capacity. The length is the actual number of
