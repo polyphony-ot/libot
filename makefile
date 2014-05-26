@@ -26,6 +26,7 @@ SOURCES=\
 	server.c \
 	xform.c \
 	sha1.c \
+	doc.c \
 	cjson/cjson.c
 
 # Output directory where binaries and build artifacts will be placed.

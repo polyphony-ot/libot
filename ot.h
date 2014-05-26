@@ -54,6 +54,7 @@ typedef struct ot_comp {
 typedef struct ot_op {
     uint32_t client_id;
     char parent[20];
+    char hash[20];
     array comps;
 } ot_op;
 

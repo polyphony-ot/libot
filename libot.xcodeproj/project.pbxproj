@@ -19,6 +19,7 @@
 		3B4EC5CE17CAA82400B254EB /* ot.c in Sources */ = {isa = PBXBuildFile; fileRef = 3B4EC5C017CAA82400B254EB /* ot.c */; };
 		3B4EC60017CAB41C00B254EB /* libot_test.c in Sources */ = {isa = PBXBuildFile; fileRef = 3B4EC5F117CAB30200B254EB /* libot_test.c */; };
 		3B4EC60417CAB86600B254EB /* libot.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B4EC5A617CAA72400B254EB /* libot.a */; };
+		3B545717193188F500F22695 /* doc.c in Sources */ = {isa = PBXBuildFile; fileRef = 3B545716193188F500F22695 /* doc.c */; };
 		3B9A39DD17F12A24008BDDFE /* libot.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B4EC5A617CAA72400B254EB /* libot.a */; };
 		3BCA65FE190DB35100A21791 /* compose_monkey.c in Sources */ = {isa = PBXBuildFile; fileRef = 3BCA65FD190DB35100A21791 /* compose_monkey.c */; };
 		3BD0401E17E7A70A000A7567 /* otdecode.c in Sources */ = {isa = PBXBuildFile; fileRef = 3BD0401D17E7A70A000A7567 /* otdecode.c */; };
@@ -104,6 +105,8 @@
 		3B4EC5F017CAB30200B254EB /* minunit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = minunit.h; sourceTree = "<group>"; };
 		3B4EC5F117CAB30200B254EB /* libot_test.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; lineEnding = 0; path = libot_test.c; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.c; };
 		3B4EC5F617CAB3AF00B254EB /* tests */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = tests; sourceTree = BUILT_PRODUCTS_DIR; };
+		3B545715193188EA00F22695 /* doc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = doc.h; sourceTree = "<group>"; };
+		3B545716193188F500F22695 /* doc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = doc.c; sourceTree = "<group>"; };
 		3BCA65FD190DB35100A21791 /* compose_monkey.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; lineEnding = 0; path = compose_monkey.c; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.c; };
 		3BD0401D17E7A70A000A7567 /* otdecode.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = otdecode.c; sourceTree = "<group>"; };
 		3BD0402017E7A717000A7567 /* otdecode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = otdecode.h; sourceTree = "<group>"; };
@@ -173,6 +176,7 @@
 				3BE9FEDF17CFEBCE00F8B9F0 /* array.c */,
 				3BF0DD3B19175A94000B0E96 /* client.c */,
 				3BF92106190A079B009DD206 /* compose.c */,
+				3B545716193188F500F22695 /* doc.c */,
 				3B204AB817DFD1DD00C9AB99 /* hex.c */,
 				3B4EC5C017CAA82400B254EB /* ot.c */,
 				3BD0401D17E7A70A000A7567 /* otdecode.c */,
@@ -183,6 +187,7 @@
 				3BE9FEDC17CFEBBF00F8B9F0 /* array.h */,
 				3BF0DD3A19175A8A000B0E96 /* client.h */,
 				3BF921041909F8D8009DD206 /* compose.h */,
+				3B545715193188EA00F22695 /* doc.h */,
 				3B204AB517DFD1D400C9AB99 /* hex.h */,
 				3B4EC5BF17CAA82400B254EB /* ot.h */,
 				3BD0402017E7A717000A7567 /* otdecode.h */,
@@ -351,6 +356,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3B545717193188F500F22695 /* doc.c in Sources */,
 				3B123F3F192B2F1A00AE2D9B /* sha1.c in Sources */,
 				3BF0DD3F19175E9D000B0E96 /* server.c in Sources */,
 				3B12DA06190F29FD0081F568 /* xform.c in Sources */,
