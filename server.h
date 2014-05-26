@@ -4,15 +4,22 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
+#include "doc.h"
+#include "xform.h"
+#include "compose.h"
 #include "otencode.h"
+#include "otdecode.h"
 
 typedef struct {
     send_func send;
-    receive_func receive;
+    ot_event_func event;
+    ot_doc* doc;
 } ot_server;
 
-ot_server* ot_new_server(send_func send, receive_func receive);
-void ot_server_send(ot_server* server, ot_op* op);
-void ot_server_receive(ot_server* server, ot_op* op);
+ot_server* ot_new_server(send_func send, ot_event_func event);
+
+void ot_server_open(ot_server* server, ot_doc* doc);
+
+void ot_server_receive(ot_server* server, const char* op);
 
 #endif

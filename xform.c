@@ -127,8 +127,8 @@ static delta_pair ot_xform_delete_delete(ot_comp_delete del1, size_t offset1,
 }
 
 ot_xform_pair ot_xform(ot_op* op1, ot_op* op2) {
-    ot_op* op1_prime = ot_new_op(0, op2->parent);
-    ot_op* op2_prime = ot_new_op(0, op1->parent);
+    ot_op* op1_prime = ot_new_op(op1->client_id, op2->parent);
+    ot_op* op2_prime = ot_new_op(op2->client_id, op1->parent);
     ot_xform_pair xform = (ot_xform_pair) { op1_prime, op2_prime };
 
     ot_comp* op1_comps = op1->comps.data;

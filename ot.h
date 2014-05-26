@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include <inttypes.h>
 #include "array.h"
 
 typedef struct ot_fmt {
@@ -58,9 +59,14 @@ typedef struct ot_op {
     array comps;
 } ot_op;
 
-typedef int (*send_func)(char*);
+typedef enum {
+    OT_CONNECTED = 0,
+    OT_DISCONNECTED = 1,
+    OT_OP_APPLIED = 2
+} ot_event_type;
 
-typedef int (*receive_func)(char*);
+typedef int (*send_func)(const char*);
+typedef int (*ot_event_func)(ot_event_type, ot_op*);
 
 ot_op* ot_new_op(uint32_t client_id, char parent[20]);
 void ot_free_op(ot_op* op);
