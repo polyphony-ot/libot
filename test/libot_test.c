@@ -11,6 +11,7 @@
 #include "../otdecode.h"
 #include "../otencode.h"
 #include "../sha1.h"
+#include "../client.h"
 
 MU_TEST(test_start_fmt_appends_correct_comp_type) {
     ot_comp_type expected_type = OT_FORMATTING_BOUNDARY;
@@ -898,7 +899,66 @@ MU_TEST_SUITE(sha1_test_suite) {
     MU_RUN_TEST(sha1);
 }
 
+/* client tests */
+
+const char* sent_op = "";
+int send_ret = 0;
+
+static int send_stub(const char* op) {
+    sent_op = op;
+    return send_ret;
+}
+
+ot_event_type event_type = 0;
+ot_op* event_op = NULL;
+int event_ret = 0;
+
+static int event_stub(ot_event_type t, ot_op* op) {
+    event_type = (const ot_event_type)t;
+    event_op = op;
+    return event_ret;
+}
+
+MU_TEST(client_receive_does_not_send_empty_buffer_after_acknowledgement) {
+    ot_client* client = ot_new_client(send_stub, event_stub, 0);
+    char* op = "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ ] }";
+    const char* const nothing = "NOTHING";
+    sent_op = nothing;
+
+    ot_client_receive(client, op);
+
+    if (sent_op != nothing) {
+        char* msg;
+        asprintf(&msg, "Expected the client to not send anything, but it sent \"%s\".", sent_op);
+        mu_fail(msg);
+    }
+}
+
+MU_TEST(client_apply_sends_op_if_not_waiting_for_acknowledgement) {
+    ot_client* client = ot_new_client(send_stub, event_stub, 0);
+    char parent[20] = { 0 };
+    ot_op* op = ot_new_op(0, parent);
+    ot_insert(op, "any string");
+
+    op = ot_client_apply(client, op);
+
+    ot_op* dec_sent_op = ot_new_op(0, parent);
+    ot_decode_err err = ot_decode(dec_sent_op, sent_op);
+
+    mu_assert_int_eq(OT_ERR_NONE, err);
+    mu_assert(ot_equal(op, dec_sent_op), "Sent op wasn't equal to the applied op.");
+}
+
+MU_TEST_SUITE(client_test_suite) {
+    MU_RUN_TEST(client_receive_does_not_send_empty_buffer_after_acknowledgement);
+    MU_RUN_TEST(client_apply_sends_op_if_not_waiting_for_acknowledgement);
+}
+
 int main() {
+    // Close stderr to avoid littering test output with log messages. This line
+    // can be removed to aid in debugging tests.
+    fclose(stderr);
+
     MU_RUN_SUITE(ot_test_suite);
     MU_RUN_SUITE(compose_test_suite);
     MU_RUN_SUITE(xform_test_suite);
@@ -907,6 +967,7 @@ int main() {
     MU_RUN_SUITE(array_test_suite);
     MU_RUN_SUITE(hex_test_suite);
     MU_RUN_SUITE(sha1_test_suite);
+    MU_RUN_SUITE(client_test_suite);
     MU_REPORT();
     return 0;
 }
