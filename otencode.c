@@ -45,10 +45,17 @@ char* ot_encode(const ot_op* const op) {
     size_t bufsize = 1;
     char* init_fmt = "{ \"clientId\": %" PRIu32 ", "
                      "\"parent\": \"%s\", "
+                     "\"hash\": \"%s\", "
                      "\"components\": [ ";
-    char hex[41] = { 0 };
-    atohex(hex, op->parent, 20);
-    append_fmtstr(&buf, &bufsize, &written, init_fmt, op->client_id, hex);
+
+    char parent[41] = { 0 };
+    atohex(parent, op->parent, 20);
+
+    char hash[41] = { 0 };
+    atohex(hash, op->hash, 20);
+
+    append_fmtstr(&buf, &bufsize, &written, init_fmt, op->client_id, parent,
+                  hash);
 
     for (size_t i = 0; i < op->comps.len; ++i) {
         ot_comp_type t = comps[i].type;

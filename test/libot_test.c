@@ -170,43 +170,43 @@ typedef struct ot_equals_test {
 
 ot_equals_test ot_equals_tests[] = {
     (ot_equals_test) {
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" } ] }",
         true
     },
     (ot_equals_test) {
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 0 } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 0 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"skip\", \"count\": 0 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"skip\", \"count\": 0 } ] }",
         true
     },
     (ot_equals_test) {
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 0 } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 1 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"skip\", \"count\": 0 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"skip\", \"count\": 1 } ] }",
         false
     },
     (ot_equals_test) {
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ ] }",
         true
     },
     (ot_equals_test) {
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ ] }",
-        "{ \"clientId\": 1, \"parent\": \"0\", \"components\": [ ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ ] }",
+        "{ \"clientId\": 1, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ ] }",
         false
     },
     (ot_equals_test) {
-        "{ \"clientId\": 0, \"parent\": \"cafebabe\", \"components\": [ ] }",
-        "{ \"clientId\": 0, \"parent\": \"cafebabe\", \"components\": [ ] }",
+        "{ \"clientId\": 0, \"parent\": \"cafebabe\", \"hash\": \"00\", \"components\": [ ] }",
+        "{ \"clientId\": 0, \"parent\": \"cafebabe\", \"hash\": \"00\", \"components\": [ ] }",
         true
     },
     (ot_equals_test) {
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" }, { \"type\": \"skip\", \"count\": 0 } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" }, { \"type\": \"skip\", \"count\": 0 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" }, { \"type\": \"skip\", \"count\": 0 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" }, { \"type\": \"skip\", \"count\": 0 } ] }",
         true
     },
     (ot_equals_test) {
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" }, { \"type\": \"skip\", \"count\": 0 } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" }, { \"type\": \"skip\", \"count\": 0 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" } ] }",
         false
     },
 };
@@ -254,95 +254,95 @@ typedef struct ot_compose_test {
 ot_compose_test ot_compose_tests[] = {
     /* skip, skip */
     (ot_compose_test) {
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 1 }, { \"type\": \"skip\", \"count\": 2 } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 1 }, { \"type\": \"skip\", \"count\": 2 } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 3 } ] }"
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"skip\", \"count\": 1 }, { \"type\": \"skip\", \"count\": 2 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"skip\", \"count\": 1 }, { \"type\": \"skip\", \"count\": 2 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"skip\", \"count\": 3 } ] }"
     },
     (ot_compose_test) {
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 1 } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 1 } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 1 } ] }"
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"skip\", \"count\": 1 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"skip\", \"count\": 1 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"skip\", \"count\": 1 } ] }"
     },
     (ot_compose_test) {
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 1 }, { \"type\": \"skip\", \"count\": 2 } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 3 } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 3 } ] }"
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"skip\", \"count\": 1 }, { \"type\": \"skip\", \"count\": 2 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"skip\", \"count\": 3 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"skip\", \"count\": 3 } ] }"
     },
     /* skip, insert */
     (ot_compose_test) {
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 3 } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" }, { \"type\": \"skip\", \"count\": 3 } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" }, { \"type\": \"skip\", \"count\": 3 } ] }"
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"skip\", \"count\": 3 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" }, { \"type\": \"skip\", \"count\": 3 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" }, { \"type\": \"skip\", \"count\": 3 } ] }"
     },
     (ot_compose_test) {
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 3 } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 3 }, { \"type\": \"insert\", \"text\": \"abc\" } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 3 }, { \"type\": \"insert\", \"text\": \"abc\" } ] }"
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"skip\", \"count\": 3 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"skip\", \"count\": 3 }, { \"type\": \"insert\", \"text\": \"abc\" } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"skip\", \"count\": 3 }, { \"type\": \"insert\", \"text\": \"abc\" } ] }"
     },
     /* skip, delete */
     (ot_compose_test) {
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 3 } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"delete\", \"count\": 3 } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"delete\", \"count\": 3 } ] }"
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"skip\", \"count\": 3 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"delete\", \"count\": 3 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"delete\", \"count\": 3 } ] }"
     },
     (ot_compose_test) {
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 3 } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"delete\", \"count\": 2 }, { \"type\": \"skip\", \"count\": 1 } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"delete\", \"count\": 2 }, { \"type\": \"skip\", \"count\": 1 } ] }"
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"skip\", \"count\": 3 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"delete\", \"count\": 2 }, { \"type\": \"skip\", \"count\": 1 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"delete\", \"count\": 2 }, { \"type\": \"skip\", \"count\": 1 } ] }"
     },
     /* insert, skip */
     (ot_compose_test) {
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 3 } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" } ] }"
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"skip\", \"count\": 3 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" } ] }"
     },
     (ot_compose_test) {
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"a\" }, { \"type\": \"skip\", \"count\": 1 }, { \"type\": \"insert\", \"text\": \"b\" } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 3 } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"a\" }, { \"type\": \"skip\", \"count\": 1 }, { \"type\": \"insert\", \"text\": \"b\" } ] }"
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"a\" }, { \"type\": \"skip\", \"count\": 1 }, { \"type\": \"insert\", \"text\": \"b\" } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"skip\", \"count\": 3 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"a\" }, { \"type\": \"skip\", \"count\": 1 }, { \"type\": \"insert\", \"text\": \"b\" } ] }"
     },
     (ot_compose_test) {
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 3 }, { \"type\": \"insert\", \"text\": \"def\" } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abcdef\" } ] }"
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"skip\", \"count\": 3 }, { \"type\": \"insert\", \"text\": \"def\" } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"abcdef\" } ] }"
     },
     /* insert, insert */
     (ot_compose_test) {
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"def\" } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" }, { \"type\": \"skip\", \"count\": 3 } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abcdef\" } ] }"
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"def\" } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" }, { \"type\": \"skip\", \"count\": 3 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"abcdef\" } ] }"
     },
     (ot_compose_test) {
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"def\" }, { \"type\": \"skip\", \"count\": 3 } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" }, { \"type\": \"skip\", \"count\": 6 } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abcdef\" }, { \"type\": \"skip\", \"count\": 3 } ] }"
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"def\" }, { \"type\": \"skip\", \"count\": 3 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" }, { \"type\": \"skip\", \"count\": 6 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"abcdef\" }, { \"type\": \"skip\", \"count\": 3 } ] }"
     },
     (ot_compose_test) {
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"def\" } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" }, { \"type\": \"skip\", \"count\": 3 }, { \"type\": \"insert\", \"text\": \"ghi\" } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abcdefghi\" } ] }"
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"def\" } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" }, { \"type\": \"skip\", \"count\": 3 }, { \"type\": \"insert\", \"text\": \"ghi\" } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"abcdefghi\" } ] }"
     },
     /* insert, delete */
     (ot_compose_test) {
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"delete\", \"count\": 3 } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ ] }"
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"delete\", \"count\": 3 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ ] }"
     },
     (ot_compose_test) {
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abcdef\" } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 3 }, { \"type\": \"delete\", \"count\": 3 } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" } ] }"
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"abcdef\" } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"skip\", \"count\": 3 }, { \"type\": \"delete\", \"count\": 3 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" } ] }"
     },
     /* delete, skip/insert/delete */
     (ot_compose_test) {
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"delete\", \"count\": 3 }, { \"type\": \"insert\", \"text\": \"abc\" } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"delete\", \"count\": 3 } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"delete\", \"count\": 3 } ] }"
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"delete\", \"count\": 3 }, { \"type\": \"insert\", \"text\": \"abc\" } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"delete\", \"count\": 3 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"delete\", \"count\": 3 } ] }"
     },
     (ot_compose_test) {
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"delete\", \"count\": 3 } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"delete\", \"count\": 3 }, { \"type\": \"insert\", \"text\": \"abc\" } ] }"
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"delete\", \"count\": 3 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"delete\", \"count\": 3 }, { \"type\": \"insert\", \"text\": \"abc\" } ] }"
     }
 };
 
@@ -387,81 +387,81 @@ typedef struct ot_xform_test {
 ot_xform_test ot_xform_tests[] = {
     /* skip, skip */
     (ot_xform_test) {
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 3 } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 1 }, { \"type\": \"skip\", \"count\": 2 } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 2 }, { \"type\": \"skip\", \"count\": 1 } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 3 } ] }"
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"skip\", \"count\": 3 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"skip\", \"count\": 1 }, { \"type\": \"skip\", \"count\": 2 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"skip\", \"count\": 2 }, { \"type\": \"skip\", \"count\": 1 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"skip\", \"count\": 3 } ] }"
     },
     /* skip, insert */
     (ot_xform_test) {
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"def\" } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 3 } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" }, { \"type\": \"skip\", \"count\": 3 } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abcdef\" } ] }"
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"def\" } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"skip\", \"count\": 3 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" }, { \"type\": \"skip\", \"count\": 3 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"abcdef\" } ] }"
     },
     (ot_xform_test) {
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 3 }, { \"type\": \"insert\", \"text\": \"ghi\" } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" }, { \"type\": \"skip\", \"count\": 6 } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 6 }, { \"type\": \"insert\", \"text\": \"jkl\" } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" }, { \"type\": \"skip\", \"count\": 3 }, { \"type\": \"insert\", \"text\": \"ghijkl\" } ] }"
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"skip\", \"count\": 3 }, { \"type\": \"insert\", \"text\": \"ghi\" } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" }, { \"type\": \"skip\", \"count\": 6 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"skip\", \"count\": 6 }, { \"type\": \"insert\", \"text\": \"jkl\" } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" }, { \"type\": \"skip\", \"count\": 3 }, { \"type\": \"insert\", \"text\": \"ghijkl\" } ] }"
     },
     /* skip, delete */
     (ot_xform_test) {
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 3 }, { \"type\": \"insert\", \"text\": \"def\" } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"delete\", \"count\": 3 } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"def\" } ] }"
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"skip\", \"count\": 3 }, { \"type\": \"insert\", \"text\": \"def\" } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"delete\", \"count\": 3 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"def\" } ] }"
     },
     (ot_xform_test) {
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 3 } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"delete\", \"count\": 3 } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ ] }"
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"skip\", \"count\": 3 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"delete\", \"count\": 3 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ ] }"
     },
     (ot_xform_test) {
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 2 }, { \"type\": \"insert\", \"text\": \"b\" }, { \"type\": \"skip\", \"count\": 1 } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"delete\", \"count\": 2 }, { \"type\": \"skip\", \"count\": 1 } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"bc\" } ] }"
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"skip\", \"count\": 2 }, { \"type\": \"insert\", \"text\": \"b\" }, { \"type\": \"skip\", \"count\": 1 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"delete\", \"count\": 2 }, { \"type\": \"skip\", \"count\": 1 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"bc\" } ] }"
     },
     /* insert, insert */
     (ot_xform_test) {
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 3 }, { \"type\": \"insert\", \"text\": \"def\" } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"skip\", \"count\": 3 }, { \"type\": \"insert\", \"text\": \"ghi\" } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abcdefghi\" } ] }"
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"skip\", \"count\": 3 }, { \"type\": \"insert\", \"text\": \"def\" } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"skip\", \"count\": 3 }, { \"type\": \"insert\", \"text\": \"ghi\" } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"abcdefghi\" } ] }"
     },
     /* insert, delete */
     (ot_xform_test) {
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"def\" } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" }, { \"type\": \"skip\", \"count\": 3 } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"delete\", \"count\": 3 } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" } ] }"
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"def\" } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" }, { \"type\": \"skip\", \"count\": 3 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"delete\", \"count\": 3 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" } ] }"
     },
     (ot_xform_test) {
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"def\" } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"delete\", \"count\": 3 } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" }, { \"type\": \"skip\", \"count\": 3 } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" } ] }"
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"def\" } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"delete\", \"count\": 3 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" }, { \"type\": \"skip\", \"count\": 3 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" } ] }"
     },
     /* delete, delete */
     (ot_xform_test) {
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"def\" } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"delete\", \"count\": 3 } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"delete\", \"count\": 3 } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ ] }"
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"def\" } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"delete\", \"count\": 3 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"delete\", \"count\": 3 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ ] }"
     },
     (ot_xform_test) {
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"def\" } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"delete\", \"count\": 2 }, { \"type\": \"skip\", \"count\": 1 } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"delete\", \"count\": 1 }, { \"type\": \"delete\", \"count\": 2 } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ ] }"
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"def\" } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"delete\", \"count\": 2 }, { \"type\": \"skip\", \"count\": 1 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"delete\", \"count\": 1 }, { \"type\": \"delete\", \"count\": 2 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ ] }"
     },
     (ot_xform_test) {
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"def\" } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" }, { \"type\": \"delete\", \"count\": 3 } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"delete\", \"count\": 2 }, { \"type\": \"skip\", \"count\": 1 }, { \"type\": \"insert\", \"text\": \"gh\" } ] }",
-        "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ { \"type\": \"insert\", \"text\": \"abcgh\" } ] }"
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"def\" } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" }, { \"type\": \"delete\", \"count\": 3 } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"delete\", \"count\": 2 }, { \"type\": \"skip\", \"count\": 1 }, { \"type\": \"insert\", \"text\": \"gh\" } ] }",
+        "{ \"clientId\": 0, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"abcgh\" } ] }"
     },
 };
 
@@ -508,7 +508,7 @@ MU_TEST_SUITE(xform_test_suite) {
 
 MU_TEST(decode_skip) {
     const uint32_t expected_client_id = 1234;
-    char* expected_json = "{ \"clientId\": 1234, \"parent\": \"6162636465666768696a6b6c6d6e6f7071727374\", \"components\": [ { \"type\": \"skip\", \"count\": 1 } ] }";
+    char* expected_json = "{ \"clientId\": 1234, \"parent\": \"6162636465666768696a6b6c6d6e6f7071727374\", \"hash\": \"00\", \"components\": [ { \"type\": \"skip\", \"count\": 1 } ] }";
 
     char p[20];
     ot_op* op = ot_new_op(0, p);
@@ -523,7 +523,7 @@ MU_TEST(decode_skip) {
 
 MU_TEST(decode_client_id) {
     const uint32_t expected_client_id = 1234;
-    char* expected_json = "{ \"clientId\": 1234, \"parent\": \"0\", \"components\": [ ] }";
+    char* expected_json = "{ \"clientId\": 1234, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ ] }";
 
     char p[20];
     ot_op* op = ot_new_op(0, p);
@@ -538,7 +538,7 @@ MU_TEST(decode_client_id) {
 
 MU_TEST(decode_parent) {
     uint8_t expected_parent[] = "abcdefghijklmnopqrst";
-    char* expected_json = "{ \"clientId\": 1234, \"parent\": \"6162636465666768696a6b6c6d6e6f7071727374\", \"components\": [ ] }";
+    char* expected_json = "{ \"clientId\": 1234, \"parent\": \"6162636465666768696a6b6c6d6e6f7071727374\", \"hash\": \"00\", \"components\": [ ] }";
 
     char p[20];
     ot_op* op = ot_new_op(0, p);
@@ -573,7 +573,7 @@ MU_TEST(decode_fails_if_parent_is_missing) {
 MU_TEST(decode_fails_if_components_is_missing) {
     char p[64] = { 0 };
     ot_op* op = ot_new_op(0, p);
-    const char* json = "{ \"clientId\": 1234, \"parent\": \"0\" }";
+    const char* json = "{ \"clientId\": 1234, \"parent\": \"0\", \"hash\": \"00\" }";
     ot_decode_err err = ot_decode(op, json);
 
     mu_assert(err == OT_ERR_COMPONENTS_MISSING, "Decode did not return the correct error for components missing.");
@@ -591,7 +591,7 @@ MU_TEST_SUITE(otdecode_test_suite) {
 /* otencode tests */
 
 MU_TEST(test_serialize_empty_op) {
-    const char* const EXPECTED = "{ \"clientId\": 0, \"parent\": \"00\", \"components\": [ ] }";
+    const char* const EXPECTED = "{ \"clientId\": 0, \"parent\": \"00\", \"hash\": \"00\", \"components\": [ ] }";
     char parent[20] = { 0 };
     ot_op* op = ot_new_op(0, parent);
 
@@ -607,7 +607,7 @@ MU_TEST(test_serialize_empty_op) {
 }
 
 MU_TEST(test_serialize_single_insert) {
-    const char* const EXPECTED = "{ \"clientId\": 0, \"parent\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"any string\" } ] }";
+    const char* const EXPECTED = "{ \"clientId\": 0, \"parent\": \"00\", \"hash\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"any string\" } ] }";
     char parent[20] = { 0 };
     ot_op* op = ot_new_op(0, parent);
     ot_insert(op, "any string");
@@ -624,7 +624,7 @@ MU_TEST(test_serialize_single_insert) {
 }
 
 MU_TEST(test_serialize_two_inserts) {
-    const char* const EXPECTED = "{ \"clientId\": 0, \"parent\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"any string any other string\" } ] }";
+    const char* const EXPECTED = "{ \"clientId\": 0, \"parent\": \"00\", \"hash\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"any string any other string\" } ] }";
     char parent[20] = { 0 };
     ot_op* op = ot_new_op(0, parent);
     ot_insert(op, "any string");
@@ -640,7 +640,7 @@ MU_TEST(test_serialize_two_inserts) {
 }
 
 MU_TEST(test_serialize_single_skip) {
-    const char* const EXPECTED = "{ \"clientId\": 0, \"parent\": \"00\", \"components\": [ { \"type\": \"skip\", \"count\": 1 } ] }";
+    const char* const EXPECTED = "{ \"clientId\": 0, \"parent\": \"00\", \"hash\": \"00\", \"components\": [ { \"type\": \"skip\", \"count\": 1 } ] }";
     char parent[20] = { 0 };
     ot_op* op = ot_new_op(0, parent);
     ot_skip(op, 1);
@@ -655,7 +655,7 @@ MU_TEST(test_serialize_single_skip) {
 }
 
 MU_TEST(test_serialize_single_delete) {
-    const char* const EXPECTED = "{ \"clientId\": 0, \"parent\": \"00\", \"components\": [ { \"type\": \"delete\", \"count\": 1 } ] }";
+    const char* const EXPECTED = "{ \"clientId\": 0, \"parent\": \"00\", \"hash\": \"00\", \"components\": [ { \"type\": \"delete\", \"count\": 1 } ] }";
     char parent[20] = { 0 };
     ot_op* op = ot_new_op(0, parent);
     ot_delete(op, 1);
@@ -670,7 +670,7 @@ MU_TEST(test_serialize_single_delete) {
 }
 
 MU_TEST(test_serialize_single_open_element) {
-    const char* const EXPECTED = "{ \"clientId\": 0, \"parent\": \"00\", \"components\": [ { \"type\": \"openElement\", \"element\": \"any string\" } ] }";
+    const char* const EXPECTED = "{ \"clientId\": 0, \"parent\": \"00\", \"hash\": \"00\", \"components\": [ { \"type\": \"openElement\", \"element\": \"any string\" } ] }";
     char parent[20] = { 0 };
     ot_op* op = ot_new_op(0, parent);
     ot_open_element(op, "any string");
@@ -685,7 +685,7 @@ MU_TEST(test_serialize_single_open_element) {
 }
 
 MU_TEST(test_serialize_single_close_element) {
-    const char* const EXPECTED = "{ \"clientId\": 0, \"parent\": \"00\", \"components\": [ { \"type\": \"closeElement\" } ] }";
+    const char* const EXPECTED = "{ \"clientId\": 0, \"parent\": \"00\", \"hash\": \"00\", \"components\": [ { \"type\": \"closeElement\" } ] }";
     char parent[20] = { 0 };
     ot_op* op = ot_new_op(0, parent);
     ot_close_element(op);
