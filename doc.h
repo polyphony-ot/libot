@@ -8,6 +8,12 @@
 #include "sha1.h"
 #include "ot.h"
 
+typedef enum {
+    // Indicates that an operation couldn't be appended, usually because it
+    // wasn't composable with the doc.
+    OT_ERR_APPEND = 1
+} ot_doc_err;
+
 // Implements an OT document, which is effectively an array of composable
 // operations.
 typedef struct ot_doc {
@@ -24,9 +30,9 @@ void ot_free_doc(ot_doc* doc);
 
 // Appends an operation to a document. The operation must be composable with the
 // current state of the document. Once an operation has been appended to a
-// document, it is "moved" into the document's history and a pointer to its new
-// location is returned.
-ot_op* ot_doc_append(ot_doc* doc, ot_op* op);
+// document, it is moved into the document's history and op is updated to point
+// to its new location.
+ot_doc_err ot_doc_append(ot_doc* doc, ot_op** op);
 
 // Composes a half-closed range of operations in the document's history. That
 // is, every operation after (but not including) "after" is composed with every

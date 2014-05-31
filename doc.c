@@ -20,33 +20,50 @@ void ot_free_doc(ot_doc* doc) {
     free(doc);
 }
 
-ot_op* ot_doc_append(ot_doc* doc, ot_op* op) {
+ot_doc_err ot_doc_append(ot_doc* doc, ot_op** op) {
+    // Move the op into the document's history array.
     ot_op* head = array_append(&doc->history);
-    memcpy(head, op, sizeof(ot_op));
+    memcpy(head, *op, sizeof(ot_op));
 
     if (doc->composed == NULL) {
+        // If a document only has one op, then its composed state is simply
+        // equal to that op.
+
+        // We have to be careful to not free this op pointer later because it
+        // points to head, which is in the doc's history.
         doc->composed = head;
     } else {
+        // If this isn't the first op, then we must update the doc's composed
+        // state by composing the previous composed op with the new op.
+
         ot_op* new_composed = ot_compose(doc->composed, head);
         if (new_composed == NULL) {
-            return NULL;
+            doc->history.len--;
+            return OT_ERR_APPEND;
         }
 
-        ot_free_op(doc->composed);
+        // Only free the previously composed op if this is the 2nd composition
+        // (aka 3rd op in the history). This is because the first composed op
+        // for a document points to the first op in the doc's history, and we
+        // don't want to free anything in the history.
+        if (doc->history.len > 2) {
+            ot_free_op(doc->composed);
+        }
         doc->composed = new_composed;
     }
 
     // Don't use ot_free_op because we only want to free the ot_op struct, not
     // its components. We must also only free op if the composition was a
     // success.
-    free(op);
+    free(*op);
+    *op = head;
 
     // The newly composed operation wil have the same hash as the appended op,
     // so we can get away with calculating the hash once and then copying it.
     hash_op(doc->composed);
     memcpy(head->hash, doc->composed->hash, 20);
 
-    return head;
+    return 0;
 }
 
 ot_op* ot_doc_compose_after(const ot_doc* doc, const char* after) {

@@ -12,13 +12,13 @@ static void append_op(ot_server* server, ot_op* op) {
     free(doc_enc);
     free(op_enc);
 
-    ot_op* appended = ot_doc_append(doc, op);
-    if (appended == NULL) {
+    ot_doc_err err = ot_doc_append(doc, &op);
+    if (err != 0) {
         fprintf(stderr, "Server append failed.\n");
         return;
     }
 
-    char* append_enc = ot_encode(appended);
+    char* append_enc = ot_encode(op);
     server->send(append_enc);
     fprintf(stderr, "Server sent op: %s\n", append_enc);
     free(append_enc);

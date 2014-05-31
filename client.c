@@ -80,8 +80,8 @@ void ot_client_receive(ot_client* client, const char* op) {
     if (client->doc == NULL) {
         client->doc = ot_new_doc();
     }
-    ot_op* appended = ot_doc_append(client->doc, p2.op2_prime);
-    fire_op_event(client, appended);
+    ot_doc_append(client->doc, &p2.op2_prime);
+    fire_op_event(client, p2.op2_prime);
 }
 
 ot_op* ot_client_apply(ot_client* client, ot_op* op) {
@@ -90,12 +90,12 @@ ot_op* ot_client_apply(ot_client* client, ot_op* op) {
     }
 
     ot_doc* doc = client->doc;
-    ot_op* appended = ot_doc_append(doc, op);
-    buffer_op(client, appended);
+    ot_doc_append(doc, &op);
+    buffer_op(client, op);
 
     if (client->sent == NULL) {
         send_buffer(client);
     }
 
-    return appended;
+    return op;
 }
