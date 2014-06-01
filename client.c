@@ -1,9 +1,9 @@
 #include "client.h"
 
-static ot_client_err buffer_op(ot_client* client, ot_op* op) {
+static ot_err buffer_op(ot_client* client, ot_op* op) {
     if (client->buffer == NULL) {
         client->buffer = op;
-        return 0;
+        return OT_ERR_NONE;
     }
 
     ot_op* composed = ot_compose(client->buffer, op);
@@ -52,9 +52,7 @@ ot_client* ot_new_client(send_func send, ot_event_func event, uint32_t id) {
     return client;
 }
 
-void ot_client_open(ot_client* client, ot_doc* doc) {
-    client->doc = doc;
-}
+void ot_client_open(ot_client* client, ot_doc* doc) { client->doc = doc; }
 
 void ot_client_receive(ot_client* client, const char* op) {
     fprintf(stderr, "Client received op: %s\n", op);
@@ -87,20 +85,20 @@ void ot_client_receive(ot_client* client, const char* op) {
     fire_op_event(client, p2.op2_prime);
 }
 
-ot_client_err ot_client_apply(ot_client* client, ot_op** op) {
+ot_err ot_client_apply(ot_client* client, ot_op** op) {
     if (client->doc == NULL) {
         client->doc = ot_new_doc();
     }
 
     ot_doc* doc = client->doc;
-    ot_doc_err derr = ot_doc_append(doc, op);
-    if (derr != 0) {
-        return OT_ERR_APPEND_FAILED;
+    ot_err append_err = ot_doc_append(doc, op);
+    if (append_err != OT_ERR_NONE) {
+        return append_err;
     }
 
-    ot_client_err err = buffer_op(client, *op);
-    if (err != 0) {
-        return err;
+    ot_err buf_err = buffer_op(client, *op);
+    if (buf_err != OT_ERR_NONE) {
+        return buf_err;
     }
 
     if (client->sent == NULL) {

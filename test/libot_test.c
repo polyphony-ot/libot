@@ -219,7 +219,7 @@ MU_TEST(test_ot_equal) {
 
         char p[20];
         ot_op* op1 = ot_new_op(0, p);
-        ot_decode_err err = ot_decode(op1, t.op1);
+        ot_err err = ot_decode(op1, t.op1);
         mu_assert(err == OT_ERR_NONE, "Error decoding test JSON.");
 
         ot_op* op2 = ot_new_op(0, p);
@@ -355,7 +355,7 @@ MU_TEST(compose_tests) {
 
         char p[20];
         ot_op* op1 = ot_new_op(0, p);
-        ot_decode_err err = ot_decode(op1, t.op1);
+        ot_err err = ot_decode(op1, t.op1);
         mu_assert(err == OT_ERR_NONE, "Error decoding first test op.");
 
         ot_op* op2 = ot_new_op(0, p);
@@ -474,7 +474,7 @@ MU_TEST(xform_tests) {
 
         char p[20];
         ot_op* initial = ot_new_op(0, p);
-        ot_decode_err err = ot_decode(initial, t.initial);
+        ot_err err = ot_decode(initial, t.initial);
         mu_assert(err == OT_ERR_NONE, "Error decoding initial test op.");
 
         ot_op* op1 = ot_new_op(0, p);
@@ -513,7 +513,7 @@ MU_TEST(decode_skip) {
 
     char p[20];
     ot_op* op = ot_new_op(0, p);
-    ot_decode_err err = ot_decode(op, expected_json);
+    ot_err err = ot_decode(op, expected_json);
     mu_check(err == OT_ERR_NONE);
     uint32_t actual_client_id = op->client_id;
 
@@ -528,7 +528,7 @@ MU_TEST(decode_client_id) {
 
     char p[20];
     ot_op* op = ot_new_op(0, p);
-    ot_decode_err err = ot_decode(op, expected_json);
+    ot_err err = ot_decode(op, expected_json);
     mu_check(err == OT_ERR_NONE);
     uint32_t actual_client_id = op->client_id;
 
@@ -543,7 +543,7 @@ MU_TEST(decode_parent) {
 
     char p[20];
     ot_op* op = ot_new_op(0, p);
-    ot_decode_err err = ot_decode(op, expected_json);
+    ot_err err = ot_decode(op, expected_json);
     mu_check(err == OT_ERR_NONE);
     char* actual_parent = op->parent;
     int cmp = memcmp(expected_parent, actual_parent, 20);
@@ -557,7 +557,7 @@ MU_TEST(decode_fails_if_client_id_is_missing) {
     char p[64] = { 0 };
     ot_op* op = ot_new_op(0, p);
     const char* json = "{ \"parent\": \"6162636465666768696a6b6c6d6e6f7071727374\", \"components\": [ ] }";
-    ot_decode_err err = ot_decode(op, json);
+    ot_err err = ot_decode(op, json);
 
     mu_assert(err == OT_ERR_CLIENT_ID_MISSING, "Decode did not return the correct error for clientId missing.");
 }
@@ -566,7 +566,7 @@ MU_TEST(decode_fails_if_parent_is_missing) {
     char p[64] = { 0 };
     ot_op* op = ot_new_op(0, p);
     const char* json = "{ \"clientId\": 1234, \"components\": [ ] }";
-    ot_decode_err err = ot_decode(op, json);
+    ot_err err = ot_decode(op, json);
 
     mu_assert(err == OT_ERR_PARENT_MISSING, "Decode did not return the correct error for parent missing.");
 }
@@ -575,7 +575,7 @@ MU_TEST(decode_fails_if_components_is_missing) {
     char p[64] = { 0 };
     ot_op* op = ot_new_op(0, p);
     const char* json = "{ \"clientId\": 1234, \"parent\": \"0\", \"hash\": \"00\" }";
-    ot_decode_err err = ot_decode(op, json);
+    ot_err err = ot_decode(op, json);
 
     mu_assert(err == OT_ERR_COMPONENTS_MISSING, "Decode did not return the correct error for components missing.");
 }
@@ -940,11 +940,11 @@ MU_TEST(client_apply_sends_op_if_not_waiting_for_acknowledgement) {
     ot_op* op = ot_new_op(0, parent);
     ot_insert(op, "any string");
 
-    ot_client_err cerr = ot_client_apply(client, &op);
+    ot_err cerr = ot_client_apply(client, &op);
     mu_assert_int_eq(OT_ERR_NONE, cerr);
 
     ot_op* dec_sent_op = ot_new_op(0, parent);
-    ot_decode_err derr = ot_decode(dec_sent_op, sent_op);
+    ot_err derr = ot_decode(dec_sent_op, sent_op);
 
     mu_assert_int_eq(OT_ERR_NONE, derr);
     mu_assert(ot_equal(op, dec_sent_op), "Sent op wasn't equal to the applied op.");

@@ -6,6 +6,33 @@
 #include <inttypes.h>
 #include "array.h"
 
+typedef enum {
+    OT_ERR_NONE = 0,
+
+    // Couldn't decode an operation because its parent field was missing.
+    OT_ERR_PARENT_MISSING = 1,
+
+    // Couldn't decode an operation because its clientId fields was missing.
+    OT_ERR_CLIENT_ID_MISSING = 2,
+
+    // Couldn't decode an operation because its components field was missing.
+    OT_ERR_COMPONENTS_MISSING = 3,
+
+    // Couldn't decode an operation because one of its components was invalid.
+    OT_ERR_INVALID_COMPONENT = 4,
+
+    // Couldn't decode an operation because its hash field was missing.
+    OT_ERR_HASH_MISSING = 5,
+
+    // Client couldn't buffer the applied operation, usually because it wasn't
+    // composable with the buffer.
+    OT_ERR_BUFFER_FAILED = 6,
+
+    // Couldn't append an operation to a document, usually because it wasn't
+    // composable with the current document state.
+    OT_ERR_APPEND_FAILED = 7
+} ot_err;
+
 typedef struct ot_fmt {
     char* name;
     char* value;

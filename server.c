@@ -12,8 +12,8 @@ static void append_op(ot_server* server, ot_op* op) {
     free(doc_enc);
     free(op_enc);
 
-    ot_doc_err err = ot_doc_append(doc, &op);
-    if (err != 0) {
+    ot_err err = ot_doc_append(doc, &op);
+    if (err != OT_ERR_NONE) {
         fprintf(stderr, "Server append failed.\n");
         return;
     }
@@ -75,7 +75,7 @@ void ot_server_receive(ot_server* server, const char* op) {
     fprintf(stderr, "Server received op: %s\n", op);
 
     ot_op* dec = ot_new_op(0, "");
-    ot_decode_err err = ot_decode(dec, op);
+    ot_err err = ot_decode(dec, op);
     if (err != OT_ERR_NONE) {
         fprintf(stderr, "Server couldn't decode op: %s\n", op);
         ot_free_op(dec);

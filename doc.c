@@ -20,7 +20,7 @@ void ot_free_doc(ot_doc* doc) {
     free(doc);
 }
 
-ot_doc_err ot_doc_append(ot_doc* doc, ot_op** op) {
+ot_err ot_doc_append(ot_doc* doc, ot_op** op) {
     // Move the op into the document's history array.
     ot_op* head = array_append(&doc->history);
     memcpy(head, *op, sizeof(ot_op));
@@ -39,7 +39,7 @@ ot_doc_err ot_doc_append(ot_doc* doc, ot_op** op) {
         ot_op* new_composed = ot_compose(doc->composed, head);
         if (new_composed == NULL) {
             doc->history.len--;
-            return OT_ERR_APPEND;
+            return OT_ERR_APPEND_FAILED;
         }
 
         // Only free the previously composed op if this is the 2nd composition
@@ -63,7 +63,7 @@ ot_doc_err ot_doc_append(ot_doc* doc, ot_op** op) {
     hash_op(doc->composed);
     memcpy(head->hash, doc->composed->hash, 20);
 
-    return 0;
+    return OT_ERR_NONE;
 }
 
 ot_op* ot_doc_compose_after(const ot_doc* doc, const char* after) {
