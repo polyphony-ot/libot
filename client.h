@@ -10,6 +10,13 @@
 #include "otencode.h"
 #include "otdecode.h"
 
+typedef enum {
+    // Client couldn't buffer the applied operation, usually because it wasn't
+    // composable with the buffer.
+    OT_ERR_BUFFER_FAILED = 1,
+    OT_ERR_APPEND_FAILED = 2
+} ot_client_err;
+
 typedef struct {
     send_func send;
     ot_event_func event;
@@ -26,6 +33,6 @@ void ot_client_open(ot_client* client, ot_doc* doc);
 
 void ot_client_receive(ot_client* client, const char* op);
 
-ot_op* ot_client_apply(ot_client* client, ot_op* op);
+ot_client_err ot_client_apply(ot_client* client, ot_op** op);
 
 #endif

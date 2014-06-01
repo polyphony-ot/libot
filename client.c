@@ -1,8 +1,9 @@
 #include "client.h"
 
-static void buffer_op(ot_client* client, ot_op* op) {
+static ot_client_err buffer_op(ot_client* client, ot_op* op) {
     if (client->buffer == NULL) {
         client->buffer = op;
+        return 0;
     }
 
     ot_op* composed = ot_compose(client->buffer, op);
@@ -10,7 +11,7 @@ static void buffer_op(ot_client* client, ot_op* op) {
         char* enc = ot_encode(op);
         fprintf(stderr, "Client couldn't add op to the buffer: %s\n", enc);
         free(enc);
-        return;
+        return OT_ERR_BUFFER_FAILED;
     }
 
     ot_free_op(client->buffer);
@@ -19,6 +20,8 @@ static void buffer_op(ot_client* client, ot_op* op) {
     char* enc = ot_encode(composed);
     fprintf(stderr, "Client's buffer is now: %s\n", enc);
     free(enc);
+
+    return 0;
 }
 
 static void send_buffer(ot_client* client) {
@@ -84,18 +87,25 @@ void ot_client_receive(ot_client* client, const char* op) {
     fire_op_event(client, p2.op2_prime);
 }
 
-ot_op* ot_client_apply(ot_client* client, ot_op* op) {
+ot_client_err ot_client_apply(ot_client* client, ot_op** op) {
     if (client->doc == NULL) {
         client->doc = ot_new_doc();
     }
 
     ot_doc* doc = client->doc;
-    ot_doc_append(doc, &op);
-    buffer_op(client, op);
+    ot_doc_err derr = ot_doc_append(doc, op);
+    if (derr != 0) {
+        return OT_ERR_APPEND_FAILED;
+    }
+
+    ot_client_err err = buffer_op(client, *op);
+    if (err != 0) {
+        return err;
+    }
 
     if (client->sent == NULL) {
         send_buffer(client);
     }
 
-    return op;
+    return 0;
 }

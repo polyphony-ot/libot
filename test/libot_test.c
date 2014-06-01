@@ -940,12 +940,13 @@ MU_TEST(client_apply_sends_op_if_not_waiting_for_acknowledgement) {
     ot_op* op = ot_new_op(0, parent);
     ot_insert(op, "any string");
 
-    op = ot_client_apply(client, op);
+    ot_client_err cerr = ot_client_apply(client, &op);
+    mu_assert_int_eq(OT_ERR_NONE, cerr);
 
     ot_op* dec_sent_op = ot_new_op(0, parent);
-    ot_decode_err err = ot_decode(dec_sent_op, sent_op);
+    ot_decode_err derr = ot_decode(dec_sent_op, sent_op);
 
-    mu_assert_int_eq(OT_ERR_NONE, err);
+    mu_assert_int_eq(OT_ERR_NONE, derr);
     mu_assert(ot_equal(op, dec_sent_op), "Sent op wasn't equal to the applied op.");
 }
 
