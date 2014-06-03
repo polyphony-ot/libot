@@ -21,21 +21,6 @@ static void ot_free_fmtbound(ot_comp_fmtbound* fmtbound) {
     array_free(&fmtbound->end);
 }
 
-static void ot_free_comp(ot_comp* comp) {
-    switch (comp->type) {
-    case OT_INSERT:
-        free(comp->value.insert.text);
-        break;
-    case OT_OPEN_ELEMENT:
-        free(comp->value.open_element.elem);
-        break;
-    case OT_FORMATTING_BOUNDARY:
-        ot_free_fmtbound(&comp->value.fmtbound);
-    default:
-        break;
-    }
-}
-
 ot_op* ot_new_op(uint32_t client_id, char parent[20]) {
     ot_op* op = (ot_op*)malloc(sizeof(ot_op));
     op->client_id = client_id;
@@ -53,6 +38,21 @@ void ot_free_op(ot_op* op) {
     }
     array_free(&op->comps);
     free(op);
+}
+
+void ot_free_comp(ot_comp* comp) {
+    switch (comp->type) {
+    case OT_INSERT:
+        free(comp->value.insert.text);
+        break;
+    case OT_OPEN_ELEMENT:
+        free(comp->value.open_element.elem);
+        break;
+    case OT_FORMATTING_BOUNDARY:
+        ot_free_fmtbound(&comp->value.fmtbound);
+    default:
+        break;
+    }
 }
 
 // TODO: Implement equality for formatting boundaries.
