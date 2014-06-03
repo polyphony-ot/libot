@@ -3,6 +3,9 @@
 // TODO: Finish implementing decoding of formatting boundaries.
 ot_err ot_decode(ot_op* op, const char* json) {
     cJSON* root = cJSON_Parse(json);
+    if (root == NULL) {
+        return OT_ERR_INVALID_JSON;
+    }
 
     cJSON* client_idf = cJSON_GetObjectItem(root, "clientId");
     if (client_idf == NULL) {

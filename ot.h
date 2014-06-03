@@ -24,13 +24,16 @@ typedef enum {
     // Couldn't decode an operation because its hash field was missing.
     OT_ERR_HASH_MISSING = 5,
 
+    // Couldn't parse a JSON string.
+    OT_ERR_INVALID_JSON = 6,
+
     // Client couldn't buffer the applied operation, usually because it wasn't
     // composable with the buffer.
-    OT_ERR_BUFFER_FAILED = 6,
+    OT_ERR_BUFFER_FAILED = 7,
 
     // Couldn't append an operation to a document, usually because it wasn't
     // composable with the current document state.
-    OT_ERR_APPEND_FAILED = 7
+    OT_ERR_APPEND_FAILED = 8
 } ot_err;
 
 typedef struct ot_fmt {

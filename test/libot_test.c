@@ -116,6 +116,7 @@ MU_TEST(iter_next_on_empty_op) {
     bool actual = ot_iter_next(&iter);
 
     mu_assert(actual == false, "Expected number of iterations did not equal actual number of iterations");
+    ot_free_op(op);
 }
 
 MU_TEST(iter_next_iterates_once_over_skip_with_count_one) {
@@ -129,6 +130,7 @@ MU_TEST(iter_next_iterates_once_over_skip_with_count_one) {
     bool second = ot_iter_next(&iter);
 
     mu_assert(first && !second, "Expected number of iterations did not equal actual number of iterations");
+    ot_free_op(op);
 }
 
 MU_TEST(iter_next_iterates_correct_number_of_times_over_skip_with_count_greater_than_one) {
@@ -143,6 +145,7 @@ MU_TEST(iter_next_iterates_correct_number_of_times_over_skip_with_count_greater_
     bool third = ot_iter_next(&iter);
 
     mu_assert(first && second && !third, "Expected number of iterations did not equal actual number of iterations");
+    ot_free_op(op);
 }
 
 MU_TEST(iter_next_iterates_correctly_over_single_insert_component) {
@@ -161,6 +164,8 @@ MU_TEST(iter_next_iterates_correctly_over_single_insert_component) {
     ot_iter_next(&iter);
     mu_assert(iter.pos == 0, "Iterator position was not 1.");
     mu_assert(iter.offset == 2, "Iterator offset was not 2.");
+
+    ot_free_op(op);
 }
 
 typedef struct ot_equals_test {
@@ -217,7 +222,7 @@ MU_TEST(test_ot_equal) {
     for (size_t i = 0; i < num_tests; ++i) {
         ot_equals_test t = ot_equals_tests[i];
 
-        char p[20];
+        char p[20] = { 0 };
         ot_op* op1 = ot_new_op(0, p);
         ot_err err = ot_decode(op1, t.op1);
         mu_assert(err == OT_ERR_NONE, "Error decoding test JSON.");
@@ -228,6 +233,9 @@ MU_TEST(test_ot_equal) {
 
         bool actual = ot_equal(op1, op2);
         mu_check(t.equal == actual);
+
+        ot_free_op(op1);
+        ot_free_op(op2);
     }
 }
 
@@ -353,7 +361,7 @@ MU_TEST(compose_tests) {
         ot_compose_test t = ot_compose_tests[i];
         char errmsg[128];
 
-        char p[20];
+        char p[20] = { 0 };
         ot_op* op1 = ot_new_op(0, p);
         ot_err err = ot_decode(op1, t.op1);
         mu_assert(err == OT_ERR_NONE, "Error decoding first test op.");
@@ -369,6 +377,11 @@ MU_TEST(compose_tests) {
         ot_op* actual = ot_compose(op1, op2);
         sprintf(errmsg, "[%zu] Composed op wasn't correct.", i);
         mu_assert(ot_equal(expected, actual), errmsg);
+
+        ot_free_op(op1);
+        ot_free_op(op2);
+        ot_free_op(expected);
+        ot_free_op(actual);
     }
 }
 
@@ -472,7 +485,7 @@ MU_TEST(xform_tests) {
     for (size_t i = 0; i < max; ++i) {
         ot_xform_test t = ot_xform_tests[i];
 
-        char p[20];
+        char p[20] = { 0 };
         ot_op* initial = ot_new_op(0, p);
         ot_err err = ot_decode(initial, t.initial);
         mu_assert(err == OT_ERR_NONE, "Error decoding initial test op.");
@@ -491,13 +504,26 @@ MU_TEST(xform_tests) {
 
         ot_xform_pair xform = ot_xform(op1, op2);
 
-        ot_op* actual1 = ot_compose(ot_compose(initial, op1), xform.op2_prime);
+        ot_op* composed1 = ot_compose(initial, op1);
+        ot_op* actual1 = ot_compose(composed1, xform.op2_prime);
         sprintf(errmsg, "[%zu] op2' wasn't correct.", i);
         mu_assert(ot_equal(expected, actual1), errmsg);
 
-        ot_op* actual2 = ot_compose(ot_compose(initial, op2), xform.op1_prime);
+        ot_op* composed2 = ot_compose(initial, op2);
+        ot_op* actual2 = ot_compose(composed2, xform.op1_prime);
         sprintf(errmsg, "[%zu] op1' wasn't correct.", i);
         mu_assert(ot_equal(expected, actual2), errmsg);
+
+        ot_free_op(initial);
+        ot_free_op(op1);
+        ot_free_op(op2);
+        ot_free_op(expected);
+        ot_free_op(xform.op1_prime);
+        ot_free_op(xform.op2_prime);
+        ot_free_op(actual1);
+        ot_free_op(actual2);
+        ot_free_op(composed1);
+        ot_free_op(composed2);
     }
 }
 
@@ -560,6 +586,7 @@ MU_TEST(decode_fails_if_client_id_is_missing) {
     ot_err err = ot_decode(op, json);
 
     mu_assert(err == OT_ERR_CLIENT_ID_MISSING, "Decode did not return the correct error for clientId missing.");
+    ot_free_op(op);
 }
 
 MU_TEST(decode_fails_if_parent_is_missing) {
@@ -569,6 +596,7 @@ MU_TEST(decode_fails_if_parent_is_missing) {
     ot_err err = ot_decode(op, json);
 
     mu_assert(err == OT_ERR_PARENT_MISSING, "Decode did not return the correct error for parent missing.");
+    ot_free_op(op);
 }
 
 MU_TEST(decode_fails_if_components_is_missing) {
@@ -578,6 +606,7 @@ MU_TEST(decode_fails_if_components_is_missing) {
     ot_err err = ot_decode(op, json);
 
     mu_assert(err == OT_ERR_COMPONENTS_MISSING, "Decode did not return the correct error for components missing.");
+    ot_free_op(op);
 }
 
 MU_TEST_SUITE(otdecode_test_suite) {
@@ -932,6 +961,8 @@ MU_TEST(client_receive_does_not_send_empty_buffer_after_acknowledgement) {
         asprintf(&msg, "Expected the client to not send anything, but it sent \"%s\".", sent_op);
         mu_fail(msg);
     }
+
+    ot_free_client(client);
 }
 
 MU_TEST(client_apply_sends_op_if_not_waiting_for_acknowledgement) {
@@ -948,6 +979,9 @@ MU_TEST(client_apply_sends_op_if_not_waiting_for_acknowledgement) {
 
     mu_assert_int_eq(OT_ERR_NONE, derr);
     mu_assert(ot_equal(op, dec_sent_op), "Sent op wasn't equal to the applied op.");
+
+    ot_free_op(dec_sent_op);
+    ot_free_client(client);
 }
 
 MU_TEST_SUITE(client_test_suite) {

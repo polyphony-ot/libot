@@ -15,12 +15,16 @@ typedef struct {
     ot_event_func event;
     ot_doc* doc;
     uint32_t client_id;
-    ot_op* sent;
+    bool ack_required;
     ot_op* anticipated;
+    bool anticipated_needs_free;
     ot_op* buffer;
+    bool buffer_needs_free;
 } ot_client;
 
 ot_client* ot_new_client(send_func send, ot_event_func event, uint32_t id);
+
+void ot_free_client(ot_client* client);
 
 void ot_client_open(ot_client* client, ot_doc* doc);
 

@@ -6,6 +6,7 @@ static void hash_op(ot_op* op) {
     sha1_init(&md);
     sha1_process(&md, snapshot, (uint32_t)strlen(snapshot));
     sha1_done(&md, (char*)&op->hash);
+    free(snapshot);
 }
 
 ot_doc* ot_new_doc(void) {
@@ -16,6 +17,18 @@ ot_doc* ot_new_doc(void) {
 }
 
 void ot_free_doc(ot_doc* doc) {
+    // Free the components of every op in the document's history.
+    ot_op* ops = doc->history.data;
+    for (size_t i = 0; i < doc->history.len; ++i) {
+        ot_op* op = ops + i;
+        ot_comp* comps = op->comps.data;
+        for (size_t j = 0; j < op->comps.len; ++j) {
+            ot_free_comp(comps + j);
+        }
+        array_free(&op->comps);
+    }
+
+    // Free the history array, which frees the all of ops.
     array_free(&doc->history);
     free(doc);
 }
