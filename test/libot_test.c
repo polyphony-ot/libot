@@ -976,14 +976,16 @@ MU_TEST(client_has_correct_state_and_event_when_receiving_op_for_empty_doc) {
 
 MU_TEST(client_has_correct_state_and_event_when_receiving_op_for_non_empty_doc) {
     const uint32_t NONZERO = 1;
-    const char* const EXPECTED = "abc";
+    const char* const EXPECTED = "abcdef";
+    const char* const ENC_OP1 = "{ \"clientId\": 0, \"parent\": \"00\", \"hash\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" } ] }";
+    const char* const ENC_OP2 = "{ \"clientId\": 0, \"parent\": \"00\", \"hash\": \"00\", \"components\": [ { \"type\": \"skip\", \"count\": 3 }, { \"type\": \"insert\", \"text\": \"def\" } ] }";
     ot_client* client = ot_new_client(send_stub, event_stub, NONZERO);
-    char* enc_op = "{ \"clientId\": 0, \"parent\": \"00\", \"hash\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" } ] }";
 
-    ot_client_receive(client, enc_op);
+    ot_client_receive(client, ENC_OP1);
+    ot_client_receive(client, ENC_OP2);
 
     char* actual = ot_snapshot(client->doc->composed);
-    int cmp = strcmp(EXPECTED, actual);
+    const int cmp = strcmp(EXPECTED, actual);
     if (cmp != 0) {
         char* msg;
         asprintf(&msg, "Expected the document state to be \"%s\", but instead got \"%s\".", EXPECTED, actual);
@@ -996,27 +998,8 @@ MU_TEST(client_has_correct_state_and_event_when_receiving_op_for_non_empty_doc) 
         mu_fail(msg);
     }
 
-    const char* const INSERT2 = "abcdef";
-    char* enc_op2 = "{ \"clientId\": 0, \"parent\": \"00\", \"hash\": \"00\", \"components\": [ { \"type\": \"skip\", \"count\": 3 }, { \"type\": \"insert\", \"text\": \"def\" } ] }";
-
-    ot_client_receive(client, enc_op2);
-    char* actual2 = ot_snapshot(client->doc->composed);
-    int cmp2 = strcmp(INSERT2, actual2);
-    if (cmp2 != 0) {
-        char* msg;
-        asprintf(&msg, "Expected the document state to be \"%s\", but instead got \"%s\".", INSERT2, actual2);
-        mu_fail(msg);
-    }
-
-    if (event_type != OT_OP_APPLIED) {
-        char* msg;
-        asprintf(&msg, "Expected an event of type OT_OP_APPLIED (%d), but instead got %d.", OT_OP_APPLIED, event_type);
-        mu_fail(msg);
-    }
-
     ot_free_client(client);
     free(actual);
-    free(actual2);
 }
 
 MU_TEST(client_receive_does_not_send_empty_buffer_after_acknowledgement) {
