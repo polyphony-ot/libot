@@ -80,8 +80,7 @@ static void send_buffer(ot_client* client) {
 }
 
 static void fire_op_event(ot_client* client, ot_op* op) {
-    assert(client);
-    assert(op);
+    client->event(OT_OP_APPLIED, op);
 }
 
 ot_client* ot_new_client(send_func send, ot_event_func event, uint32_t id) {
@@ -116,7 +115,13 @@ void ot_client_receive(ot_client* client, const char* op) {
     fprintf(stderr, "Client received op: %s\n", op);
 
     ot_op* dec = ot_new_op(0, "");
-    ot_decode(dec, op);
+    ot_err err = ot_decode(dec, op);
+    if (err != OT_ERR_NONE) {
+        fprintf(stderr, "Client couldn't decode op. Error code: %d.", err);
+        ot_free_op(dec);
+        return;
+    }
+
     if (dec->client_id == client->client_id) {
         char hex[41];
         atohex((char*)&hex, (char*)&dec->hash, 20);
@@ -128,22 +133,29 @@ void ot_client_receive(ot_client* client, const char* op) {
         return;
     }
 
-    ot_xform_pair p = ot_xform(client->anticipated, dec);
-    free_anticipated(client);
-    client->anticipated = p.op1_prime;
-    client->free_anticipated_comps = true;
+    ot_op* apply;
+    if (client->anticipated == NULL) {
+        apply = dec;
+    } else {
+        ot_xform_pair p = ot_xform(client->anticipated, dec);
+        free_anticipated(client);
+        client->anticipated = p.op1_prime;
+        client->free_anticipated_comps = true;
 
-    ot_xform_pair p2 = ot_xform(client->buffer, p.op2_prime);
-    ot_free_op(client->buffer);
-    ot_free_op(p.op2_prime);
-    client->buffer = p2.op1_prime;
-    client->free_buffer_comps = true;
+        ot_xform_pair p2 = ot_xform(client->buffer, p.op2_prime);
+        free_buffer(client);
+        ot_free_op(p.op2_prime);
+        client->buffer = p2.op1_prime;
+        client->free_buffer_comps = true;
+
+        apply = p2.op2_prime;
+    }
 
     if (client->doc == NULL) {
         client->doc = ot_new_doc();
     }
-    ot_doc_append(client->doc, &p2.op2_prime);
-    fire_op_event(client, p2.op2_prime);
+    ot_doc_append(client->doc, &apply);
+    fire_op_event(client, apply);
 }
 
 ot_err ot_client_apply(ot_client* client, ot_op** op) {

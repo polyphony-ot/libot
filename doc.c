@@ -28,6 +28,10 @@ void ot_free_doc(ot_doc* doc) {
         array_free(&op->comps);
     }
 
+    if (doc->history.len > 1) {
+        ot_free_op(doc->composed);
+    }
+
     // Free the history array, which frees the all of ops.
     array_free(&doc->history);
     free(doc);
@@ -37,6 +41,9 @@ ot_err ot_doc_append(ot_doc* doc, ot_op** op) {
     // Move the op into the document's history array.
     ot_op* head = array_append(&doc->history);
     memcpy(head, *op, sizeof(ot_op));
+    if (doc->history.len == 2) {
+        doc->composed = (ot_op*)doc->history.data;
+    }
 
     if (doc->composed == NULL) {
         // If a document only has one op, then its composed state is simply
