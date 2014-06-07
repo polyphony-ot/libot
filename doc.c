@@ -28,12 +28,15 @@ void ot_free_doc(ot_doc* doc) {
         array_free(&op->comps);
     }
 
+    // Free the history array, which frees the all of ops.
+    array_free(&doc->history);
+
+    // When the history length is less than 2, then the composed op is just
+    // pointing to the first op in the history (which has already been freed).
     if (doc->history.len > 1) {
         ot_free_op(doc->composed);
     }
 
-    // Free the history array, which frees the all of ops.
-    array_free(&doc->history);
     free(doc);
 }
 
@@ -41,31 +44,29 @@ ot_err ot_doc_append(ot_doc* doc, ot_op** op) {
     // Move the op into the document's history array.
     ot_op* head = array_append(&doc->history);
     memcpy(head, *op, sizeof(ot_op));
-    if (doc->history.len == 2) {
+
+    // If we're appending the first op, then the composed state will simply be
+    // the first op in the history. If we're appending the second op, then we
+    // must ensure that the composed op still points to the first op in the
+    // history in case its location changed after calling array_append (which
+    // may have reallocated the array to a different location in memory).
+    if (doc->history.len <= 2) {
         doc->composed = (ot_op*)doc->history.data;
     }
 
-    if (doc->composed == NULL) {
-        // If a document only has one op, then its composed state is simply
-        // equal to that op.
-
-        // We have to be careful to not free this op pointer later because it
-        // points to head, which is in the doc's history.
-        doc->composed = head;
-    } else {
-        // If this isn't the first op, then we must update the doc's composed
-        // state by composing the previous composed op with the new op.
-
+    // If we're appending any op after the first, then we must compose the new
+    // op with the currently composed state to get the new composed state.
+    if (doc->history.len > 1) {
         ot_op* new_composed = ot_compose(doc->composed, head);
         if (new_composed == NULL) {
             doc->history.len--;
             return OT_ERR_APPEND_FAILED;
         }
 
-        // Only free the previously composed op if this is the 2nd composition
-        // (aka 3rd op in the history). This is because the first composed op
-        // for a document points to the first op in the doc's history, and we
-        // don't want to free anything in the history.
+        // Only free the previously composed op if this is at least the 2nd
+        // composition (aka 3rd op in the history). This is because the first
+        // composed op for a document points to the first op in the doc's
+        // history, and we don't want to free anything in the history.
         if (doc->history.len > 2) {
             ot_free_op(doc->composed);
         }
