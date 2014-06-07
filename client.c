@@ -1,26 +1,41 @@
 #include "client.h"
 
 static void free_anticipated(ot_client* client) {
-    if (client->anticipated_needs_free) {
+    if (client->anticipated == NULL) {
+        return;
+    }
+
+    if (client->free_anticipated_comps) {
         ot_free_op(client->anticipated);
-        client->anticipated_needs_free = false;
+        client->free_anticipated_comps = false;
+    } else {
+        free(client->anticipated);
     }
 }
 
 static void free_buffer(ot_client* client) {
-    if (client->buffer_needs_free) {
-        ot_free_op(client->buffer);
-        client->buffer = NULL;
-        client->buffer_needs_free = false;
+    if (client->buffer == NULL) {
+        return;
     }
+
+    if (client->free_buffer_comps) {
+        ot_free_op(client->buffer);
+        client->free_buffer_comps = false;
+    } else {
+        free(client->buffer);
+    }
+
+    client->buffer = NULL;
 }
 
 static ot_err buffer_op(ot_client* client, ot_op* op) {
     if (client->buffer == NULL) {
-        client->buffer = op;
+        client->buffer = malloc(sizeof(ot_op));
+        memcpy(client->buffer, op, sizeof(ot_op));
 
-        // Don't free the buffer because it points to an op in the document.
-        client->buffer_needs_free = false;
+        // Don't free the buffer op's components because it's a shallow copy of
+        // an op in the doc.
+        client->free_buffer_comps = false;
         return OT_ERR_NONE;
     }
 
@@ -34,10 +49,10 @@ static ot_err buffer_op(ot_client* client, ot_op* op) {
 
     free_buffer(client);
 
-    // Set the buffer and mark it as freeable because it doesn't point to
-    // anywhere within the doc.
+    // Set the buffer and mark its components as freeable because it doesn't
+    // point to anywhere within the doc.
     client->buffer = composed;
-    client->buffer_needs_free = true;
+    client->free_buffer_comps = true;
 
     char* enc = ot_encode(composed);
     fprintf(stderr, "Client's buffer is now: %s\n", enc);
@@ -54,12 +69,14 @@ static void send_buffer(ot_client* client) {
     char* enc_buf = ot_encode(client->buffer);
     client->send(enc_buf);
 
+    // Don't free the anticipated op's components because it points to an op in
+    // the document.
+    client->anticipated = malloc(sizeof(ot_op));
+    memcpy(client->anticipated, client->buffer, sizeof(ot_op));
+    client->free_anticipated_comps = false;
+
     free_buffer(client);
     client->ack_required = true;
-
-    // Don't free the anticipated op because it points to an op in the document.
-    client->anticipated = client->buffer;
-    client->anticipated_needs_free = false;
 }
 
 static void fire_op_event(ot_client* client, ot_op* op) {
@@ -76,8 +93,8 @@ ot_client* ot_new_client(send_func send, ot_event_func event, uint32_t id) {
     client->doc = NULL;
     client->client_id = id;
     client->ack_required = false;
-    client->anticipated_needs_free = false;
-    client->buffer_needs_free = false;
+    client->free_anticipated_comps = false;
+    client->free_buffer_comps = false;
 
     return client;
 }
@@ -114,12 +131,13 @@ void ot_client_receive(ot_client* client, const char* op) {
     ot_xform_pair p = ot_xform(client->anticipated, dec);
     free_anticipated(client);
     client->anticipated = p.op1_prime;
-    client->anticipated_needs_free = true;
+    client->free_anticipated_comps = true;
 
     ot_xform_pair p2 = ot_xform(client->buffer, p.op2_prime);
     ot_free_op(client->buffer);
     ot_free_op(p.op2_prime);
     client->buffer = p2.op1_prime;
+    client->free_buffer_comps = true;
 
     if (client->doc == NULL) {
         client->doc = ot_new_doc();

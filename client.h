@@ -17,9 +17,9 @@ typedef struct {
     uint32_t client_id;
     bool ack_required;
     ot_op* anticipated;
-    bool anticipated_needs_free;
+    bool free_anticipated_comps;
     ot_op* buffer;
-    bool buffer_needs_free;
+    bool free_buffer_comps;
 } ot_client;
 
 ot_client* ot_new_client(send_func send, ot_event_func event, uint32_t id);
