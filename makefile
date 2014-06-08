@@ -11,7 +11,7 @@
 # 	clean
 
 CC=clang
-CFLAGS=-std=c99 -Wall -funsigned-char -pedantic -fpic
+CFLAGS=-std=c99 -Wall -Wextra -funsigned-char -pedantic -fpic
 AR=ar
 
 # List of all the sources belonging to the core library (no tests).
