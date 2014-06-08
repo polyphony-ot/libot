@@ -68,6 +68,7 @@ static void send_buffer(ot_client* client) {
 
     char* enc_buf = ot_encode(client->buffer);
     client->send(enc_buf);
+    free(enc_buf);
 
     // Don't free the anticipated op's components because it points to an op in
     // the document.
@@ -139,16 +140,21 @@ void ot_client_receive(ot_client* client, const char* op) {
     } else {
         ot_xform_pair p = ot_xform(client->anticipated, dec);
         free_anticipated(client);
+        ot_free_op(dec);
         client->anticipated = p.op1_prime;
         client->free_anticipated_comps = true;
 
-        ot_xform_pair p2 = ot_xform(client->buffer, p.op2_prime);
-        free_buffer(client);
-        ot_free_op(p.op2_prime);
-        client->buffer = p2.op1_prime;
-        client->free_buffer_comps = true;
+        if (client->buffer != NULL) {
+            ot_xform_pair p2 = ot_xform(client->buffer, p.op2_prime);
+            free_buffer(client);
+            ot_free_op(p.op2_prime);
+            client->buffer = p2.op1_prime;
+            client->free_buffer_comps = true;
 
-        apply = p2.op2_prime;
+            apply = p2.op2_prime;
+        } else {
+            apply = p.op2_prime;
+        }
     }
 
     if (client->doc == NULL) {

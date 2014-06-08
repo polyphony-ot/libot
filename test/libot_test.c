@@ -930,11 +930,11 @@ MU_TEST_SUITE(sha1_test_suite) {
 
 /* client tests */
 
-const char* sent_op = "";
+char* sent_op = "";
 int send_ret = 0;
 
 static int send_stub(const char* op) {
-    sent_op = op;
+    sent_op = strdup(op);
     return send_ret;
 }
 
@@ -1005,7 +1005,7 @@ MU_TEST(client_has_correct_state_and_event_when_receiving_op_for_non_empty_doc) 
 MU_TEST(client_receive_does_not_send_empty_buffer_after_acknowledgement) {
     ot_client* client = ot_new_client(send_stub, event_stub, 0);
     char* op = "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ ] }";
-    const char* const nothing = "NOTHING";
+    char* nothing = "NOTHING";
     sent_op = nothing;
 
     ot_client_receive(client, op);
@@ -1036,6 +1036,32 @@ MU_TEST(client_apply_sends_op_if_not_waiting_for_acknowledgement) {
 
     ot_free_op(dec_sent_op);
     ot_free_client(client);
+    free(sent_op);
+}
+
+MU_TEST(client_receives_new_op_before_acknowledgement_starting_with_empty_doc) {
+    const char* const EXPECTED = "client text server text";
+    ot_client* client = ot_new_client(send_stub, event_stub, 0);
+    char parent[20] = { 0 };
+    ot_op* op = ot_new_op(0, parent);
+    ot_insert(op, "client text ");
+
+    ot_err cerr = ot_client_apply(client, &op);
+    mu_assert_int_eq(OT_ERR_NONE, cerr);
+
+    char* enc_serv_op = "{ \"clientId\": 1, \"parent\": \"00\", \"hash\": \"d82ac619d64a0883de5276f0f3e9a984c3e22620\", \"components\": [ { \"type\": \"insert\", \"text\": \"server text\" } ] }";
+    ot_client_receive(client, enc_serv_op);
+
+    char* actual = ot_snapshot(client->doc->composed);
+    int cmp = strcmp(EXPECTED, actual);
+    if (cmp != 0) {
+        char* msg;
+        asprintf(&msg, "Expected the client's document to be \"%s\", but instead it's \"%s\".", EXPECTED, actual);
+        mu_fail(msg);
+    }
+
+    ot_free_client(client);
+    free(actual);
 }
 
 MU_TEST_SUITE(client_test_suite) {
@@ -1043,6 +1069,7 @@ MU_TEST_SUITE(client_test_suite) {
     MU_RUN_TEST(client_has_correct_state_and_event_when_receiving_op_for_non_empty_doc);
     MU_RUN_TEST(client_receive_does_not_send_empty_buffer_after_acknowledgement);
     MU_RUN_TEST(client_apply_sends_op_if_not_waiting_for_acknowledgement);
+    MU_RUN_TEST(client_receives_new_op_before_acknowledgement_starting_with_empty_doc);
 }
 
 int main() {
