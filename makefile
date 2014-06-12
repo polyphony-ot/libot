@@ -29,6 +29,9 @@ SOURCES=\
 	doc.c \
 	cjson/cjson.c
 
+# List of sources for test scenarios.
+SCENARIOS=$(wildcard test/scenarios/*.c)
+
 # Output directory where binaries and build artifacts will be placed.
 BIN=bin
 
@@ -94,12 +97,17 @@ release: $(BIN)/release/$(LIB)
 
 # Test targets #
 
+$(BIN)/debug/scenarios$(EXESUFFIX): $(BIN)/debug/$(LIB) $(SCENARIOS)
+	$(CC) $(CFLAGS) -g -Icjson -o "$(BIN)/debug/scenarios$(EXESUFFIX)" \
+	$(BIN)/debug/$(LIB) $(SCENARIOS)
+
 $(BIN)/debug/test$(EXESUFFIX): $(BIN)/debug/$(LIB) test/libot_test.c
 	$(CC) $(CFLAGS) -g -Icjson -o "$(BIN)/debug/test$(EXESUFFIX)" \
 	test/libot_test.c $(BIN)/debug/$(LIB)
 
-test: $(BIN)/debug/test$(EXESUFFIX)
+test: $(BIN)/debug/test$(EXESUFFIX) $(BIN)/debug/scenarios$(EXESUFFIX)
 	$(TESTRUNNER) $(BIN)/debug/test$(EXESUFFIX)
+	$(TESTRUNNER) $(BIN)/debug/scenarios$(EXESUFFIX)
 ifdef COVERAGE
 	@echo "Code coverage is temporarily disabled due to an incompatibility \
 	between lcov and Apple's (buggy) version of gcov."
