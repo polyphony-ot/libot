@@ -928,6 +928,22 @@ MU_TEST_SUITE(sha1_test_suite) {
     MU_RUN_TEST(sha1);
 }
 
+/* doc tests */
+
+MU_TEST(append_empty_op_does_not_segfault) {
+    ot_doc* doc = ot_new_doc();
+    char parent[20] = { 0 };
+    ot_op* op = ot_new_op(0, parent);
+
+    ot_doc_append(doc, &op);
+
+    ot_free_doc(doc);
+}
+
+MU_TEST_SUITE(doc_test_suite) {
+    MU_RUN_TEST(append_empty_op_does_not_segfault);
+}
+
 /* client tests */
 
 char* sent_op = "";
@@ -1150,6 +1166,7 @@ int main() {
     MU_RUN_SUITE(hex_test_suite);
     MU_RUN_SUITE(sha1_test_suite);
     MU_RUN_SUITE(client_test_suite);
+    MU_RUN_SUITE(doc_test_suite);
     MU_REPORT();
     return 0;
 }
