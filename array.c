@@ -10,6 +10,16 @@ void array_init(array* arr, size_t size) {
 
 void array_free(array* arr) { free(arr->data); }
 
+void array_copy(array* dst, const array* src) {
+    dst->len = src->len;
+    dst->cap = src->len;
+    dst->size = src->size;
+
+    size_t datalen = src->size * src->len;
+    dst->data = malloc(datalen);
+    memcpy(dst->data, src->data, datalen);
+}
+
 void array_ensure_size(array* arr) {
     if (arr->len == 0) {
         arr->cap = 1;

@@ -782,10 +782,70 @@ MU_TEST(append_increases_array_length_by_one) {
     mu_assert(EXPECTED == ACTUAL, "Appending to an array did not increase its length by 1.");
 }
 
+MU_TEST(array_copy_copies_array_with_no_elements) {
+    array src;
+    array_init(&src, sizeof(char));
+
+    array dst;
+    array_copy(&dst, &src);
+
+    mu_assert_int_eq(src.len, dst.len);
+    mu_assert_int_eq(src.cap, dst.cap);
+    mu_assert_int_eq(src.size, dst.size);
+    int cmp = memcmp((char*)src.data, (char*)dst.data, src.len);
+    mu_assert(cmp == 0, "Source data and destination data weren't equal.");
+
+    array_free(&src);
+    array_free(&dst);
+}
+
+MU_TEST(array_copy_copies_array_with_one_element) {
+    array src;
+    array_init(&src, sizeof(char));
+    char* elem = (char*)array_append(&src);
+    *elem = 1;
+
+    array dst;
+    array_copy(&dst, &src);
+
+    mu_assert_int_eq(src.len, dst.len);
+    mu_assert_int_eq(src.cap, dst.cap);
+    mu_assert_int_eq(src.size, dst.size);
+    int cmp = memcmp((char*)src.data, (char*)dst.data, src.len);
+    mu_assert(cmp == 0, "Source data and destination data weren't equal.");
+
+    array_free(&src);
+    array_free(&dst);
+}
+
+MU_TEST(array_copy_copies_array_with_two_elements) {
+    array src;
+    array_init(&src, sizeof(char));
+    char* elem1 = (char*)array_append(&src);
+    *elem1 = 1;
+    char* elem2 = (char*)array_append(&src);
+    *elem2 = 2;
+
+    array dst;
+    array_copy(&dst, &src);
+
+    mu_assert_int_eq(src.len, dst.len);
+    mu_assert_int_eq(src.cap, dst.cap);
+    mu_assert_int_eq(src.size, dst.size);
+    int cmp = memcmp((char*)src.data, (char*)dst.data, src.len);
+    mu_assert(cmp == 0, "Source data and destination data weren't equal.");
+
+    array_free(&src);
+    array_free(&dst);
+}
+
 MU_TEST_SUITE(array_test_suite) {
     MU_RUN_TEST(ensure_size_on_empty_array_increases_capacity_to_one);
     MU_RUN_TEST(ensure_size_on_non_empty_array_doubles_capacity);
     MU_RUN_TEST(append_increases_array_length_by_one);
+    MU_RUN_TEST(array_copy_copies_array_with_no_elements);
+    MU_RUN_TEST(array_copy_copies_array_with_one_element);
+    MU_RUN_TEST(array_copy_copies_array_with_two_elements);
 }
 
 /* hex tests */

@@ -2,6 +2,7 @@
 #define LIBOT_ARRAY_H
 
 #include <stddef.h>
+#include <string.h>
 
 // Implements a dynamically resizing array.
 //
@@ -21,6 +22,10 @@ void array_init(array* arr, size_t size);
 
 // Frees an initialized array.
 void array_free(array* arr);
+
+// Copies an array from src into dst. The copied array will have a capacity
+// equal to the length of the source array.
+void array_copy(array* dst, const array* src);
 
 // Ensures that the array has enough capacity for another element.
 void array_ensure_size(array* arr);
