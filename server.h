@@ -18,6 +18,8 @@ typedef struct {
 
 ot_server* ot_new_server(send_func send, ot_event_func event);
 
+void ot_free_server(ot_server* server);
+
 void ot_server_open(ot_server* server, ot_doc* doc);
 
 void ot_server_receive(ot_server* server, const char* op);

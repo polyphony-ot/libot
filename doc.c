@@ -98,25 +98,35 @@ ot_err ot_doc_append(ot_doc* doc, ot_op** op) {
 
 ot_op* ot_doc_compose_after(const ot_doc* doc, const char* after) {
     array history = doc->history;
-    if (history.len < 2) {
+    if (history.len == 0) {
         return NULL;
     }
 
-    ot_op* ops = (ot_op*)history.data;
-    size_t start = 0;
-    for (size_t i = history.len - 1; i > 0; --i) {
-        ot_op* op = ops + i;
-        if (memcmp(op->hash, after, sizeof(char) * 20) == 0) {
-            start = i + 1;
+    bool after_null = true;
+    for (int i = 0; i < 20; ++i) {
+        if (after[i] != 0) {
+            after_null = false;
             break;
         }
     }
 
-    if (start == 0) {
-        return NULL;
+    size_t start = 0;
+    ot_op* ops = (ot_op*)history.data;
+    if (!after_null) {
+        for (size_t i = history.len - 1; i > 0; --i) {
+            ot_op* op = ops + i;
+            if (memcmp(op->hash, after, sizeof(char) * 20) == 0) {
+                start = i + 1;
+                break;
+            }
+        }
+
+        if (start == 0) {
+            return NULL;
+        }
     }
 
-    ot_op* composed = ops + start;
+    ot_op* composed = ot_dup_op(ops + start);
     ot_op* temp;
     for (size_t i = start + 1; i < history.len; ++i) {
         temp = ot_compose(composed, ops + i);

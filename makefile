@@ -97,7 +97,8 @@ release: $(BIN)/release/$(LIB)
 
 # Test targets #
 
-$(BIN)/debug/scenarios$(EXESUFFIX): $(BIN)/debug/$(LIB) $(SCENARIOS)
+$(BIN)/debug/scenarios$(EXESUFFIX): $(BIN)/debug/$(LIB) $(SCENARIOS) \
+	test/scenarios/scenario.h
 	$(CC) $(CFLAGS) -g -Icjson -o "$(BIN)/debug/scenarios$(EXESUFFIX)" \
 	$(BIN)/debug/$(LIB) $(SCENARIOS)
 

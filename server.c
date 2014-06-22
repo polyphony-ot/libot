@@ -1,16 +1,38 @@
 #include "server.h"
 
 static bool can_append(const ot_doc* doc, const ot_op* op) {
-    return memcmp(doc->composed->hash, op->parent, sizeof(char) * 20) == 0;
+    const char* parent = op->parent;
+    if (memcmp(doc->composed->hash, parent, sizeof(char) * 20) == 0) {
+        return true;
+    }
+
+    if (doc->history.len == 0) {
+        for (int i = 0; i < 20; ++i) {
+            if (parent[i] != 0) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    return false;
 }
 
 static void append_op(ot_server* server, ot_op* op) {
     ot_doc* doc = server->doc;
-    char* doc_enc = ot_encode(doc->composed);
-    char* op_enc = ot_encode(op);
-    fprintf(stderr, "Server appending:\n\t%s\n\t%s\n", doc_enc, op_enc);
-    free(doc_enc);
-    free(op_enc);
+
+    if (doc->composed == NULL) {
+        char* op_enc = ot_encode(op);
+        fprintf(stderr, "Server setting first op: %s\n", op_enc);
+        free(op_enc);
+    } else {
+        char* doc_enc = ot_encode(doc->composed);
+        char* op_enc = ot_encode(op);
+        fprintf(stderr, "Server appending:\n\t%s\n\t%s\n", doc_enc, op_enc);
+        free(doc_enc);
+        free(op_enc);
+    }
 
     ot_err err = ot_doc_append(doc, &op);
     if (err != OT_ERR_NONE) {
@@ -57,6 +79,9 @@ static ot_op* xform(const ot_doc* doc, ot_op* op) {
     free(op2_prime_enc);
     ot_free_op(p.op1_prime);
 
+    memcpy(p.op2_prime->parent, composed->hash, 20);
+    ot_free_op(composed);
+
     return p.op2_prime;
 }
 
@@ -67,6 +92,14 @@ ot_server* ot_new_server(send_func send, ot_event_func event) {
     server->doc = NULL;
 
     return server;
+}
+
+void ot_free_server(ot_server* server) {
+    if (server->doc != NULL) {
+        ot_free_doc(server->doc);
+    }
+
+    free(server);
 }
 
 void ot_server_open(ot_server* server, ot_doc* doc) { server->doc = doc; }
@@ -85,15 +118,16 @@ void ot_server_receive(ot_server* server, const char* op) {
     ot_doc* doc = server->doc;
     if (doc == NULL) {
         server->doc = ot_new_doc();
+        doc = server->doc;
         append_op(server, dec);
     } else if (can_append(doc, dec)) {
         append_op(server, dec);
     } else {
         ot_op* op_prime = xform(doc, dec);
+        ot_free_op(dec);
         append_op(server, op_prime);
     }
 
-    ot_free_op(dec);
     char* doc_enc = ot_encode(doc->composed);
     fprintf(stderr, "Server's document is now: %s\n", doc_enc);
     free(doc_enc);
