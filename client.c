@@ -11,6 +11,8 @@ static void free_anticipated(ot_client* client) {
     } else {
         free(client->anticipated);
     }
+
+    client->anticipated = NULL;
 }
 
 static void free_buffer(ot_client* client) {
@@ -63,6 +65,7 @@ static ot_err buffer_op(ot_client* client, ot_op* op) {
 
 static void send_buffer(ot_client* client) {
     if (client->buffer == NULL) {
+        free_anticipated(client);
         return;
     }
 
