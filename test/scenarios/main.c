@@ -26,6 +26,7 @@ int main() {
     fclose(stderr);
 
     RUN_SCENARIO(scenario1);
+    RUN_SCENARIO(scenario2);
 
     printf("\n%d tests passed.\n"
            "%d tests failed.\n"
