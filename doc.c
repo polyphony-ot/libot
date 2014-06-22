@@ -54,6 +54,16 @@ ot_err ot_doc_append(ot_doc* doc, ot_op** op) {
     ot_op* head = array_append(&doc->history);
     memcpy(head, *op, sizeof(ot_op));
 
+    size_t len = doc->history.len;
+    if (len > 1) {
+        ot_op* history = (ot_op*)doc->history.data;
+        ot_op* prev = &history[len - 2];
+        memcpy(head->parent, prev->hash, 20);
+    } else {
+        char zero[20] = { 0 };
+        memcpy(head->parent, zero, 20);
+    }
+
     // If we're appending the first op, then the composed state will simply be
     // the first op in the history. If we're appending the second op, then we
     // must ensure that the composed op still points to the first op in the

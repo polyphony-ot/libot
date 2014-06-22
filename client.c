@@ -164,6 +164,8 @@ void ot_client_receive(ot_client* client, const char* op) {
 }
 
 ot_err ot_client_apply(ot_client* client, ot_op** op) {
+    (*op)->client_id = client->client_id;
+
     if (client->doc == NULL) {
         client->doc = ot_new_doc();
     }
