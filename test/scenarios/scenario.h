@@ -2,6 +2,7 @@
 #pragma clang diagnostic ignored "-Wunused-function"
 
 #define MAX_SERVER_QUEUE 1024
+#define MAX_CLIENTS 1024
 #define MAX_CLIENT_QUEUE 1024
 
 #define S(x) #x
@@ -23,23 +24,37 @@
 static ot_server* server;
 
 static size_t clients_len = 0;
-static ot_client** clients;
+static ot_client* clients[MAX_CLIENTS];
 
 static size_t server_queue_len = 0;
 static char* server_queue[MAX_SERVER_QUEUE];
 
-static size_t client_queue_len = 0;
-static char* client_queue[MAX_CLIENT_QUEUE];
+static size_t client_queue_lens[MAX_CLIENTS] = { 0 };
+static char* client_queues[MAX_CLIENTS][MAX_CLIENT_QUEUE];
 
-static void flush_clients() {
-    assert(client_queue_len > 0);
+static void flush_client(size_t id) {
+    assert(client_queue_lens[id] > 0);
 
-    for (size_t i = 0; i < client_queue_len; ++i) {
-        ot_server_receive(server, client_queue[i]);
-        free(client_queue[i]);
+    for (size_t i = 0; i < client_queue_lens[id]; ++i) {
+        char* data = client_queues[id][i];
+        ot_server_receive(server, data);
+        free(data);
     }
 
-    client_queue_len = 0;
+    client_queue_lens[id] = 0;
+}
+
+static void flush_clients() {
+    bool flushed = false;
+
+    for (size_t i = 0; i < clients_len; ++i) {
+        if (client_queue_lens[i] > 0) {
+            flushed = true;
+            flush_client(i);
+        }
+    }
+
+    assert(flushed);
 }
 
 static void flush_server() {
@@ -64,10 +79,16 @@ static int server_send(const char* op) {
 }
 
 static int client_send(const char* op) {
-    assert(client_queue_len != MAX_CLIENT_QUEUE);
+    char parent[20] = { 0 };
+    ot_op* dec = ot_new_op(0, parent);
+    ot_decode(dec, op);
+    size_t id = dec->client_id;
+    ot_free_op(dec);
 
-    client_queue[client_queue_len] = strdup(op);
-    client_queue_len++;
+    assert(client_queue_lens[id] != MAX_CLIENT_QUEUE);
+
+    client_queues[id][client_queue_lens[id]] = strdup(op);
+    client_queue_lens[id]++;
     return 0;
 }
 
@@ -87,7 +108,6 @@ static void setup(size_t num_clients) {
     clients_len = num_clients;
     server = ot_new_server(server_send, server_event);
 
-    clients = malloc(sizeof(ot_client*) * num_clients);
     for (size_t i = 0; i < num_clients; ++i) {
         clients[i] = ot_new_client(client_send, client_event, i);
     }
