@@ -55,6 +55,41 @@ void ot_free_comp(ot_comp* comp) {
     }
 }
 
+// TODO: Implement copying of formatting boundaries.
+// TODO: Make this more efficient by copying memory instead of recreating the op
+//       using the various OT functions.
+ot_op* ot_dup_op(const ot_op* op) {
+    ot_op* dup = malloc(sizeof(ot_op));
+    memcpy(dup, op, sizeof(ot_op));
+    array_init(&dup->comps, sizeof(ot_comp));
+
+    ot_comp* comps = op->comps.data;
+    for (size_t i = 0; i < op->comps.len; ++i) {
+        ot_comp* comp = comps + i;
+        switch (comp->type) {
+        case OT_SKIP:
+            ot_skip(dup, comp->value.skip.count);
+            break;
+        case OT_INSERT:
+            ot_insert(dup, comp->value.insert.text);
+            break;
+        case OT_DELETE:
+            ot_delete(dup, comp->value.delete.count);
+            break;
+        case OT_OPEN_ELEMENT:
+            ot_open_element(dup, comp->value.open_element.elem);
+            break;
+        case OT_CLOSE_ELEMENT:
+            ot_close_element(dup);
+            break;
+        case OT_FORMATTING_BOUNDARY:
+            break;
+        }
+    }
+
+    return dup;
+}
+
 // TODO: Implement equality for formatting boundaries.
 bool ot_equal(const ot_op* op1, const ot_op* op2) {
     if (op1 == NULL || op2 == NULL) {

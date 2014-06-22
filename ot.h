@@ -101,6 +101,7 @@ typedef int (*ot_event_func)(ot_event_type, ot_op*);
 ot_op* ot_new_op(uint32_t client_id, char parent[20]);
 void ot_free_op(ot_op* op);
 void ot_free_comp(ot_comp* comp);
+ot_op* ot_dup_op(const ot_op* op);
 bool ot_equal(const ot_op* op1, const ot_op* op2);
 void ot_skip(ot_op* op, uint32_t count);
 

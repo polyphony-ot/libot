@@ -239,6 +239,20 @@ MU_TEST(test_ot_equal) {
     }
 }
 
+MU_TEST(ot_dup_duplicates_op_with_one_component) {
+    char parent[20] = { 0 };
+    ot_op* orig = ot_new_op(0, parent);
+    ot_insert(orig, "abc");
+
+    ot_op* dup = ot_dup_op(orig);
+
+    bool equal = ot_equal(orig, dup);
+    mu_assert(equal, "Duplicated op wasn't equal to the original op.");
+
+    ot_free_op(orig);
+    ot_free_op(dup);
+}
+
 MU_TEST_SUITE(ot_test_suite) {
     MU_RUN_TEST(test_start_fmt_appends_correct_comp_type);
     MU_RUN_TEST(test_start_fmt_appends_correct_name_and_value);
@@ -250,6 +264,7 @@ MU_TEST_SUITE(ot_test_suite) {
     MU_RUN_TEST(iter_next_iterates_correct_number_of_times_over_skip_with_count_greater_than_one);
     MU_RUN_TEST(iter_next_iterates_correctly_over_single_insert_component);
     MU_RUN_TEST(test_ot_equal);
+    MU_RUN_TEST(ot_dup_duplicates_op_with_one_component);
 }
 
 /* compose tests */
