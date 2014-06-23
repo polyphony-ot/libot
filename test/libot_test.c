@@ -636,7 +636,7 @@ MU_TEST_SUITE(otdecode_test_suite) {
 /* otencode tests */
 
 MU_TEST(test_serialize_empty_op) {
-    const char* const EXPECTED = "{ \"clientId\": 0, \"parent\": \"00\", \"hash\": \"00\", \"components\": [ ] }";
+    const char* const EXPECTED = "{\"clientId\":0,\"parent\":\"00\",\"hash\":\"00\",\"components\":[]}";
     char parent[20] = { 0 };
     ot_op* op = ot_new_op(0, parent);
 
@@ -652,7 +652,7 @@ MU_TEST(test_serialize_empty_op) {
 }
 
 MU_TEST(test_serialize_single_insert) {
-    const char* const EXPECTED = "{ \"clientId\": 0, \"parent\": \"00\", \"hash\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"any string\" } ] }";
+    const char* const EXPECTED = "{\"clientId\":0,\"parent\":\"00\",\"hash\":\"00\",\"components\":[{\"type\":\"insert\",\"text\":\"any string\"}]}";
     char parent[20] = { 0 };
     ot_op* op = ot_new_op(0, parent);
     ot_insert(op, "any string");
@@ -669,7 +669,7 @@ MU_TEST(test_serialize_single_insert) {
 }
 
 MU_TEST(test_serialize_two_inserts) {
-    const char* const EXPECTED = "{ \"clientId\": 0, \"parent\": \"00\", \"hash\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"any string any other string\" } ] }";
+    const char* const EXPECTED = "{\"clientId\":0,\"parent\":\"00\",\"hash\":\"00\",\"components\":[{\"type\":\"insert\",\"text\":\"any string any other string\"}]}";
     char parent[20] = { 0 };
     ot_op* op = ot_new_op(0, parent);
     ot_insert(op, "any string");
@@ -685,7 +685,7 @@ MU_TEST(test_serialize_two_inserts) {
 }
 
 MU_TEST(test_serialize_single_skip) {
-    const char* const EXPECTED = "{ \"clientId\": 0, \"parent\": \"00\", \"hash\": \"00\", \"components\": [ { \"type\": \"skip\", \"count\": 1 } ] }";
+    const char* const EXPECTED = "{\"clientId\":0,\"parent\":\"00\",\"hash\":\"00\",\"components\":[{\"type\":\"skip\",\"count\":1}]}";
     char parent[20] = { 0 };
     ot_op* op = ot_new_op(0, parent);
     ot_skip(op, 1);
@@ -700,7 +700,7 @@ MU_TEST(test_serialize_single_skip) {
 }
 
 MU_TEST(test_serialize_single_delete) {
-    const char* const EXPECTED = "{ \"clientId\": 0, \"parent\": \"00\", \"hash\": \"00\", \"components\": [ { \"type\": \"delete\", \"count\": 1 } ] }";
+    const char* const EXPECTED = "{\"clientId\":0,\"parent\":\"00\",\"hash\":\"00\",\"components\":[{\"type\":\"delete\",\"count\":1}]}";
     char parent[20] = { 0 };
     ot_op* op = ot_new_op(0, parent);
     ot_delete(op, 1);
@@ -715,7 +715,7 @@ MU_TEST(test_serialize_single_delete) {
 }
 
 MU_TEST(test_serialize_single_open_element) {
-    const char* const EXPECTED = "{ \"clientId\": 0, \"parent\": \"00\", \"hash\": \"00\", \"components\": [ { \"type\": \"openElement\", \"element\": \"any string\" } ] }";
+    const char* const EXPECTED = "{\"clientId\":0,\"parent\":\"00\",\"hash\":\"00\",\"components\":[{\"type\":\"openElement\",\"element\":\"any string\"}]}";
     char parent[20] = { 0 };
     ot_op* op = ot_new_op(0, parent);
     ot_open_element(op, "any string");
@@ -730,7 +730,7 @@ MU_TEST(test_serialize_single_open_element) {
 }
 
 MU_TEST(test_serialize_single_close_element) {
-    const char* const EXPECTED = "{ \"clientId\": 0, \"parent\": \"00\", \"hash\": \"00\", \"components\": [ { \"type\": \"closeElement\" } ] }";
+    const char* const EXPECTED = "{\"clientId\":0,\"parent\":\"00\",\"hash\":\"00\",\"components\":[{\"type\":\"closeElement\"}]}";
     char parent[20] = { 0 };
     ot_op* op = ot_new_op(0, parent);
     ot_close_element(op);
