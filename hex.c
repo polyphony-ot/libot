@@ -1,9 +1,9 @@
 #include <stddef.h>
 #include "hex.h"
 
-int hextoa(char* const a, const char* const hex, size_t len) {
-    size_t j = 0;
-    for (size_t i = 0; i < len; ++i) {
+int hextoa(char* const a, size_t alen, const char* const hex, size_t hexlen) {
+    size_t j = alen - (hexlen / 2);
+    for (size_t i = 0; i < hexlen; ++i) {
         char c;
         if (hex[i] >= 0x61) { // Lowercase letter
             c = (char)((hex[i] - 0x57) << 4);

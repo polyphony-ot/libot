@@ -20,7 +20,7 @@ ot_err ot_decode(ot_op* op, const char* json) {
         return OT_ERR_PARENT_MISSING;
     }
     memset(op->parent, 0, 20);
-    hextoa(op->parent, parentf->valuestring, strlen(parentf->valuestring));
+    hextoa(op->parent, 20, parentf->valuestring, strlen(parentf->valuestring));
 
     cJSON* hashf = cJSON_GetObjectItem(root, "hash");
     if (hashf == NULL) {
@@ -28,7 +28,7 @@ ot_err ot_decode(ot_op* op, const char* json) {
         return OT_ERR_HASH_MISSING;
     }
     memset(op->hash, 0, 20);
-    hextoa(op->hash, hashf->valuestring, strlen(hashf->valuestring));
+    hextoa(op->hash, 20, hashf->valuestring, strlen(hashf->valuestring));
 
     cJSON* components = cJSON_GetObjectItem(root, "components");
     if (components == NULL) {

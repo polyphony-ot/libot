@@ -869,7 +869,7 @@ MU_TEST(hextoa_does_not_write_to_array_when_hex_is_empty) {
     const char EXPECTED = 1;
     char a[] = { EXPECTED };
 
-    hextoa(a, "", 0);
+    hextoa(a, 1, "", 0);
     const char ACTUAL = a[0];
 
     mu_assert(EXPECTED == ACTUAL, "Converting an empty hex string to an array should not write anything to the array.");
@@ -879,7 +879,7 @@ MU_TEST(hextoa_decodes_single_byte) {
     const char* const EXPECTED = "a";
 
     char actual[1];
-    hextoa(actual, "61", 2);
+    hextoa(actual, 1, "61", 2);
     int cmp = memcmp(EXPECTED, actual, sizeof(actual));
 
     mu_assert(cmp == 0, "Decoding a single byte gave an incorrect result.");
@@ -889,7 +889,7 @@ MU_TEST(hextoa_decodes_multiple_bytes) {
     const char* const EXPECTED = "abc";
 
     char actual[3];
-    hextoa(actual, "616263", 6);
+    hextoa(actual, 3, "616263", 6);
     int cmp = memcmp(EXPECTED, actual, sizeof(actual));
 
     mu_assert(cmp == 0, "Decoding multiple bytes gave an incorrect result.");
@@ -899,7 +899,7 @@ MU_TEST(hextoa_decodes_mixed_case_letters) {
     const char* const EXPECTED = "JZ";
 
     char actual[2];
-    hextoa(actual, "4A5a", 4);
+    hextoa(actual, 2, "4A5a", 4);
     int cmp = memcmp(EXPECTED, actual, sizeof(actual));
 
     mu_assert(cmp == 0, "Decoding mixed-case letters gave an incorrect result.");
@@ -909,7 +909,7 @@ MU_TEST(hextoa_decodes_lowercase_letters) {
     const char* const EXPECTED = "JZ";
 
     char actual[2];
-    hextoa(actual, "4a5a", 4);
+    hextoa(actual, 2, "4a5a", 4);
     int cmp = memcmp(EXPECTED, actual, sizeof(actual));
 
     mu_assert(cmp == 0, "Decoding lowercase letters gave an incorrect result.");
@@ -919,7 +919,7 @@ MU_TEST(hextoa_decodes_uppercase_letters) {
     const char* const EXPECTED = "JZ";
 
     char actual[2];
-    hextoa(actual, "4A5A", 4);
+    hextoa(actual, 2, "4A5A", 4);
     int cmp = memcmp(EXPECTED, actual, sizeof(actual));
 
     mu_assert(cmp == 0, "Decoding uppercase letters gave an incorrect result.");
