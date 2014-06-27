@@ -180,3 +180,21 @@ int sha1_done(hash_state* md, char* out) {
 
     return CRYPT_OK;
 }
+
+void hash_op(ot_op* op) {
+    bool free_snapshot = true;
+    char* snapshot = ot_snapshot(op);
+    if (snapshot == NULL) {
+        free_snapshot = false;
+        snapshot = "";
+    }
+
+    hash_state md;
+    sha1_init(&md);
+    sha1_process(&md, snapshot, (uint32_t)strlen(snapshot));
+    sha1_done(&md, (char*)&op->hash);
+
+    if (free_snapshot) {
+        free(snapshot);
+    }
+}

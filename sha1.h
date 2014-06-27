@@ -4,6 +4,8 @@
 #include <assert.h>
 #include <string.h>
 #include <stdint.h>
+#include <stdlib.h>
+#include "ot.h"
 
 /* error codes [will be expanded in future releases] */
 enum {
@@ -71,6 +73,7 @@ extern struct ltc_hash_descriptor {
 int sha1_init(hash_state* md);
 int sha1_process(hash_state* md, const char* in, uint32_t inlen);
 int sha1_done(hash_state* md, char* hash);
+void hash_op(ot_op* op);
 extern const struct ltc_hash_descriptor sha1_desc;
 
 #define LOAD32H(x, y)                                                          \

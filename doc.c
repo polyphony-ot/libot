@@ -1,23 +1,5 @@
 #include "doc.h"
 
-static void hash_op(ot_op* op) {
-    bool free_snapshot = true;
-    char* snapshot = ot_snapshot(op);
-    if (snapshot == NULL) {
-        free_snapshot = false;
-        snapshot = "";
-    }
-
-    hash_state md;
-    sha1_init(&md);
-    sha1_process(&md, snapshot, (uint32_t)strlen(snapshot));
-    sha1_done(&md, (char*)&op->hash);
-
-    if (free_snapshot) {
-        free(snapshot);
-    }
-}
-
 ot_doc* ot_new_doc(void) {
     ot_doc* doc = malloc(sizeof(ot_doc));
     array_init(&doc->history, sizeof(ot_op));
