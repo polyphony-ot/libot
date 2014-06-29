@@ -33,4 +33,8 @@ ot_err ot_doc_append(ot_doc* doc, ot_op** op);
 // operation up to and including the most recent operation (after, latest].
 ot_op* ot_doc_compose_after(const ot_doc* doc, const char* after);
 
+// ot_doc_last returns the last op (which is also the most recent op) in the
+// document's history.
+ot_op* ot_doc_last(const ot_doc* doc);
+
 #endif

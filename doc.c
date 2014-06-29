@@ -131,3 +131,9 @@ ot_op* ot_doc_compose_after(const ot_doc* doc, const char* after) {
 
     return composed;
 }
+
+ot_op* ot_doc_last(const ot_doc* doc) {
+    size_t i = doc->history.len - 1;
+    ot_op* history = (ot_op*)doc->history.data;
+    return history + i;
+}
