@@ -102,18 +102,20 @@ ot_op* ot_doc_compose_after(const ot_doc* doc, const char* after) {
         }
     }
 
+    bool found = false;
     size_t start = 0;
     ot_op* ops = (ot_op*)history.data;
     if (!after_null) {
-        for (size_t i = history.len - 1; i > 0; --i) {
+        for (size_t i = history.len - 1; i < history.len; --i) {
             ot_op* op = ops + i;
             if (memcmp(op->hash, after, sizeof(char) * 20) == 0) {
                 start = i + 1;
+                found = true;
                 break;
             }
         }
 
-        if (start == 0) {
+        if (!found) {
             return NULL;
         }
     }

@@ -14,16 +14,6 @@ static size_t min(size_t s1, size_t s2) {
     }
 }
 
-static delta_pair ot_xform_null_skip(ot_comp_skip skip, size_t offset) {
-    size_t count = (size_t)skip.count - offset;
-    return (delta_pair) { 0, count };
-}
-
-static delta_pair ot_xform_skip_null(ot_comp_skip skip, size_t offset) {
-    delta_pair p = ot_xform_null_skip(skip, offset);
-    return (delta_pair) { p.delta2, p.delta1 };
-}
-
 static delta_pair ot_xform_skip_skip(ot_comp_skip skip1, size_t offset1,
                                      ot_comp_skip skip2, size_t offset2,
                                      ot_xform_pair xform) {
@@ -173,11 +163,6 @@ ot_xform_pair ot_xform(ot_op* op1, ot_op* op2) {
             // whatever the second operation did.
             if (op2_comp == NULL) {
                 assert(!"Both op components should never be NULL.");
-            } else if (op2_comp->type == OT_SKIP) {
-                ot_comp_skip op2_skip = op2_comp->value.skip;
-                delta_pair p = ot_xform_null_skip(op2_skip, op2_iter.offset);
-
-                op2_next = ot_iter_skip(&op2_iter, p.delta2);
             } else if (op2_comp->type == OT_INSERT) {
                 ot_comp_insert op2_insert = op2_comp->value.insert;
                 delta_pair p =
@@ -192,11 +177,6 @@ ot_xform_pair ot_xform(ot_op* op1, ot_op* op2) {
         } else if (op2_comp == NULL) {
             if (op1_comp == NULL) {
                 assert(!"Both op components should never be NULL.");
-            } else if (op1_comp->type == OT_SKIP) {
-                ot_comp_skip op1_skip = op1_comp->value.skip;
-                delta_pair p = ot_xform_skip_null(op1_skip, op1_iter.offset);
-
-                op1_next = ot_iter_skip(&op1_iter, p.delta1);
             } else if (op1_comp->type == OT_INSERT) {
                 // If we've reached the end of the second operation but not the
                 // first, then just act like the second operation is skipping

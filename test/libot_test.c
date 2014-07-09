@@ -1140,7 +1140,7 @@ MU_TEST(client_receives_new_op_before_acknowledgement_starting_with_empty_doc) {
     ot_err cerr = ot_client_apply(client, &op);
     mu_assert_int_eq(OT_ERR_NONE, cerr);
 
-    char* enc_serv_op = "{ \"clientId\": 1, \"parent\": \"00\", \"hash\": \"d82ac619d64a0883de5276f0f3e9a984c3e22620\", \"components\": [ { \"type\": \"insert\", \"text\": \"server text \" } ] }";
+    char* enc_serv_op = "{ \"clientId\": 1, \"parent\": \"00\", \"hash\": \"2a19fa462b801abce17bf5bb6c13f370c268d9b2\", \"components\": [ { \"type\": \"insert\", \"text\": \"server text \" } ] }";
     ot_client_receive(client, enc_serv_op);
 
     char* actual = ot_snapshot(client->doc->composed);

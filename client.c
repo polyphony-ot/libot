@@ -63,10 +63,14 @@ static ot_err buffer_op(ot_client* client, ot_op* op) {
     return 0;
 }
 
-static void send_buffer(ot_client* client) {
+static void send_buffer(ot_client* client, const char* received_hash) {
     if (client->buffer == NULL) {
         free_anticipated(client);
         return;
+    }
+
+    if (received_hash != NULL) {
+        memcpy(client->buffer->parent, received_hash, 20);
     }
 
     char* enc_buf = ot_encode(client->buffer);
@@ -84,6 +88,60 @@ static void send_buffer(ot_client* client) {
 
 static void fire_op_event(ot_client* client, ot_op* op) {
     client->event(OT_OP_APPLIED, op);
+}
+
+// xform_anticipated calculates a new anticipated op by transforming the current
+// anticipated op against an incoming op. It outputs an intermediate operation,
+// inter, which can be transformed against the current buffer. This function
+// will free the received op, provided that no error is returned. The outputted
+// intermediate op must be freed by the caller.
+static ot_err xform_anticipated(ot_client* client, ot_op* received,
+                                ot_op** inter) {
+
+    // We aren't anticipating any acknowledgment, so the buffer can be directly
+    // transformed against the received op.
+    if (client->anticipated == NULL) {
+        *inter = received;
+        return OT_ERR_NONE;
+    }
+
+    ot_xform_pair p = ot_xform(received, client->anticipated);
+    if (p.op1_prime == NULL || p.op2_prime == NULL) {
+        return OT_ERR_XFORM_FAILED;
+    }
+
+    free_anticipated(client);
+    *inter = p.op1_prime;
+
+    client->anticipated = p.op2_prime;
+    client->free_anticipated_comps = true;
+
+    ot_free_op(received);
+
+    return OT_ERR_NONE;
+}
+
+static ot_err xform_buffer(ot_client* client, ot_op* inter, ot_op** apply) {
+    // We haven't buffered any new ops, so the intermediate op can be directly
+    // applied to the document.
+    if (client->buffer == NULL) {
+        *apply = inter;
+        return OT_ERR_NONE;
+    }
+
+    ot_xform_pair p = ot_xform(client->buffer, inter);
+    if (p.op1_prime == NULL || p.op2_prime == NULL) {
+        return OT_ERR_XFORM_FAILED;
+    }
+
+    *apply = p.op2_prime;
+    free_buffer(client);
+    ot_free_op(inter);
+
+    client->buffer = p.op1_prime;
+    client->free_buffer_comps = true;
+
+    return OT_ERR_NONE;
 }
 
 ot_client* ot_new_client(send_func send, ot_event_func event, uint32_t id) {
@@ -129,34 +187,33 @@ void ot_client_receive(ot_client* client, const char* op) {
         char hex[41];
         atohex((char*)&hex, (char*)&dec->hash, 20);
         fprintf(stderr, "Op %s was acknowledged.\n", hex);
-        ot_free_op(dec);
 
         client->ack_required = false;
-        send_buffer(client);
+        send_buffer(client, dec->hash);
+
+        ot_free_op(dec);
+        return;
+    }
+
+    ot_op* inter;
+    err = xform_anticipated(client, dec, &inter);
+    if (err != OT_ERR_NONE) {
+        fprintf(stderr,
+                "Client couldn't transform its anticipated op. Error code: %d.",
+                err);
+        ot_free_op(dec);
+        assert(false);
         return;
     }
 
     ot_op* apply;
-    if (client->anticipated == NULL) {
-        apply = dec;
-    } else {
-        ot_xform_pair p = ot_xform(dec, client->anticipated);
-        free_anticipated(client);
-        ot_free_op(dec);
-        client->anticipated = p.op2_prime;
-        client->free_anticipated_comps = true;
-
-        if (client->buffer != NULL) {
-            ot_xform_pair p2 = ot_xform(client->buffer, p.op1_prime);
-            free_buffer(client);
-            ot_free_op(p.op1_prime);
-            client->buffer = p2.op1_prime;
-            client->free_buffer_comps = true;
-
-            apply = p2.op2_prime;
-        } else {
-            apply = p.op1_prime;
-        }
+    err = xform_buffer(client, inter, &apply);
+    if (err != OT_ERR_NONE) {
+        fprintf(stderr, "Client couldn't transform its buffer. Error code: %d.",
+                err);
+        ot_free_op(inter);
+        assert(false);
+        return;
     }
 
     if (client->doc == NULL) {
@@ -185,7 +242,7 @@ ot_err ot_client_apply(ot_client* client, ot_op** op) {
     }
 
     if (!client->ack_required) {
-        send_buffer(client);
+        send_buffer(client, NULL);
     }
 
     return 0;

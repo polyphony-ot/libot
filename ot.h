@@ -33,7 +33,15 @@ typedef enum {
 
     // Couldn't append an operation to a document, usually because it wasn't
     // composable with the current document state.
-    OT_ERR_APPEND_FAILED = 8
+    OT_ERR_APPEND_FAILED = 8,
+
+    // Couldn't transform two operations, usually because the two operations
+    // weren't parented off of the same state.
+    OT_ERR_XFORM_FAILED = 9,
+
+    // Couldn't compose two operations, usually because the first op wasn't a
+    // parent of the second op.
+    OT_ERR_COMPOSE_FAILED = 10,
 } ot_err;
 
 typedef struct ot_fmt {
