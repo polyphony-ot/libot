@@ -312,9 +312,9 @@ void ot_iter_init(ot_iter* iter, const ot_op* op) {
     iter->started = false;
 }
 
-static bool ot_iter_adv(ot_iter* iter, size_t max) {
-    if (iter->offset < max) {
-        iter->offset++;
+static bool ot_iter_adv(ot_iter* iter, size_t n, size_t max) {
+    if (iter->offset + n < max) {
+        iter->offset += n;
         return true;
     }
     if (iter->pos < iter->op->comps.len - 1) {
@@ -327,6 +327,12 @@ static bool ot_iter_adv(ot_iter* iter, size_t max) {
 }
 
 bool ot_iter_next(ot_iter* iter) {
+    return ot_iter_skip(iter, 1);
+}
+
+// This can be made more efficient instead of simply calling ot_iter_next()
+// "count" times.
+bool ot_iter_skip(ot_iter* iter, size_t count) {
     if (iter->op->comps.len == 0) {
         return false;
     }
@@ -338,34 +344,36 @@ bool ot_iter_next(ot_iter* iter) {
         return true;
     }
 
-    ot_comp* comp = ((ot_comp*)iter->op->comps.data) + iter->pos;
-    if (comp->type == OT_SKIP) {
-        ot_comp_skip skip = comp->value.skip;
-        return ot_iter_adv(iter, (size_t)skip.count - 1);
-    } else if (comp->type == OT_INSERT) {
-        ot_comp_insert insert = comp->value.insert;
-        return ot_iter_adv(iter, strlen(insert.text) - 1);
-    } else if (comp->type == OT_DELETE) {
-        ot_comp_delete delete = comp->value.delete;
-        return ot_iter_adv(iter, (size_t) delete.count - 1);
-    } else if (comp->type == OT_OPEN_ELEMENT) {
-        return ot_iter_adv(iter, 0);
-    } else if (comp->type == OT_CLOSE_ELEMENT) {
-        return ot_iter_adv(iter, 0);
-    } else if (comp->type == OT_FORMATTING_BOUNDARY) {
-        return ot_iter_adv(iter, 0);
-    }
+    for (size_t i = 0; i < count;) {
+        size_t max = 0;
+        ot_comp* comp = ((ot_comp*)iter->op->comps.data) + iter->pos;
+        if (comp->type == OT_SKIP) {
+            ot_comp_skip skip = comp->value.skip;
+            max = (size_t)skip.count;
+        } else if (comp->type == OT_INSERT) {
+            ot_comp_insert insert = comp->value.insert;
+            max = strlen(insert.text);
+        } else if (comp->type == OT_DELETE) {
+            ot_comp_delete delete = comp->value.delete;
+            max = (size_t)delete.count;
+        } else if (comp->type == OT_OPEN_ELEMENT) {
+            max = 0;
+        } else if (comp->type == OT_CLOSE_ELEMENT) {
+            max = 0;
+        } else if (comp->type == OT_FORMATTING_BOUNDARY) {
+            max = 0;
+        } else {
+            assert(!"Iterator doesn't know how to handle this component type.");
+        }
 
-    assert(!"Iterator doesn't know how to handle this component type.");
-    return false;
-}
-
-// This can be made more efficient instead of simply calling ot_iter_next()
-// "count" times.
-bool ot_iter_skip(ot_iter* iter, size_t count) {
-    for (size_t i = 0; i < count; ++i) {
-        if (!ot_iter_next(iter)) {
+        if (!ot_iter_adv(iter, count, max)) {
             return false;
+        }
+
+        if (iter->offset == 0) {
+            i += max;
+        } else {
+            i += count;
         }
     }
 
