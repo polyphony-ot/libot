@@ -5,7 +5,7 @@
 #include "otencode.h"
 #include "hex.h"
 
-char* ot_encode(const ot_op* const op) {
+static cJSON* cjson_op(const ot_op* const op) {
     ot_comp* comps = op->comps.data;
     cJSON* components = cJSON_CreateArray();
     for (size_t i = 0; i < op->comps.len; ++i) {
@@ -48,5 +48,27 @@ char* ot_encode(const ot_op* const op) {
     cJSON_AddStringToObject(root, "hash", hash);
     cJSON_AddItemToObject(root, "components", components);
 
-    return cJSON_PrintUnformatted(root);
+    return root;
+}
+
+char* ot_encode(const ot_op* const op) {
+    cJSON* cjson = cjson_op(op);
+    char* enc = cJSON_PrintUnformatted(cjson);
+    cJSON_Delete(cjson);
+
+    return enc;
+}
+
+char* ot_encode_doc(const ot_doc* const doc) {
+    cJSON* root = cJSON_CreateArray();
+
+    ot_op* history = (ot_op*)doc->history.data;
+    for (size_t i = 0; i < doc->history.len; ++i) {
+        cJSON_AddItemToArray(root, cjson_op(history + i));
+    }
+
+    char* enc = cJSON_PrintUnformatted(root);
+    cJSON_Delete(root);
+
+    return enc;
 }

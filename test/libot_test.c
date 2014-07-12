@@ -744,6 +744,56 @@ MU_TEST(test_serialize_single_close_element) {
     mu_assert(cmp == 0, "Serializing a single closeElement did not create expected string.");
 }
 
+MU_TEST(encode_empty_doc) {
+    const char* const EXPECTED = "[]";
+    ot_doc* doc = ot_new_doc();
+    char* actual = ot_encode_doc(doc);
+
+    int cmp = strcmp(EXPECTED, actual);
+    if (cmp != 0) {
+        char* msg;
+        asprintf(&msg, "Expected the encoded document to be \"%s\", but instead got \"%s\".", EXPECTED, actual);
+        mu_fail(msg);
+    }
+
+    ot_free_doc(doc);
+    free(actual);
+}
+
+MU_TEST(encode_doc_with_multiple_ops) {
+    const char* const EXPECTED = "[{\"clientId\":0,\"parent\":\"00\",\"hash\":\"a9993e364706816aba3e25717850c26c9cd0d89d\",\"components\":[{\"type\":\"insert\",\"text\":\"abc\"}]},"
+                                 "{\"clientId\":0,\"parent\":\"a9993e364706816aba3e25717850c26c9cd0d89d\",\"hash\":\"1f8ac10f23c5b5bc1167bda84b833e5c057a77d2\",\"components\":[{\"type\":\"skip\",\"count\":3},{\"type\":\"insert\",\"text\":\"def\"}]},"
+                                 "{\"clientId\":0,\"parent\":\"1f8ac10f23c5b5bc1167bda84b833e5c057a77d2\",\"hash\":\"a9993e364706816aba3e25717850c26c9cd0d89d\",\"components\":[{\"type\":\"skip\",\"count\":3},{\"type\":\"delete\",\"count\":3}]}]";
+    ot_doc* doc = ot_new_doc();
+
+    char parent[20] = { 0 };
+    ot_op* op1 = ot_new_op(0, parent);
+    ot_insert(op1, "abc");
+    ot_doc_append(doc, &op1);
+
+    ot_op* op2 = ot_new_op(0, op1->hash);
+    ot_skip(op2, 3);
+    ot_insert(op2, "def");
+    ot_doc_append(doc, &op2);
+
+    ot_op* op3 = ot_new_op(0, op2->hash);
+    ot_skip(op3, 3);
+    ot_delete(op3, 3);
+    ot_doc_append(doc, &op3);
+
+    char* actual = ot_encode_doc(doc);
+
+    int cmp = strcmp(EXPECTED, actual);
+    if (cmp != 0) {
+        char* msg;
+        asprintf(&msg, "Expected the encoded document to be \"%s\", but instead got \"%s\".", EXPECTED, actual);
+        mu_fail(msg);
+    }
+
+    ot_free_doc(doc);
+    free(actual);
+}
+
 MU_TEST_SUITE(otencode_test_suite) {
     MU_RUN_TEST(test_serialize_empty_op);
     MU_RUN_TEST(test_serialize_single_insert);
@@ -752,6 +802,8 @@ MU_TEST_SUITE(otencode_test_suite) {
     MU_RUN_TEST(test_serialize_single_delete);
     MU_RUN_TEST(test_serialize_single_open_element);
     MU_RUN_TEST(test_serialize_single_close_element);
+    MU_RUN_TEST(encode_empty_doc);
+    MU_RUN_TEST(encode_doc_with_multiple_ops);
 }
 
 /* array tests */
