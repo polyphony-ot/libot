@@ -624,6 +624,112 @@ MU_TEST(decode_fails_if_components_is_missing) {
     ot_free_op(op);
 }
 
+MU_TEST(decode_empty_doc) {
+    char* json = "[]";
+
+    ot_doc* doc = ot_new_doc();
+    ot_err err = ot_decode_doc(doc, json);
+
+    if (err != 0) {
+        char* msg;
+        asprintf(&msg, "Decoding an empty document returned an error: %d.", err);
+        mu_fail(msg);
+    }
+
+    size_t len = doc->history.len;
+    if (len != 0) {
+        char* msg;
+        asprintf(&msg, "Expected the decoded document to be empty, but instead it has a length of %zu.", len);
+        mu_fail(msg);
+    }
+
+    ot_op* composed = doc->composed;
+    if (composed != NULL) {
+        char* msg;
+        char* enc = ot_encode(composed);
+        asprintf(&msg, "Expected the decoded document's composed state to be NULL, but instead it's: %s", enc);
+        mu_fail(msg);
+    }
+
+    ot_free_doc(doc);
+}
+
+MU_TEST(decode_doc_with_multiple_ops) {
+    char* json = "[{\"clientId\":0,\"parent\":\"00\",\"hash\":\"a9993e364706816aba3e25717850c26c9cd0d89d\",\"components\":[{\"type\":\"insert\",\"text\":\"abc\"}]},"
+                 "{\"clientId\":0,\"parent\":\"a9993e364706816aba3e25717850c26c9cd0d89d\",\"hash\":\"1f8ac10f23c5b5bc1167bda84b833e5c057a77d2\",\"components\":[{\"type\":\"skip\",\"count\":3},{\"type\":\"insert\",\"text\":\"def\"}]},"
+                 "{\"clientId\":0,\"parent\":\"1f8ac10f23c5b5bc1167bda84b833e5c057a77d2\",\"hash\":\"a9993e364706816aba3e25717850c26c9cd0d89d\",\"components\":[{\"type\":\"skip\",\"count\":3},{\"type\":\"delete\",\"count\":3}]}]";
+
+    char parent[20] = { 0 };
+    ot_op* op1 = ot_new_op(0, parent);
+    ot_insert(op1, "abc");
+    hextoa(op1->hash, 20, "a9993e364706816aba3e25717850c26c9cd0d89d", 41);
+
+    ot_op* op2 = ot_new_op(0, parent);
+    ot_skip(op2, 3);
+    ot_insert(op2, "def");
+    hextoa(op2->hash, 20, "1f8ac10f23c5b5bc1167bda84b833e5c057a77d2", 41);
+    hextoa(op2->parent, 20, "a9993e364706816aba3e25717850c26c9cd0d89d", 41);
+
+    ot_op* op3 = ot_new_op(0, parent);
+    ot_skip(op3, 3);
+    ot_delete(op3, 3);
+    hextoa(op3->hash, 20, "a9993e364706816aba3e25717850c26c9cd0d89d", 41);
+    hextoa(op3->parent, 20, "1f8ac10f23c5b5bc1167bda84b833e5c057a77d2", 41);
+
+    ot_doc* doc = ot_new_doc();
+    ot_err err = ot_decode_doc(doc, json);
+
+    if (err != 0) {
+        char* msg;
+        asprintf(&msg, "Decoding the document returned an error: %d.", err);
+        mu_fail(msg);
+    }
+
+    size_t len = doc->history.len;
+    if (len != 3) {
+        char* msg;
+        asprintf(&msg, "Expected the decoded document to be 3, but instead it has a length of %zu.", len);
+        mu_fail(msg);
+    }
+
+    ot_op* history = (ot_op*)doc->history.data;
+    if (!ot_equal(op1, history + 0)) {
+        char* msg;
+        char* enc_expected = ot_encode(op1);
+        char* enc_actual = ot_encode(history + 0);
+        asprintf(&msg, "Unexpected document op at index 0:\n\tExpected: %s\n\tActual: %s", enc_expected, enc_actual);
+        mu_fail(msg);
+    }
+    if (!ot_equal(op2, history + 1)) {
+        char* msg;
+        char* enc_expected = ot_encode(op2);
+        char* enc_actual = ot_encode(history + 1);
+        asprintf(&msg, "Unexpected document op at index 1:\n\tExpected: %s\n\tActual: %s", enc_expected, enc_actual);
+        mu_fail(msg);
+    }
+    if (!ot_equal(op3, history + 2)) {
+        char* msg;
+        char* enc_expected = ot_encode(op3);
+        char* enc_actual = ot_encode(history + 2);
+        asprintf(&msg, "Unexpected document op at index 2:\n\tExpected: %s\n\tActual: %s", enc_expected, enc_actual);
+        mu_fail(msg);
+    }
+
+    ot_op* composed = doc->composed;
+    if (!ot_equal(op1, composed)) {
+        char* msg;
+        char* enc_expected = ot_encode(op1);
+        char* enc_actual = ot_encode(composed);
+        asprintf(&msg, "Unexpected document composed state:\n\tExpected: %s\n\tActual: %s", enc_expected, enc_actual);
+        mu_fail(msg);
+    }
+
+    ot_free_op(op1);
+    ot_free_op(op2);
+    ot_free_op(op3);
+    ot_free_doc(doc);
+}
+
 MU_TEST_SUITE(otdecode_test_suite) {
     MU_RUN_TEST(decode_skip);
     MU_RUN_TEST(decode_client_id);
@@ -631,6 +737,8 @@ MU_TEST_SUITE(otdecode_test_suite) {
     MU_RUN_TEST(decode_fails_if_client_id_is_missing);
     MU_RUN_TEST(decode_fails_if_parent_is_missing);
     MU_RUN_TEST(decode_fails_if_components_is_missing);
+    MU_RUN_TEST(decode_empty_doc);
+    MU_RUN_TEST(decode_doc_with_multiple_ops);
 }
 
 /* otencode tests */

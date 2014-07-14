@@ -1,38 +1,29 @@
 #include "otdecode.h"
 
-// TODO: Finish implementing decoding of formatting boundaries.
-ot_err ot_decode(ot_op* op, const char* json) {
-    cJSON* root = cJSON_Parse(json);
-    if (root == NULL) {
-        return OT_ERR_INVALID_JSON;
-    }
-
-    cJSON* client_idf = cJSON_GetObjectItem(root, "clientId");
+// decode_cjson_op decodes a cJSON item into an op.
+ot_err decode_cjson_op(cJSON* json, ot_op* op) {
+    cJSON* client_idf = cJSON_GetObjectItem(json, "clientId");
     if (client_idf == NULL) {
-        cJSON_Delete(root);
         return OT_ERR_CLIENT_ID_MISSING;
     }
     op->client_id = (uint32_t)client_idf->valueint;
 
-    cJSON* parentf = cJSON_GetObjectItem(root, "parent");
+    cJSON* parentf = cJSON_GetObjectItem(json, "parent");
     if (parentf == NULL) {
-        cJSON_Delete(root);
         return OT_ERR_PARENT_MISSING;
     }
     memset(op->parent, 0, 20);
     hextoa(op->parent, 20, parentf->valuestring, strlen(parentf->valuestring));
 
-    cJSON* hashf = cJSON_GetObjectItem(root, "hash");
+    cJSON* hashf = cJSON_GetObjectItem(json, "hash");
     if (hashf == NULL) {
-        cJSON_Delete(root);
         return OT_ERR_HASH_MISSING;
     }
     memset(op->hash, 0, 20);
     hextoa(op->hash, 20, hashf->valuestring, strlen(hashf->valuestring));
 
-    cJSON* components = cJSON_GetObjectItem(root, "components");
+    cJSON* components = cJSON_GetObjectItem(json, "components");
     if (components == NULL) {
-        cJSON_Delete(root);
         return OT_ERR_COMPONENTS_MISSING;
     }
 
@@ -70,8 +61,47 @@ ot_err ot_decode(ot_op* op, const char* json) {
             ot_comp* open_elem = array_append(&op->comps);
             open_elem->type = OT_FORMATTING_BOUNDARY;
         } else {
-            cJSON_Delete(root);
             return OT_ERR_INVALID_COMPONENT;
+        }
+    }
+
+    return OT_ERR_NONE;
+}
+
+// TODO: Finish implementing decoding of formatting boundaries.
+ot_err ot_decode(ot_op* op, const char* json) {
+    cJSON* root = cJSON_Parse(json);
+    if (root == NULL) {
+        return OT_ERR_INVALID_JSON;
+    }
+
+    ot_err err = decode_cjson_op(root, op);
+    cJSON_Delete(root);
+    return err;
+}
+
+ot_err ot_decode_doc(ot_doc* doc, const char* const json) {
+    cJSON* root = cJSON_Parse(json);
+    if (root == NULL) {
+        return OT_ERR_INVALID_JSON;
+    }
+
+    int max = cJSON_GetArraySize(root);
+    for (int i = 0; i < max; ++i) {
+        cJSON* item = cJSON_GetArrayItem(root, i);
+
+        char parent[20] = { 0 };
+        ot_op* op = ot_new_op(0, parent);
+        ot_err err = decode_cjson_op(item, op);
+        if (err != OT_ERR_NONE) {
+            cJSON_Delete(root);
+            return err;
+        }
+
+        err = ot_doc_append(doc, &op);
+        if (err != OT_ERR_NONE) {
+            cJSON_Delete(root);
+            return err;
         }
     }
 
