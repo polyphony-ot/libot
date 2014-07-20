@@ -92,17 +92,20 @@ static int client_send(const char* op) {
     return 0;
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-parameter"
+
 static int server_event(ot_event_type t, ot_op* op) {
     assert(t);
-    assert(op);
     return 0;
 }
 
 static int client_event(ot_event_type t, ot_op* op) {
     assert(t);
-    assert(op);
     return 0;
 }
+
+#pragma clang diagnostic pop
 
 static void setup(size_t num_clients) {
     clients_len = num_clients;

@@ -86,8 +86,8 @@ static void send_buffer(ot_client* client, const char* received_hash) {
     client->ack_required = true;
 }
 
-static void fire_op_event(ot_client* client, ot_op* op) {
-    client->event(OT_OP_APPLIED, op);
+static void fire_op_event(ot_client* client, ot_event_type type, ot_op* op) {
+    client->event(type, op);
 }
 
 // xform_anticipated calculates a new anticipated op by transforming the current
@@ -195,6 +195,8 @@ void ot_client_receive(ot_client* client, const char* op) {
         return;
     }
 
+    fire_op_event(client, OT_OP_INCOMING, NULL);
+
     ot_op* inter;
     err = xform_anticipated(client, dec, &inter);
     if (err != OT_ERR_NONE) {
@@ -220,7 +222,7 @@ void ot_client_receive(ot_client* client, const char* op) {
         client->doc = ot_new_doc();
     }
     ot_doc_append(client->doc, &apply);
-    fire_op_event(client, apply);
+    fire_op_event(client, OT_OP_APPLIED, apply);
 }
 
 ot_err ot_client_apply(ot_client* client, ot_op** op) {
