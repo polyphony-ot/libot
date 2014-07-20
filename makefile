@@ -27,7 +27,7 @@ SOURCES=\
 	xform.c \
 	sha1.c \
 	doc.c \
-	cjson/cjson.c
+	cjson/cJSON.c
 
 # List of sources for test scenarios.
 SCENARIOS=$(wildcard test/scenarios/*.c)
