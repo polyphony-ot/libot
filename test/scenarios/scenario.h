@@ -1,9 +1,9 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-function"
 
-#define MAX_SERVER_QUEUE 1024
-#define MAX_CLIENTS 1024
-#define MAX_CLIENT_QUEUE 1024
+#define MAX_SERVER_QUEUE 16
+#define MAX_CLIENTS 16
+#define MAX_CLIENT_QUEUE 16
 
 #define S(x) #x
 #define S_(x) S(x)
