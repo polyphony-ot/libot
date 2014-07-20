@@ -100,7 +100,7 @@ release: $(BIN)/release/$(LIB)
 $(BIN)/debug/scenarios$(EXESUFFIX): $(BIN)/debug/$(LIB) $(SCENARIOS) \
 	test/scenarios/scenario.h
 	$(CC) $(CFLAGS) -g -Icjson -o "$(BIN)/debug/scenarios$(EXESUFFIX)" \
-	$(BIN)/debug/$(LIB) $(SCENARIOS)
+	$(SCENARIOS) $(BIN)/debug/$(LIB)
 
 $(BIN)/debug/test$(EXESUFFIX): $(BIN)/debug/$(LIB) test/libot_test.c
 	$(CC) $(CFLAGS) -g -Icjson -o "$(BIN)/debug/test$(EXESUFFIX)" \
