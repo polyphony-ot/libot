@@ -662,19 +662,19 @@ MU_TEST(decode_doc_with_multiple_ops) {
     char parent[20] = { 0 };
     ot_op* op1 = ot_new_op(0, parent);
     ot_insert(op1, "abc");
-    hextoa(op1->hash, 20, "a9993e364706816aba3e25717850c26c9cd0d89d", 41);
+    hextoa(op1->hash, 20, "a9993e364706816aba3e25717850c26c9cd0d89d", 40);
 
     ot_op* op2 = ot_new_op(0, parent);
     ot_skip(op2, 3);
     ot_insert(op2, "def");
-    hextoa(op2->hash, 20, "1f8ac10f23c5b5bc1167bda84b833e5c057a77d2", 41);
-    hextoa(op2->parent, 20, "a9993e364706816aba3e25717850c26c9cd0d89d", 41);
+    hextoa(op2->hash, 20, "1f8ac10f23c5b5bc1167bda84b833e5c057a77d2", 40);
+    hextoa(op2->parent, 20, "a9993e364706816aba3e25717850c26c9cd0d89d", 40);
 
     ot_op* op3 = ot_new_op(0, parent);
     ot_skip(op3, 3);
     ot_delete(op3, 3);
-    hextoa(op3->hash, 20, "a9993e364706816aba3e25717850c26c9cd0d89d", 41);
-    hextoa(op3->parent, 20, "1f8ac10f23c5b5bc1167bda84b833e5c057a77d2", 41);
+    hextoa(op3->hash, 20, "a9993e364706816aba3e25717850c26c9cd0d89d", 40);
+    hextoa(op3->parent, 20, "1f8ac10f23c5b5bc1167bda84b833e5c057a77d2", 40);
 
     ot_doc* doc = ot_new_doc();
     ot_err err = ot_decode_doc(doc, json);
