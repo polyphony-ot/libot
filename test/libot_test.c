@@ -1202,7 +1202,8 @@ static int event_stub(ot_event_type t, ot_op* op) {
 MU_TEST(client_has_correct_state_and_event_when_receiving_op_for_empty_doc) {
     const uint32_t NONZERO = 1;
     const char* const EXPECTED = "any string";
-    ot_client* client = ot_new_client(send_stub, event_stub, NONZERO);
+    ot_client* client = ot_new_client(send_stub, event_stub);
+    client->client_id = NONZERO;
     char* enc_op = "{ \"clientId\": 0, \"parent\": \"00\", \"hash\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"any string\" } ] }";
 
     ot_client_receive(client, enc_op);
@@ -1230,7 +1231,8 @@ MU_TEST(client_has_correct_state_and_event_when_receiving_op_for_non_empty_doc) 
     const char* const EXPECTED = "abcdef";
     const char* const ENC_OP1 = "{ \"clientId\": 0, \"parent\": \"00\", \"hash\": \"00\", \"components\": [ { \"type\": \"insert\", \"text\": \"abc\" } ] }";
     const char* const ENC_OP2 = "{ \"clientId\": 0, \"parent\": \"00\", \"hash\": \"00\", \"components\": [ { \"type\": \"skip\", \"count\": 3 }, { \"type\": \"insert\", \"text\": \"def\" } ] }";
-    ot_client* client = ot_new_client(send_stub, event_stub, NONZERO);
+    ot_client* client = ot_new_client(send_stub, event_stub);
+    client->client_id = NONZERO;
 
     ot_client_receive(client, ENC_OP1);
     ot_client_receive(client, ENC_OP2);
@@ -1254,7 +1256,7 @@ MU_TEST(client_has_correct_state_and_event_when_receiving_op_for_non_empty_doc) 
 }
 
 MU_TEST(client_receive_does_not_send_empty_buffer_after_acknowledgement) {
-    ot_client* client = ot_new_client(send_stub, event_stub, 0);
+    ot_client* client = ot_new_client(send_stub, event_stub);
     char* op = "{ \"clientId\": 0, \"parent\": \"0\", \"components\": [ ] }";
     char* nothing = "NOTHING";
     sent_op = nothing;
@@ -1271,7 +1273,7 @@ MU_TEST(client_receive_does_not_send_empty_buffer_after_acknowledgement) {
 }
 
 MU_TEST(client_apply_sends_op_if_not_waiting_for_acknowledgement) {
-    ot_client* client = ot_new_client(send_stub, event_stub, 0);
+    ot_client* client = ot_new_client(send_stub, event_stub);
     char parent[20] = { 0 };
     ot_op* op = ot_new_op(0, parent);
     ot_insert(op, "any string");
@@ -1292,7 +1294,7 @@ MU_TEST(client_apply_sends_op_if_not_waiting_for_acknowledgement) {
 
 MU_TEST(client_receives_new_op_before_acknowledgement_starting_with_empty_doc) {
     const char* const EXPECTED = "server text client text";
-    ot_client* client = ot_new_client(send_stub, event_stub, 0);
+    ot_client* client = ot_new_client(send_stub, event_stub);
     char parent[20] = { 0 };
     ot_op* op = ot_new_op(0, parent);
     ot_insert(op, "client text");
@@ -1318,7 +1320,7 @@ MU_TEST(client_receives_new_op_before_acknowledgement_starting_with_empty_doc) {
 
 MU_TEST(client_receives_multiple_ops_before_acknowledgement_starting_with_empty_doc) {
     const char* const EXPECTED = "server text more server text client text";
-    ot_client* client = ot_new_client(send_stub, event_stub, 0);
+    ot_client* client = ot_new_client(send_stub, event_stub);
     char parent[20] = { 0 };
     ot_op* op = ot_new_op(0, parent);
     ot_insert(op, "client text");
@@ -1346,7 +1348,7 @@ MU_TEST(client_receives_multiple_ops_before_acknowledgement_starting_with_empty_
 
 MU_TEST(client_receives_new_op_before_acknowledgement_and_then_applies_local_op) {
     const char* const EXPECTED = "server text client text more client text";
-    ot_client* client = ot_new_client(send_stub, event_stub, 0);
+    ot_client* client = ot_new_client(send_stub, event_stub);
     char parent[20] = { 0 };
     ot_op* op = ot_new_op(0, parent);
     ot_insert(op, "client text ");

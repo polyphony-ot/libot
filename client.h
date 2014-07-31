@@ -22,7 +22,7 @@ typedef struct {
     bool free_buffer_comps;
 } ot_client;
 
-ot_client* ot_new_client(send_func send, ot_event_func event, uint32_t id);
+ot_client* ot_new_client(send_func send, ot_event_func event);
 
 void ot_free_client(ot_client* client);
 

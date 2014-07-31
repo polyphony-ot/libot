@@ -144,14 +144,14 @@ static ot_err xform_buffer(ot_client* client, ot_op* inter, ot_op** apply) {
     return OT_ERR_NONE;
 }
 
-ot_client* ot_new_client(send_func send, ot_event_func event, uint32_t id) {
+ot_client* ot_new_client(send_func send, ot_event_func event) {
     ot_client* client = malloc(sizeof(ot_client));
     client->buffer = NULL;
     client->anticipated = NULL;
     client->send = send;
     client->event = event;
     client->doc = NULL;
-    client->client_id = id;
+    client->client_id = 0;
     client->ack_required = false;
     client->free_anticipated_comps = false;
     client->free_buffer_comps = false;
