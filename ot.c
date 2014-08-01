@@ -160,6 +160,10 @@ bool ot_equal(const ot_op* op1, const ot_op* op2) {
 }
 
 void ot_skip(ot_op* op, uint32_t count) {
+    if (count == 0) {
+        return;
+    }
+
     ot_comp* comps = op->comps.data;
     ot_comp* last = comps + (op->comps.len - 1);
     if (op->comps.len > 0 && last->type == OT_SKIP) {
@@ -172,6 +176,10 @@ void ot_skip(ot_op* op, uint32_t count) {
 }
 
 void ot_insert(ot_op* op, const char* text) {
+    if (text == NULL) {
+        return;
+    }
+
     ot_comp* comps = op->comps.data;
     ot_comp* last = comps + (op->comps.len - 1);
     if (op->comps.len > 0 && last->type == OT_INSERT) {
@@ -190,6 +198,10 @@ void ot_insert(ot_op* op, const char* text) {
 }
 
 void ot_delete(ot_op* op, uint32_t count) {
+    if (count == 0) {
+        return;
+    }
+
     ot_comp* comps = op->comps.data;
     ot_comp* last = comps + (op->comps.len - 1);
     if (op->comps.len > 0 && last->type == OT_DELETE) {
