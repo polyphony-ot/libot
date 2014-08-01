@@ -14,20 +14,19 @@
 bool scenario1(char** msg) {
     setup(2);
 
-    char parent[20] = { 0 };
-    ot_op* opc = ot_new_op(1, parent);
+    ot_op* opc = ot_new_op();
     ot_insert(opc, "ABC");
     ot_client_apply(clients[1], &opc);
     flush_clients();
     assert_op_snapshot(clients[1]->doc->composed, "ABC", msg);
 
-    ot_op* opa = ot_new_op(0, parent);
+    ot_op* opa = ot_new_op();
     ot_insert(opa, "abc");
     ot_client_apply(clients[0], &opa);
     flush_clients();
     assert_op_snapshot(clients[0]->doc->composed, "abc", msg);
 
-    ot_op* opb = ot_new_op(0, opa->hash);
+    ot_op* opb = ot_new_op();
     ot_skip(opb, 3);
     ot_insert(opb, "def");
     ot_client_apply(clients[0], &opb);

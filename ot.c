@@ -21,11 +21,11 @@ static void ot_free_fmtbound(ot_comp_fmtbound* fmtbound) {
     array_free(&fmtbound->end);
 }
 
-ot_op* ot_new_op(uint32_t client_id, char parent[20]) {
+ot_op* ot_new_op() {
     ot_op* op = (ot_op*)malloc(sizeof(ot_op));
-    op->client_id = client_id;
+    op->client_id = 0;
     array_init(&op->comps, sizeof(ot_comp));
-    memcpy(op->parent, parent, 20);
+    memset(op->parent, 0, 20);
     memset(op->hash, 0, 20);
 
     return op;

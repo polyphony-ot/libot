@@ -8,8 +8,7 @@
 bool scenario2(char** msg) {
     setup(2);
 
-    char parent[20] = { 0 };
-    ot_op* opc = ot_new_op(1, parent);
+    ot_op* opc = ot_new_op();
     ot_insert(opc, "ABC");
     ot_client_apply(clients[1], &opc);
 
@@ -17,12 +16,12 @@ bool scenario2(char** msg) {
     assert_op_snapshot(server->doc->composed, "ABC", msg);
     assert_op_snapshot(clients[1]->doc->composed, "ABC", msg);
 
-    ot_op* opa = ot_new_op(0, parent);
+    ot_op* opa = ot_new_op();
     ot_insert(opa, "abc");
     ot_client_apply(clients[0], &opa);
     assert_op_snapshot(clients[0]->doc->composed, "abc", msg);
 
-    ot_op* opb = ot_new_op(0, opa->hash);
+    ot_op* opb = ot_new_op();
     ot_skip(opb, 3);
     ot_insert(opb, "def");
     ot_client_apply(clients[0], &opb);
@@ -33,13 +32,13 @@ bool scenario2(char** msg) {
     assert_op_snapshot(clients[0]->doc->composed, "ABCabcdef", msg);
     assert_op_snapshot(clients[1]->doc->composed, "ABC", msg);
 
-    ot_op* ope = ot_new_op(0, clients[0]->doc->composed->hash);
+    ot_op* ope = ot_new_op();
     ot_skip(ope, 9);
     ot_insert(ope, "ghi");
     ot_client_apply(clients[0], &ope);
     assert_op_snapshot(clients[0]->doc->composed, "ABCabcdefghi", msg);
 
-    ot_op* opd = ot_new_op(1, opc->hash);
+    ot_op* opd = ot_new_op();
     ot_skip(opd, 3);
     ot_insert(opd, "DEF");
     ot_client_apply(clients[1], &opd);

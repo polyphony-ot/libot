@@ -9,7 +9,7 @@ int main() {
     fgets(buf, 1024, stdin);
 
     char p[20];
-    ot_op* op = ot_new_op(0, p);
+    ot_op* op = ot_new_op();
     ot_decode_err err = ot_decode(op, buf);
     if (err != OT_ERR_NONE) {
         puts("Error when decoding JSON.");
@@ -20,7 +20,7 @@ int main() {
     fputs("Operation 2: ", stdout);
     fgets(buf2, 1024, stdin);
 
-    ot_op* op2 = ot_new_op(0, p);
+    ot_op* op2 = ot_new_op();
     err = ot_decode(op2, buf2);
     if (err != OT_ERR_NONE) {
         puts("Error when decoding JSON.");

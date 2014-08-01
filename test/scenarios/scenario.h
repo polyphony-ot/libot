@@ -79,8 +79,7 @@ static int server_send(const char* op) {
 }
 
 static int client_send(const char* op) {
-    char parent[20] = { 0 };
-    ot_op* dec = ot_new_op(0, parent);
+    ot_op* dec = ot_new_op();
     ot_decode(dec, op);
     size_t id = dec->client_id;
     ot_free_op(dec);

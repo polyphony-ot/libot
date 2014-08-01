@@ -113,7 +113,7 @@ static void gen_doc(int docnum) {
     // Create the initial operation which is just an insert of the document
     // string.
     char parent[20] = { 0 };
-    ot_op* docop = ot_new_op(0, parent);
+    ot_op* docop = ot_new_op();
     ot_insert(docop, docstr);
     char* snapshot = ot_snapshot(docop);
     assert_doc(docstr, snapshot);
@@ -126,7 +126,7 @@ static void gen_doc(int docnum) {
     size_t max_reached = 0;
     size_t num_ops = rand() % max_ops + 2;
     for (size_t i = 0; i < num_ops; ++i) {
-        ot_op* op = ot_new_op(0, parent);
+        ot_op* op = ot_new_op();
 
         sprintf(msg, "[INFO] Generating operation %zu out of %zu.", i + 1,
                 num_ops);

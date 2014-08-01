@@ -175,7 +175,7 @@ void ot_client_open(ot_client* client, ot_doc* doc) { client->doc = doc; }
 void ot_client_receive(ot_client* client, const char* op) {
     fprintf(stderr, "Client received op: %s\n", op);
 
-    ot_op* dec = ot_new_op(0, "");
+    ot_op* dec = ot_new_op();
     ot_err err = ot_decode(dec, op);
     if (err != OT_ERR_NONE) {
         fprintf(stderr, "Client couldn't decode op. Error code: %d.", err);

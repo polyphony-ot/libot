@@ -18,8 +18,7 @@ MU_TEST(test_start_fmt_appends_correct_comp_type) {
     char* expected_name = "any name";
     char* expected_value = "any value";
 
-    char parent[20] = { 0 };
-    ot_op* op = ot_new_op(0, parent);
+    ot_op* op = ot_new_op();
     ot_start_fmt(op, expected_name, expected_value);
 
     ot_comp* comps = op->comps.data;
@@ -35,8 +34,7 @@ MU_TEST(test_start_fmt_appends_correct_name_and_value) {
     char* expected_name = "any name";
     char* expected_value = "any value";
 
-    char parent[20] = { 0 };
-    ot_op* op = ot_new_op(0, parent);
+    ot_op* op = ot_new_op();
     ot_start_fmt(op, expected_name, expected_value);
 
     ot_comp* comps = op->comps.data;
@@ -57,8 +55,7 @@ MU_TEST(test_start_fmt_does_not_append_another_fmtbound_when_last_component_is_f
     char* any_name = "any name";
     char* any_value = "any value";
 
-    char parent[20] = { 0 };
-    ot_op* op = ot_new_op(0, parent);
+    ot_op* op = ot_new_op();
     ot_start_fmt(op, any_name, any_value);
     ot_start_fmt(op, any_name, any_value);
 
@@ -73,8 +70,7 @@ MU_TEST(test_end_fmt_appends_correct_name_and_value) {
     char* expected_name = "any name";
     char* expected_value = "any value";
 
-    char parent[20] = { 0 };
-    ot_op* op = ot_new_op(0, parent);
+    ot_op* op = ot_new_op();
     ot_end_fmt(op, expected_name, expected_value);
 
     ot_comp* comps = op->comps.data;
@@ -95,8 +91,7 @@ MU_TEST(test_end_fmt_does_not_append_another_fmtbound_when_last_component_is_fmt
     char* any_name = "any name";
     char* any_value = "any value";
 
-    char parent[20] = { 0 };
-    ot_op* op = ot_new_op(0, parent);
+    ot_op* op = ot_new_op();
     ot_end_fmt(op, any_name, any_value);
     ot_end_fmt(op, any_name, any_value);
 
@@ -108,8 +103,7 @@ MU_TEST(test_end_fmt_does_not_append_another_fmtbound_when_last_component_is_fmt
 }
 
 MU_TEST(iter_next_on_empty_op) {
-    char parent[20] = { 0 };
-    ot_op* op = ot_new_op(0, parent);
+    ot_op* op = ot_new_op();
     ot_iter iter;
 
     ot_iter_init(&iter, op);
@@ -120,8 +114,7 @@ MU_TEST(iter_next_on_empty_op) {
 }
 
 MU_TEST(iter_next_iterates_once_over_skip_with_count_one) {
-    char parent[20] = { 0 };
-    ot_op* op = ot_new_op(0, parent);
+    ot_op* op = ot_new_op();
     ot_skip(op, 1);
     ot_iter iter;
 
@@ -134,8 +127,7 @@ MU_TEST(iter_next_iterates_once_over_skip_with_count_one) {
 }
 
 MU_TEST(iter_next_iterates_correct_number_of_times_over_skip_with_count_greater_than_one) {
-    char parent[20] = { 0 };
-    ot_op* op = ot_new_op(0, parent);
+    ot_op* op = ot_new_op();
     ot_skip(op, 2);
     ot_iter iter;
 
@@ -149,8 +141,7 @@ MU_TEST(iter_next_iterates_correct_number_of_times_over_skip_with_count_greater_
 }
 
 MU_TEST(iter_next_iterates_correctly_over_single_insert_component) {
-    char parent[20] = { 0 };
-    ot_op* op = ot_new_op(0, parent);
+    ot_op* op = ot_new_op();
     ot_insert(op, "012");
     ot_iter iter;
 
@@ -222,12 +213,11 @@ MU_TEST(test_ot_equal) {
     for (size_t i = 0; i < num_tests; ++i) {
         ot_equals_test t = ot_equals_tests[i];
 
-        char p[20] = { 0 };
-        ot_op* op1 = ot_new_op(0, p);
+        ot_op* op1 = ot_new_op();
         ot_err err = ot_decode(op1, t.op1);
         mu_assert(err == OT_ERR_NONE, "Error decoding test JSON.");
 
-        ot_op* op2 = ot_new_op(0, p);
+        ot_op* op2 = ot_new_op();
         err = ot_decode(op2, t.op2);
         mu_assert(err == OT_ERR_NONE, "Error decoding test JSON.");
 
@@ -240,8 +230,7 @@ MU_TEST(test_ot_equal) {
 }
 
 MU_TEST(ot_dup_duplicates_op_with_one_component) {
-    char parent[20] = { 0 };
-    ot_op* orig = ot_new_op(0, parent);
+    ot_op* orig = ot_new_op();
     ot_insert(orig, "abc");
 
     ot_op* dup = ot_dup_op(orig);
@@ -376,16 +365,15 @@ MU_TEST(compose_tests) {
         ot_compose_test t = ot_compose_tests[i];
         char errmsg[128];
 
-        char p[20] = { 0 };
-        ot_op* op1 = ot_new_op(0, p);
+        ot_op* op1 = ot_new_op();
         ot_err err = ot_decode(op1, t.op1);
         mu_assert(err == OT_ERR_NONE, "Error decoding first test op.");
 
-        ot_op* op2 = ot_new_op(0, p);
+        ot_op* op2 = ot_new_op();
         err = ot_decode(op2, t.op2);
         mu_assert(err == OT_ERR_NONE, "Error decoding second test op.");
 
-        ot_op* expected = ot_new_op(0, p);
+        ot_op* expected = ot_new_op();
         err = ot_decode(expected, t.expected);
         mu_assert(err == OT_ERR_NONE, "Error decoding expected test op.");
 
@@ -500,20 +488,19 @@ MU_TEST(xform_tests) {
     for (size_t i = 0; i < max; ++i) {
         ot_xform_test t = ot_xform_tests[i];
 
-        char p[20] = { 0 };
-        ot_op* initial = ot_new_op(0, p);
+        ot_op* initial = ot_new_op();
         ot_err err = ot_decode(initial, t.initial);
         mu_assert(err == OT_ERR_NONE, "Error decoding initial test op.");
 
-        ot_op* op1 = ot_new_op(0, p);
+        ot_op* op1 = ot_new_op();
         err = ot_decode(op1, t.op1);
         mu_assert(err == OT_ERR_NONE, "Error decoding first test op.");
 
-        ot_op* op2 = ot_new_op(0, p);
+        ot_op* op2 = ot_new_op();
         err = ot_decode(op2, t.op2);
         mu_assert(err == OT_ERR_NONE, "Error decoding second test op.");
 
-        ot_op* expected = ot_new_op(0, p);
+        ot_op* expected = ot_new_op();
         err = ot_decode(expected, t.expected);
         mu_assert(err == OT_ERR_NONE, "Error decoding expected test op.");
 
@@ -552,8 +539,7 @@ MU_TEST(decode_skip) {
     const uint32_t expected_client_id = 1234;
     char* expected_json = "{ \"clientId\": 1234, \"parent\": \"6162636465666768696a6b6c6d6e6f7071727374\", \"hash\": \"00\", \"components\": [ { \"type\": \"skip\", \"count\": 1 } ] }";
 
-    char p[20];
-    ot_op* op = ot_new_op(0, p);
+    ot_op* op = ot_new_op();
     ot_err err = ot_decode(op, expected_json);
     mu_check(err == OT_ERR_NONE);
     uint32_t actual_client_id = op->client_id;
@@ -567,8 +553,7 @@ MU_TEST(decode_client_id) {
     const uint32_t expected_client_id = 1234;
     char* expected_json = "{ \"clientId\": 1234, \"parent\": \"0\", \"hash\": \"00\", \"components\": [ ] }";
 
-    char p[20];
-    ot_op* op = ot_new_op(0, p);
+    ot_op* op = ot_new_op();
     ot_err err = ot_decode(op, expected_json);
     mu_check(err == OT_ERR_NONE);
     uint32_t actual_client_id = op->client_id;
@@ -582,8 +567,7 @@ MU_TEST(decode_parent) {
     uint8_t expected_parent[] = "abcdefghijklmnopqrst";
     char* expected_json = "{ \"clientId\": 1234, \"parent\": \"6162636465666768696a6b6c6d6e6f7071727374\", \"hash\": \"00\", \"components\": [ ] }";
 
-    char p[20];
-    ot_op* op = ot_new_op(0, p);
+    ot_op* op = ot_new_op();
     ot_err err = ot_decode(op, expected_json);
     mu_check(err == OT_ERR_NONE);
     char* actual_parent = op->parent;
@@ -595,8 +579,7 @@ MU_TEST(decode_parent) {
 }
 
 MU_TEST(decode_fails_if_client_id_is_missing) {
-    char p[64] = { 0 };
-    ot_op* op = ot_new_op(0, p);
+    ot_op* op = ot_new_op();
     const char* json = "{ \"parent\": \"6162636465666768696a6b6c6d6e6f7071727374\", \"components\": [ ] }";
     ot_err err = ot_decode(op, json);
 
@@ -605,8 +588,7 @@ MU_TEST(decode_fails_if_client_id_is_missing) {
 }
 
 MU_TEST(decode_fails_if_parent_is_missing) {
-    char p[64] = { 0 };
-    ot_op* op = ot_new_op(0, p);
+    ot_op* op = ot_new_op();
     const char* json = "{ \"clientId\": 1234, \"components\": [ ] }";
     ot_err err = ot_decode(op, json);
 
@@ -615,8 +597,7 @@ MU_TEST(decode_fails_if_parent_is_missing) {
 }
 
 MU_TEST(decode_fails_if_components_is_missing) {
-    char p[64] = { 0 };
-    ot_op* op = ot_new_op(0, p);
+    ot_op* op = ot_new_op();
     const char* json = "{ \"clientId\": 1234, \"parent\": \"0\", \"hash\": \"00\" }";
     ot_err err = ot_decode(op, json);
 
@@ -659,18 +640,17 @@ MU_TEST(decode_doc_with_multiple_ops) {
                  "{\"clientId\":0,\"parent\":\"a9993e364706816aba3e25717850c26c9cd0d89d\",\"hash\":\"1f8ac10f23c5b5bc1167bda84b833e5c057a77d2\",\"components\":[{\"type\":\"skip\",\"count\":3},{\"type\":\"insert\",\"text\":\"def\"}]},"
                  "{\"clientId\":0,\"parent\":\"1f8ac10f23c5b5bc1167bda84b833e5c057a77d2\",\"hash\":\"a9993e364706816aba3e25717850c26c9cd0d89d\",\"components\":[{\"type\":\"skip\",\"count\":3},{\"type\":\"delete\",\"count\":3}]}]";
 
-    char parent[20] = { 0 };
-    ot_op* op1 = ot_new_op(0, parent);
+    ot_op* op1 = ot_new_op();
     ot_insert(op1, "abc");
     hextoa(op1->hash, 20, "a9993e364706816aba3e25717850c26c9cd0d89d", 40);
 
-    ot_op* op2 = ot_new_op(0, parent);
+    ot_op* op2 = ot_new_op();
     ot_skip(op2, 3);
     ot_insert(op2, "def");
     hextoa(op2->hash, 20, "1f8ac10f23c5b5bc1167bda84b833e5c057a77d2", 40);
     hextoa(op2->parent, 20, "a9993e364706816aba3e25717850c26c9cd0d89d", 40);
 
-    ot_op* op3 = ot_new_op(0, parent);
+    ot_op* op3 = ot_new_op();
     ot_skip(op3, 3);
     ot_delete(op3, 3);
     hextoa(op3->hash, 20, "a9993e364706816aba3e25717850c26c9cd0d89d", 40);
@@ -745,8 +725,7 @@ MU_TEST_SUITE(otdecode_test_suite) {
 
 MU_TEST(test_serialize_empty_op) {
     const char* const EXPECTED = "{\"clientId\":0,\"parent\":\"00\",\"hash\":\"00\",\"components\":[]}";
-    char parent[20] = { 0 };
-    ot_op* op = ot_new_op(0, parent);
+    ot_op* op = ot_new_op();
 
     char* actual = ot_encode(op);
     int cmp = strcmp(EXPECTED, (char*)actual);
@@ -761,8 +740,7 @@ MU_TEST(test_serialize_empty_op) {
 
 MU_TEST(test_serialize_single_insert) {
     const char* const EXPECTED = "{\"clientId\":0,\"parent\":\"00\",\"hash\":\"00\",\"components\":[{\"type\":\"insert\",\"text\":\"any string\"}]}";
-    char parent[20] = { 0 };
-    ot_op* op = ot_new_op(0, parent);
+    ot_op* op = ot_new_op();
     ot_insert(op, "any string");
 
     char* actual = ot_encode(op);
@@ -778,8 +756,7 @@ MU_TEST(test_serialize_single_insert) {
 
 MU_TEST(test_serialize_two_inserts) {
     const char* const EXPECTED = "{\"clientId\":0,\"parent\":\"00\",\"hash\":\"00\",\"components\":[{\"type\":\"insert\",\"text\":\"any string any other string\"}]}";
-    char parent[20] = { 0 };
-    ot_op* op = ot_new_op(0, parent);
+    ot_op* op = ot_new_op();
     ot_insert(op, "any string");
     ot_insert(op, " any other string");
 
@@ -794,8 +771,7 @@ MU_TEST(test_serialize_two_inserts) {
 
 MU_TEST(test_serialize_single_skip) {
     const char* const EXPECTED = "{\"clientId\":0,\"parent\":\"00\",\"hash\":\"00\",\"components\":[{\"type\":\"skip\",\"count\":1}]}";
-    char parent[20] = { 0 };
-    ot_op* op = ot_new_op(0, parent);
+    ot_op* op = ot_new_op();
     ot_skip(op, 1);
 
     char* actual = ot_encode(op);
@@ -809,8 +785,7 @@ MU_TEST(test_serialize_single_skip) {
 
 MU_TEST(test_serialize_single_delete) {
     const char* const EXPECTED = "{\"clientId\":0,\"parent\":\"00\",\"hash\":\"00\",\"components\":[{\"type\":\"delete\",\"count\":1}]}";
-    char parent[20] = { 0 };
-    ot_op* op = ot_new_op(0, parent);
+    ot_op* op = ot_new_op();
     ot_delete(op, 1);
 
     char* actual = ot_encode(op);
@@ -824,8 +799,7 @@ MU_TEST(test_serialize_single_delete) {
 
 MU_TEST(test_serialize_single_open_element) {
     const char* const EXPECTED = "{\"clientId\":0,\"parent\":\"00\",\"hash\":\"00\",\"components\":[{\"type\":\"openElement\",\"element\":\"any string\"}]}";
-    char parent[20] = { 0 };
-    ot_op* op = ot_new_op(0, parent);
+    ot_op* op = ot_new_op();
     ot_open_element(op, "any string");
 
     char* actual = ot_encode(op);
@@ -839,8 +813,7 @@ MU_TEST(test_serialize_single_open_element) {
 
 MU_TEST(test_serialize_single_close_element) {
     const char* const EXPECTED = "{\"clientId\":0,\"parent\":\"00\",\"hash\":\"00\",\"components\":[{\"type\":\"closeElement\"}]}";
-    char parent[20] = { 0 };
-    ot_op* op = ot_new_op(0, parent);
+    ot_op* op = ot_new_op();
     ot_close_element(op);
 
     char* actual = ot_encode(op);
@@ -874,17 +847,16 @@ MU_TEST(encode_doc_with_multiple_ops) {
                                  "{\"clientId\":0,\"parent\":\"1f8ac10f23c5b5bc1167bda84b833e5c057a77d2\",\"hash\":\"a9993e364706816aba3e25717850c26c9cd0d89d\",\"components\":[{\"type\":\"skip\",\"count\":3},{\"type\":\"delete\",\"count\":3}]}]";
     ot_doc* doc = ot_new_doc();
 
-    char parent[20] = { 0 };
-    ot_op* op1 = ot_new_op(0, parent);
+    ot_op* op1 = ot_new_op();
     ot_insert(op1, "abc");
     ot_doc_append(doc, &op1);
 
-    ot_op* op2 = ot_new_op(0, op1->hash);
+    ot_op* op2 = ot_new_op();
     ot_skip(op2, 3);
     ot_insert(op2, "def");
     ot_doc_append(doc, &op2);
 
-    ot_op* op3 = ot_new_op(0, op2->hash);
+    ot_op* op3 = ot_new_op();
     ot_skip(op3, 3);
     ot_delete(op3, 3);
     ot_doc_append(doc, &op3);
@@ -1167,8 +1139,7 @@ MU_TEST_SUITE(sha1_test_suite) {
 
 MU_TEST(append_empty_op_does_not_segfault) {
     ot_doc* doc = ot_new_doc();
-    char parent[20] = { 0 };
-    ot_op* op = ot_new_op(0, parent);
+    ot_op* op = ot_new_op();
 
     ot_doc_append(doc, &op);
 
@@ -1274,14 +1245,13 @@ MU_TEST(client_receive_does_not_send_empty_buffer_after_acknowledgement) {
 
 MU_TEST(client_apply_sends_op_if_not_waiting_for_acknowledgement) {
     ot_client* client = ot_new_client(send_stub, event_stub);
-    char parent[20] = { 0 };
-    ot_op* op = ot_new_op(0, parent);
+    ot_op* op = ot_new_op();
     ot_insert(op, "any string");
 
     ot_err cerr = ot_client_apply(client, &op);
     mu_assert_int_eq(OT_ERR_NONE, cerr);
 
-    ot_op* dec_sent_op = ot_new_op(0, parent);
+    ot_op* dec_sent_op = ot_new_op();
     ot_err derr = ot_decode(dec_sent_op, sent_op);
 
     mu_assert_int_eq(OT_ERR_NONE, derr);
@@ -1295,8 +1265,7 @@ MU_TEST(client_apply_sends_op_if_not_waiting_for_acknowledgement) {
 MU_TEST(client_receives_new_op_before_acknowledgement_starting_with_empty_doc) {
     const char* const EXPECTED = "server text client text";
     ot_client* client = ot_new_client(send_stub, event_stub);
-    char parent[20] = { 0 };
-    ot_op* op = ot_new_op(0, parent);
+    ot_op* op = ot_new_op();
     ot_insert(op, "client text");
 
     ot_err cerr = ot_client_apply(client, &op);
@@ -1321,8 +1290,7 @@ MU_TEST(client_receives_new_op_before_acknowledgement_starting_with_empty_doc) {
 MU_TEST(client_receives_multiple_ops_before_acknowledgement_starting_with_empty_doc) {
     const char* const EXPECTED = "server text more server text client text";
     ot_client* client = ot_new_client(send_stub, event_stub);
-    char parent[20] = { 0 };
-    ot_op* op = ot_new_op(0, parent);
+    ot_op* op = ot_new_op();
     ot_insert(op, "client text");
 
     ot_err cerr = ot_client_apply(client, &op);
@@ -1349,8 +1317,7 @@ MU_TEST(client_receives_multiple_ops_before_acknowledgement_starting_with_empty_
 MU_TEST(client_receives_new_op_before_acknowledgement_and_then_applies_local_op) {
     const char* const EXPECTED = "server text client text more client text";
     ot_client* client = ot_new_client(send_stub, event_stub);
-    char parent[20] = { 0 };
-    ot_op* op = ot_new_op(0, parent);
+    ot_op* op = ot_new_op();
     ot_insert(op, "client text ");
 
     ot_err cerr = ot_client_apply(client, &op);
@@ -1359,7 +1326,7 @@ MU_TEST(client_receives_new_op_before_acknowledgement_and_then_applies_local_op)
     char* enc_serv_op = "{ \"clientId\": 1, \"parent\": \"00\", \"hash\": \"d82ac619d64a0883de5276f0f3e9a984c3e22620\", \"components\": [ { \"type\": \"insert\", \"text\": \"server text \" } ] }";
     ot_client_receive(client, enc_serv_op);
 
-    ot_op* op2 = ot_new_op(0, parent);
+    ot_op* op2 = ot_new_op();
     ot_skip(op2, 24);
     ot_insert(op2, "more client text");
 

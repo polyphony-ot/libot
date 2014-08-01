@@ -107,7 +107,7 @@ typedef enum {
 typedef int (*send_func)(const char*);
 typedef int (*ot_event_func)(ot_event_type, ot_op*);
 
-ot_op* ot_new_op(uint32_t client_id, char parent[20]);
+ot_op* ot_new_op();
 void ot_free_op(ot_op* op);
 void ot_free_comp(ot_comp* comp);
 ot_op* ot_dup_op(const ot_op* op);

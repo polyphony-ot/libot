@@ -107,7 +107,7 @@ void ot_server_open(ot_server* server, ot_doc* doc) { server->doc = doc; }
 void ot_server_receive(ot_server* server, const char* op) {
     fprintf(stderr, "Server received op: %s\n", op);
 
-    ot_op* dec = ot_new_op(0, "");
+    ot_op* dec = ot_new_op();
     ot_err err = ot_decode(dec, op);
     if (err != OT_ERR_NONE) {
         fprintf(stderr, "Server couldn't decode op: %s\n", op);

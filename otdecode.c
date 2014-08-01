@@ -90,8 +90,7 @@ ot_err ot_decode_doc(ot_doc* doc, const char* const json) {
     for (int i = 0; i < max; ++i) {
         cJSON* item = cJSON_GetArrayItem(root, i);
 
-        char parent[20] = { 0 };
-        ot_op* op = ot_new_op(0, parent);
+        ot_op* op = ot_new_op();
         ot_err err = decode_cjson_op(item, op);
         if (err != OT_ERR_NONE) {
             cJSON_Delete(root);
