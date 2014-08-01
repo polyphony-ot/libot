@@ -1,14 +1,22 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-function"
 
+// The maximum number of servers that can be used in a scenario.
 #define MAX_SERVER_QUEUE 16
+
+// The maximum number of clients that can be used in a scenario.
 #define MAX_CLIENTS 16
+
+// The maximum number of operations that can be queued by a client.
 #define MAX_CLIENT_QUEUE 16
 
+// Debugging macros for creating a string containing the current line number.
 #define S(x) #x
 #define S_(x) S(x)
 #define STRLINE S_(__LINE__)
 
+// Asserts that an operation's snapshot is equal to an expected string. If it
+// isn't, msg will be set to an error message.
 #define assert_op_snapshot(op, expected, msg)                                  \
     if (!_assert_op_snapshot(op, expected, "Line #" STRLINE                    \
                                            ": Unexpected operation snapshot.", \
@@ -16,22 +24,31 @@
         return false;                                                          \
     }
 
+// Asserts that all of the clients and the server have converged on the same
+// document. If some of them have not converged, msg will be set to an error
+// message.
 #define assert_convergence(expected, msg)                                      \
     if (!_assert_convergence(expected, "Line #" STRLINE, msg)) {               \
         return false;                                                          \
     }
 
+// The single server used in a scenario.
 static ot_server* server;
 
+// An array of clients used in a scenario. clients_len is specified when the
+// setup function is called.
 static size_t clients_len = 0;
 static ot_client* clients[MAX_CLIENTS];
 
+// An array of staged server operations.
 static size_t server_queue_len = 0;
 static char* server_queue[MAX_SERVER_QUEUE];
 
+// Arrays of staged client operations.
 static size_t client_queue_lens[MAX_CLIENTS] = { 0 };
 static char* client_queues[MAX_CLIENTS][MAX_CLIENT_QUEUE];
 
+// Flushes all operations sent by a specific client from the staging area.
 static void flush_client(size_t id) {
     assert(client_queue_lens[id] > 0);
 
@@ -44,6 +61,7 @@ static void flush_client(size_t id) {
     client_queue_lens[id] = 0;
 }
 
+// Flushes all sent client operations from the staging area.
 static void flush_clients() {
     bool flushed = false;
 
@@ -57,6 +75,7 @@ static void flush_clients() {
     assert(flushed);
 }
 
+// Flushes all sent server operations from the staging area.
 static void flush_server() {
     assert(server_queue_len > 0);
 
@@ -70,6 +89,7 @@ static void flush_server() {
     server_queue_len = 0;
 }
 
+// Server send callback that stores op in the staging area until it is flushed.
 static int server_send(const char* op) {
     assert(server_queue_len != MAX_SERVER_QUEUE);
 
@@ -78,6 +98,7 @@ static int server_send(const char* op) {
     return 0;
 }
 
+// Client send callback that stores op in the staging area until it is flushed.
 static int client_send(const char* op) {
     ot_op* dec = ot_new_op();
     ot_decode(dec, op);
@@ -94,11 +115,15 @@ static int client_send(const char* op) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-parameter"
 
+// Server event callback function that simply asserts that an event type was
+// provided.
 static int server_event(ot_event_type t, ot_op* op) {
     assert(t);
     return 0;
 }
 
+// Client event callback function used by all of the clients that simply asserts
+// that an event type was provided.
 static int client_event(ot_event_type t, ot_op* op) {
     assert(t);
     return 0;
@@ -106,6 +131,9 @@ static int client_event(ot_event_type t, ot_op* op) {
 
 #pragma clang diagnostic pop
 
+// This function should be called at the beginning of every scenario. It
+// initializes all of the clients and the server. num_clients should be the
+// maximum number of clients used in the scenario.
 static void setup(size_t num_clients) {
     clients_len = num_clients;
     server = ot_new_server(server_send, server_event);
@@ -116,6 +144,8 @@ static void setup(size_t num_clients) {
     }
 }
 
+// This function should be called at the end of every scenario. It cleans up all
+// the clients and the server.
 static void teardown() {
     for (size_t i = 0; i < clients_len; ++i) {
         ot_free_client(clients[i]);
@@ -124,6 +154,8 @@ static void teardown() {
     ot_free_server(server);
 }
 
+// Asserts that two operations are equal. If they aren't, msg will be set to an
+// error message.
 static bool assert_ops_equal(ot_op* op1, ot_op* op2, char** msg) {
     bool equal = ot_equal(op1, op2);
     if (!equal) {
@@ -140,6 +172,10 @@ static bool assert_ops_equal(ot_op* op1, ot_op* op2, char** msg) {
     return equal;
 }
 
+// Asserts that an operation's snapshot is equal to an expected string. If it
+// isn't, msg will be set to an error message. A prefix may be provided which
+// will be prepended to the message. This function is typically not used
+// directly, see the assert_op_snapshot macro instead.
 static bool _assert_op_snapshot(ot_op* op, char* const expected, char* prefix,
                                 char** msg) {
 
@@ -161,6 +197,11 @@ static bool _assert_op_snapshot(ot_op* op, char* const expected, char* prefix,
     return true;
 }
 
+// Asserts that all of the clients and the server have converged on the same
+// document. If some of them have not converged, msg will be set to an error
+// message. loc is the location in the source file where this assert was called.
+// This function is typically not used directly, see the assert_convergence
+// macro instead.
 static bool _assert_convergence(char* const expected, char* loc, char** msg) {
     for (size_t i = 0; i < clients_len; ++i) {
         char* prefix = NULL;
