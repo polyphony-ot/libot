@@ -553,22 +553,22 @@ MU_TEST(xform_tests) {
 MU_TEST(xformed_ops_have_correct_client_ids_and_parents) {
     ot_op* op1 = ot_new_op();
     op1->client_id = 1;
-    memset(op1->parent, 0xFF, 20);
+    memset(op1->hash, 0xFF, 20);
 
     ot_op* op2 = ot_new_op();
     op2->client_id = 2;
-    memset(op2->parent, 0xAA, 20);
+    memset(op2->hash, 0xAA, 20);
 
     ot_xform_pair xform = ot_xform(op1, op2);
 
     mu_assert(op1->client_id == xform.op1_prime->client_id, "op1_prime client ID wasn't correct.");
-    int cmp = memcmp(op2->parent, xform.op1_prime->parent, 20);
+    int cmp = memcmp(op2->hash, xform.op1_prime->parent, 20);
     if (cmp != 0) {
         mu_fail("op1_prime parent wasn't correct.");
     }
 
     mu_assert(op2->client_id == xform.op2_prime->client_id, "op2_prime client ID wasn't correct.");
-    cmp = memcmp(op1->parent, xform.op2_prime->parent, 20);
+    cmp = memcmp(op1->hash, xform.op2_prime->parent, 20);
     if (cmp != 0) {
         mu_fail("op2_prime parent wasn't correct.");
     }

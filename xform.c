@@ -129,11 +129,11 @@ static delta_pair ot_xform_delete_delete(ot_comp_delete del1, size_t offset1,
 ot_xform_pair ot_xform(ot_op* op1, ot_op* op2) {
     ot_op* op1_prime = ot_new_op();
     op1_prime->client_id = op1->client_id;
-    memcpy(op1_prime->parent, op2->parent, 20);
+    memcpy(op1_prime->parent, op2->hash, 20);
 
     ot_op* op2_prime = ot_new_op();
     op2_prime->client_id = op2->client_id;
-    memcpy(op2_prime->parent, op1->parent, 20);
+    memcpy(op2_prime->parent, op1->hash, 20);
 
     ot_xform_pair xform = (ot_xform_pair) { op1_prime, op2_prime };
 
