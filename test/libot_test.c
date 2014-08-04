@@ -388,8 +388,29 @@ MU_TEST(compose_tests) {
     }
 }
 
+MU_TEST(composed_op_has_same_client_id_and_parent_as_first_op) {
+    ot_op* op1 = ot_new_op();
+    op1->client_id = 1;
+    memset(op1->parent, 0xFF, 20);
+
+    ot_op* op2 = ot_new_op();
+    op2->client_id = 2;
+
+    ot_op* composed = ot_compose(op1, op2);
+    mu_assert(op1->client_id == composed->client_id, "Composed client ID wasn't correct.");
+    int cmp = memcmp(op1->parent, composed->parent, 20);
+    if (cmp != 0) {
+        mu_fail("Composed parent wasn't correct.");
+    }
+
+    ot_free_op(op1);
+    ot_free_op(op2);
+    ot_free_op(composed);
+}
+
 MU_TEST_SUITE(compose_test_suite) {
     MU_RUN_TEST(compose_tests);
+    MU_RUN_TEST(composed_op_has_same_client_id_and_parent_as_first_op);
 }
 
 /* xform tests */
@@ -529,8 +550,38 @@ MU_TEST(xform_tests) {
     }
 }
 
+MU_TEST(xformed_ops_have_correct_client_ids_and_parents) {
+    ot_op* op1 = ot_new_op();
+    op1->client_id = 1;
+    memset(op1->parent, 0xFF, 20);
+
+    ot_op* op2 = ot_new_op();
+    op2->client_id = 2;
+    memset(op2->parent, 0xAA, 20);
+
+    ot_xform_pair xform = ot_xform(op1, op2);
+
+    mu_assert(op1->client_id == xform.op1_prime->client_id, "op1_prime client ID wasn't correct.");
+    int cmp = memcmp(op2->parent, xform.op1_prime->parent, 20);
+    if (cmp != 0) {
+        mu_fail("op1_prime parent wasn't correct.");
+    }
+
+    mu_assert(op2->client_id == xform.op2_prime->client_id, "op2_prime client ID wasn't correct.");
+    cmp = memcmp(op1->parent, xform.op2_prime->parent, 20);
+    if (cmp != 0) {
+        mu_fail("op2_prime parent wasn't correct.");
+    }
+
+    ot_free_op(op1);
+    ot_free_op(op2);
+    ot_free_op(xform.op1_prime);
+    ot_free_op(xform.op2_prime);
+}
+
 MU_TEST_SUITE(xform_test_suite) {
     MU_RUN_TEST(xform_tests);
+    MU_RUN_TEST(xformed_ops_have_correct_client_ids_and_parents);
 }
 
 /* otdecode tests */
