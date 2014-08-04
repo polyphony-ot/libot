@@ -28,6 +28,7 @@ int main() {
     RUN_SCENARIO(scenario1);
     RUN_SCENARIO(scenario2);
     RUN_SCENARIO(scenario3);
+    RUN_SCENARIO(basic_xform_scenario);
 
     printf("\n%d tests passed.\n"
            "%d tests failed.\n"
