@@ -1,8 +1,3 @@
-#include <stdio.h>
-#include <stdbool.h>
-#include <string.h>
-#include "../../server.h"
-#include "../../client.h"
 #include "scenario.h"
 
 bool basic_xform_scenario(char** msg) {
