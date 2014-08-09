@@ -10,7 +10,7 @@ How Scenario Tests Work
 
 The scenario testing framework provides test scenarios with a single server instance and an arbitrary number of clients. The test can then use the server and clients just as a real application would - with one difference. Scenarios are provided with queues that can buffer client or server operations. These queues allow you to effectively simulate network latency or concurrent operations in a reproducible way.
 
-![Diagram showing how the scenario queues work](../images/scenario-diagram.svg)
+![Diagram showing how the scenario queues work](../images/scenario-diagram.png)
 
 As the diagram above shows, operations are not immediately received when they are sent by a client or the server. Instead, they are put into a queue that must be flushed at a later time. Operations will only reach their receipient after the queue they reside in is flushed.
 
