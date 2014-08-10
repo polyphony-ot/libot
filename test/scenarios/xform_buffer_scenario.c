@@ -1,12 +1,10 @@
 #include "scenario.h"
 
-// In this scenario, there are two clients starting with an empty doc. Client0
-// and client1 simultaneously send opA and opC, respectively. opC happens to be
-// received first. Client0 then applies and buffers another op, opB, before
-// receiving any response. At this point, the server acknowledges opC and opA.
-// Finally, client0 sends its buffered op, opB, after receiving the
-// acknowledgment of opC.
-bool scenario1(char** msg) {
+// In this scenario, two clients send an initial op at the same time, requiring
+// that the server transform them. Before the server replies with the
+// transformed ops, one client buffers additional changes. The buffered changes
+// are then sent after the server's response is received.
+bool xform_buffer_scenario(char** msg) {
     setup(2);
 
     ot_op* opc = ot_new_op();

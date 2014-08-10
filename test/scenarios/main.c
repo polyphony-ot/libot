@@ -25,7 +25,7 @@ int total = 0;
 int main() {
     fclose(stderr);
 
-    RUN_SCENARIO(scenario1);
+    RUN_SCENARIO(xform_buffer_scenario);
     RUN_SCENARIO(scenario2);
     RUN_SCENARIO(scenario3);
     RUN_SCENARIO(basic_xform_scenario);
