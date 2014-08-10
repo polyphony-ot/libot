@@ -1,6 +1,8 @@
 #include "scenario.h"
 
-bool scenario3(char** msg) {
+// In this scenario, two clients make non-concurrent, composable changes so that
+// transformation is never needed.
+bool basic_compose(char** msg) {
     setup(2);
 
     ot_op* opa = ot_new_op();

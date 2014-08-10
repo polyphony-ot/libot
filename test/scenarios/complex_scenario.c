@@ -1,6 +1,9 @@
 #include "scenario.h"
 
-bool scenario2(char** msg) {
+// In this scenario, a complex case of transformation, buffering, and bridging
+// is tested. It should fully exercise all the components needed for real-time
+// text editing.
+bool complex_scenario(char** msg) {
     setup(2);
 
     ot_op* opc = ot_new_op();
