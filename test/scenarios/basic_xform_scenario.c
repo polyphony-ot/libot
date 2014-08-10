@@ -7,17 +7,17 @@ bool basic_xform_scenario(char** msg) {
     ot_insert(opa, "abc");
     ot_client_apply(clients[0], &opa);
     flush_client(0);
-    assert_op_snapshot(clients[0]->doc->composed, "abc", msg);
+    ASSERT_OP_SNAPSHOT(clients[0]->doc->composed, "abc", msg);
 
     ot_op* opb = ot_new_op();
     ot_insert(opb, "def");
     ot_client_apply(clients[1], &opb);
     flush_client(1);
-    assert_op_snapshot(clients[1]->doc->composed, "def", msg);
+    ASSERT_OP_SNAPSHOT(clients[1]->doc->composed, "def", msg);
 
     flush_server();
 
-    assert_convergence("abcdef", msg);
+    ASSERT_CONVERGENCE("abcdef", msg);
 
     teardown();
     return true;

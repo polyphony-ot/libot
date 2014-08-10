@@ -13,30 +13,30 @@ bool scenario1(char** msg) {
     ot_insert(opc, "ABC");
     ot_client_apply(clients[1], &opc);
     flush_clients();
-    assert_op_snapshot(clients[1]->doc->composed, "ABC", msg);
+    ASSERT_OP_SNAPSHOT(clients[1]->doc->composed, "ABC", msg);
 
     ot_op* opa = ot_new_op();
     ot_insert(opa, "abc");
     ot_client_apply(clients[0], &opa);
     flush_clients();
-    assert_op_snapshot(clients[0]->doc->composed, "abc", msg);
+    ASSERT_OP_SNAPSHOT(clients[0]->doc->composed, "abc", msg);
 
     ot_op* opb = ot_new_op();
     ot_skip(opb, 3);
     ot_insert(opb, "def");
     ot_client_apply(clients[0], &opb);
-    assert_op_snapshot(clients[0]->doc->composed, "abcdef", msg);
+    ASSERT_OP_SNAPSHOT(clients[0]->doc->composed, "abcdef", msg);
 
     flush_server();
 
-    assert_op_snapshot(server->doc->composed, "ABCabc", msg);
-    assert_op_snapshot(clients[0]->doc->composed, "ABCabcdef", msg);
-    assert_op_snapshot(clients[1]->doc->composed, "ABCabc", msg);
+    ASSERT_OP_SNAPSHOT(server->doc->composed, "ABCabc", msg);
+    ASSERT_OP_SNAPSHOT(clients[0]->doc->composed, "ABCabcdef", msg);
+    ASSERT_OP_SNAPSHOT(clients[1]->doc->composed, "ABCabc", msg);
 
     flush_clients();
     flush_server();
 
-    assert_convergence("ABCabcdef", msg);
+    ASSERT_CONVERGENCE("ABCabcdef", msg);
 
     teardown();
 

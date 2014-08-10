@@ -9,7 +9,7 @@ bool scenario3(char** msg) {
 
     flush_clients();
     flush_server();
-    assert_convergence("a", msg);
+    ASSERT_CONVERGENCE("a", msg);
 
     ot_op* opb = ot_new_op();
     ot_skip(opb, 1);
@@ -18,7 +18,7 @@ bool scenario3(char** msg) {
 
     flush_clients();
     flush_server();
-    assert_convergence("ab", msg);
+    ASSERT_CONVERGENCE("ab", msg);
 
     ot_op* opc = ot_new_op();
     ot_skip(opc, 1);
@@ -27,7 +27,7 @@ bool scenario3(char** msg) {
 
     flush_clients();
     flush_server();
-    assert_convergence("a", msg);
+    ASSERT_CONVERGENCE("a", msg);
 
     teardown();
 

@@ -69,10 +69,10 @@ When we applied opa it was not automatically send to the server, which it would'
 flush_clients(0);
 ```
 
-Now that we've applied and sent opa, our first assertion verifies that the snapshot of the client's document is actually equal to "abc". `assert_op_snapshot` is a macro provided by the framework which will automatically return false and fail the test if an operation's snapshot isn't equal to an expected string.
+Now that we've applied and sent opa, our first assertion verifies that the snapshot of the client's document is actually equal to "abc". `ASSERT_OP_SNAPSHOT` is a macro provided by the framework which will automatically return false and fail the test if an operation's snapshot isn't equal to an expected string.
 
 ```c
-assert_op_snapshot(clients[0]->doc->composed, "abc", msg);
+ASSERT_OP_SNAPSHOT(clients[0]->doc->composed, "abc", msg);
 ```
 
 Now we do the same thing again, but instead apply the text "def" to the other client.
@@ -82,7 +82,7 @@ ot_op* opb = ot_new_op();
 ot_insert(opb, "def");
 ot_client_apply(clients[1], &opb);
 flush_clients(1);
-assert_op_snapshot(clients[1]->doc->composed, "def", msg);
+ASSERT_OP_SNAPSHOT(clients[1]->doc->composed, "def", msg);
 ```
 
 Next, call `flush_server()` so that all of the clients receive operations relayed by the server.
@@ -91,10 +91,10 @@ Next, call `flush_server()` so that all of the clients receive operations relaye
 flush_server();
 ```
 
-Finally, we assert that all of the clients and the server have converged on the same document. `assert_convergence` is a macro provided by the framework that checks for convergence on an expected string.
+Finally, we assert that all of the clients and the server have converged on the same document. `ASSERT_CONVERGENCE` is a macro provided by the framework that checks for convergence on an expected string.
 
 ```c
-assert_convergence("abcdef", msg);
+ASSERT_CONVERGENCE("abcdef", msg);
 ```
 
 The last step is to add our test to `scenarios/main.c` so that it is actually run.

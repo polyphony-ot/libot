@@ -1,3 +1,8 @@
+/*
+    This header contains the scenario testing framework. For a guide on how to
+    create and run scenario tests, see doc/scenarios/scenario-tests.md.
+*/
+
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
@@ -7,8 +12,11 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-function"
 
-// The maximum number of servers that can be used in a scenario.
-#define MAX_SERVER_QUEUE 16
+// CONSTANTS
+//
+// These values can be increased if a scenario test needs more clients or queue
+// space. Keep in mind that memory usage will grow fast since each scenario test
+// has its own queues.
 
 // The maximum number of clients that can be used in a scenario.
 #define MAX_CLIENTS 16
@@ -16,14 +24,40 @@
 // The maximum number of operations that can be queued by a client.
 #define MAX_CLIENT_QUEUE 16
 
+// The maximum number of operations that can be queued by the server.
+#define MAX_SERVER_QUEUE 16
+
+// PRIVATE FRAMEWORK DECLARATIONS
+//
+// These are declarations for private framework variables and functions that
+// aren't intended to be referenced directly. They are defined at the bottom of
+// this file.
+
+static size_t client_queue_lens[MAX_CLIENT_QUEUE];
+static char* client_queues[MAX_CLIENTS][MAX_CLIENT_QUEUE];
+static size_t clients_len;
+static size_t server_queue_len;
+static char* server_queue[MAX_SERVER_QUEUE];
+static int server_send(const char* op);
+static int server_event(ot_event_type t, ot_op* op);
+static int client_send(const char* op);
+static int client_event(ot_event_type t, ot_op* op);
+
+// ASSERTIONS
+//
+// Assertion macros for validating common conditions in scenario tests. If an
+// assertion fails, it will return false to fail the test and output a helpful
+// error message.
+
 // Debugging macros for creating a string containing the current line number.
+// These are used by assertions so they can output where a test fails.
 #define S(x) #x
 #define S_(x) S(x)
 #define STRLINE S_(__LINE__)
 
 // Asserts that an operation's snapshot is equal to an expected string. If it
-// isn't, msg will be set to an error message.
-#define assert_op_snapshot(op, expected, msg)                                  \
+// isn't, the test will fail and msg will be set to an error message.
+#define ASSERT_OP_SNAPSHOT(op, expected, msg)                                  \
     if (!_assert_op_snapshot(op, expected, "Line #" STRLINE                    \
                                            ": Unexpected operation snapshot.", \
                              msg)) {                                           \
@@ -31,30 +65,33 @@
     }
 
 // Asserts that all of the clients and the server have converged on the same
-// document. If some of them have not converged, msg will be set to an error
-// message.
-#define assert_convergence(expected, msg)                                      \
+// document. If some of them have not converged, the test will fail and msg will
+// be set to an error message.
+#define ASSERT_CONVERGENCE(expected, msg)                                      \
     if (!_assert_convergence(expected, "Line #" STRLINE, msg)) {               \
         return false;                                                          \
     }
 
+// SERVER AND CLIENTS
+//
+// These variables are set by the framework when setup() is called. They are
+// used in tests to carry out a scenario. The clients will have IDs
+// corresponding to their location in the array. For example,
+// clients[0]->client_id == 0, clients[1]->client_id == 1, and so on.
+
 // The single server used in a scenario.
 static ot_server* server;
 
-// An array of clients used in a scenario. clients_len is specified when the
-// setup function is called.
-static size_t clients_len = 0;
+// The array of clients used in a scenario. It will contain the number of
+// clients specified when setup() is called.
 static ot_client* clients[MAX_CLIENTS];
 
-// An array of staged server operations.
-static size_t server_queue_len = 0;
-static char* server_queue[MAX_SERVER_QUEUE];
+// TEST FUNCTIONS
+//
+// The following functions are used in tests to flush queues, as well as setup
+// and teardown the environment.
 
-// Arrays of staged client operations.
-static size_t client_queue_lens[MAX_CLIENTS] = { 0 };
-static char* client_queues[MAX_CLIENTS][MAX_CLIENT_QUEUE];
-
-// Flushes all operations sent by a specific client from the staging area.
+// Flushes all operations from a specific client's queue.
 static void flush_client(size_t id) {
     assert(client_queue_lens[id] > 0);
 
@@ -67,7 +104,7 @@ static void flush_client(size_t id) {
     client_queue_lens[id] = 0;
 }
 
-// Flushes all sent client operations from the staging area.
+// Flushes all operations from every client's queue.
 static void flush_clients() {
     bool flushed = false;
 
@@ -81,7 +118,7 @@ static void flush_clients() {
     assert(flushed);
 }
 
-// Flushes all sent server operations from the staging area.
+// Flushes all operations from the server's queue.
 static void flush_server() {
     assert(server_queue_len > 0);
 
@@ -94,6 +131,50 @@ static void flush_server() {
 
     server_queue_len = 0;
 }
+
+// This function should be called at the beginning of every scenario. It
+// initializes all of the clients and the server. num_clients should be the
+// number of clients used in the scenario.
+static void setup(size_t num_clients) {
+    clients_len = num_clients;
+    server = ot_new_server(server_send, server_event);
+
+    for (size_t i = 0; i < num_clients; ++i) {
+        clients[i] = ot_new_client(client_send, client_event);
+        clients[i]->client_id = i;
+    }
+}
+
+// This function should be called at the end of every scenario. It cleans up all
+// the clients and the server.
+static void teardown() {
+    for (size_t i = 0; i < clients_len; ++i) {
+        ot_free_client(clients[i]);
+    }
+
+    ot_free_server(server);
+}
+
+// PRIVATE FRAMEWORK CODE
+//
+// The remaining code is used internally by the framework. You shouldn't need to
+// reference it directly.
+
+// The actual number of clients being used in a scenario. This is determined by
+// the number given to setup() when it is called.
+static size_t clients_len = 0;
+
+// The number of operations currently in server_queue.
+static size_t server_queue_len = 0;
+
+// The array of queued server operations.
+static char* server_queue[MAX_SERVER_QUEUE];
+
+// An array containing the lengths of each client queue.
+static size_t client_queue_lens[MAX_CLIENTS] = { 0 };
+
+// The 2D array of client queues.
+static char* client_queues[MAX_CLIENTS][MAX_CLIENT_QUEUE];
 
 // Server send callback that stores op in the staging area until it is flushed.
 static int server_send(const char* op) {
@@ -137,29 +218,6 @@ static int client_event(ot_event_type t, ot_op* op) {
 
 #pragma clang diagnostic pop
 
-// This function should be called at the beginning of every scenario. It
-// initializes all of the clients and the server. num_clients should be the
-// maximum number of clients used in the scenario.
-static void setup(size_t num_clients) {
-    clients_len = num_clients;
-    server = ot_new_server(server_send, server_event);
-
-    for (size_t i = 0; i < num_clients; ++i) {
-        clients[i] = ot_new_client(client_send, client_event);
-        clients[i]->client_id = i;
-    }
-}
-
-// This function should be called at the end of every scenario. It cleans up all
-// the clients and the server.
-static void teardown() {
-    for (size_t i = 0; i < clients_len; ++i) {
-        ot_free_client(clients[i]);
-    }
-
-    ot_free_server(server);
-}
-
 // Asserts that two operations are equal. If they aren't, msg will be set to an
 // error message.
 static bool assert_ops_equal(ot_op* op1, ot_op* op2, char** msg) {
@@ -181,7 +239,7 @@ static bool assert_ops_equal(ot_op* op1, ot_op* op2, char** msg) {
 // Asserts that an operation's snapshot is equal to an expected string. If it
 // isn't, msg will be set to an error message. A prefix may be provided which
 // will be prepended to the message. This function is typically not used
-// directly, see the assert_op_snapshot macro instead.
+// directly, see the ASSERT_OP_SNAPSHOT macro instead.
 static bool _assert_op_snapshot(ot_op* op, char* const expected, char* prefix,
                                 char** msg) {
 
@@ -206,7 +264,7 @@ static bool _assert_op_snapshot(ot_op* op, char* const expected, char* prefix,
 // Asserts that all of the clients and the server have converged on the same
 // document. If some of them have not converged, msg will be set to an error
 // message. loc is the location in the source file where this assert was called.
-// This function is typically not used directly, see the assert_convergence
+// This function is typically not used directly, see the ASSERT_CONVERGENCE
 // macro instead.
 static bool _assert_convergence(char* const expected, char* loc, char** msg) {
     for (size_t i = 0; i < clients_len; ++i) {
