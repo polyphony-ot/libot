@@ -242,6 +242,37 @@ MU_TEST(ot_dup_duplicates_op_with_one_component) {
     ot_free_op(dup);
 }
 
+MU_TEST(ot_size_with_one_insert) {
+    ot_op* op = ot_new_op();
+    ot_insert(op, "abc");
+
+    uint32_t actual = ot_size(op);
+
+    mu_assert(actual == 3, "Unexpected op size.");
+    ot_free_op(op);
+}
+
+MU_TEST(ot_size_with_empty_op) {
+    ot_op* op = ot_new_op();
+    uint32_t actual = ot_size(op);
+
+    mu_assert(actual == 0, "Unexpected op size.");
+    ot_free_op(op);
+}
+
+MU_TEST(ot_size_equals_length_of_snapshot) {
+    ot_op* op = ot_new_op();
+    ot_insert(op, "abc");
+
+    char* snapshot = ot_snapshot(op);
+    uint32_t snapshot_len = strlen(snapshot);
+    uint32_t size = ot_size(op);
+
+    mu_assert(size == snapshot_len, "Op size wasn't equal to snapshot length.");
+    ot_free_op(op);
+    free(snapshot);
+}
+
 MU_TEST_SUITE(ot_test_suite) {
     MU_RUN_TEST(test_start_fmt_appends_correct_comp_type);
     MU_RUN_TEST(test_start_fmt_appends_correct_name_and_value);
@@ -254,6 +285,9 @@ MU_TEST_SUITE(ot_test_suite) {
     MU_RUN_TEST(iter_next_iterates_correctly_over_single_insert_component);
     MU_RUN_TEST(test_ot_equal);
     MU_RUN_TEST(ot_dup_duplicates_op_with_one_component);
+    MU_RUN_TEST(ot_size_with_one_insert);
+    MU_RUN_TEST(ot_size_with_empty_op);
+    MU_RUN_TEST(ot_size_equals_length_of_snapshot);
 }
 
 /* compose tests */

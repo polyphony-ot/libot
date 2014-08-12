@@ -319,6 +319,19 @@ char* ot_snapshot(ot_op* op) {
     return snapshot;
 }
 
+uint32_t ot_size(const ot_op* op) {
+    uint32_t size = 0;
+    ot_comp* comps = op->comps.data;
+    for (size_t i = 0; i < op->comps.len; ++i) {
+        ot_comp* comp = comps + i;
+        if (comp->type == OT_INSERT) {
+            size += strlen(comp->value.insert.text);
+        }
+    }
+
+    return size;
+}
+
 void ot_iter_init(ot_iter* iter, const ot_op* op) {
     iter->op = op;
     iter->started = false;
