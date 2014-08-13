@@ -4,6 +4,8 @@ ot_doc* ot_new_doc(void) {
     ot_doc* doc = malloc(sizeof(ot_doc));
     array_init(&doc->history, sizeof(ot_op));
     doc->composed = NULL;
+    doc->size = 0;
+    doc->max_size = 0;
     return doc;
 }
 
@@ -32,6 +34,10 @@ void ot_free_doc(ot_doc* doc) {
 }
 
 ot_err ot_doc_append(ot_doc* doc, ot_op** op) {
+    if (doc->max_size > 0 && ot_size(*op) + doc->size > doc->max_size) {
+        return OT_ERR_MAX_SIZE;
+    }
+
     // Move the op into the document's history array.
     ot_op* head = array_append(&doc->history);
     memcpy(head, *op, sizeof(ot_op));
@@ -84,6 +90,7 @@ ot_err ot_doc_append(ot_doc* doc, ot_op** op) {
     // so we can get away with calculating the hash once and then copying it.
     hash_op(doc->composed);
     memcpy(head->hash, doc->composed->hash, 20);
+    doc->size = ot_size(doc->composed);
 
     return OT_ERR_NONE;
 }

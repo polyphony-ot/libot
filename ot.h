@@ -42,6 +42,10 @@ typedef enum {
     // Couldn't compose two operations, usually because the first op wasn't a
     // parent of the second op.
     OT_ERR_COMPOSE_FAILED = 10,
+
+    // Couldn't append an operation to a document because it would cause the
+    // document to go beyond its maximum size.
+    OT_ERR_MAX_SIZE = 11
 } ot_err;
 
 typedef struct ot_fmt {

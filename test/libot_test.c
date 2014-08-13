@@ -1231,8 +1231,22 @@ MU_TEST(append_empty_op_does_not_segfault) {
     ot_free_doc(doc);
 }
 
+MU_TEST(append_returns_error_when_max_size_is_reached) {
+    ot_doc* doc = ot_new_doc();
+    doc->max_size = 2;
+
+    ot_op* op = ot_new_op();
+    ot_insert(op, "abc");
+
+    ot_err err = ot_doc_append(doc, &op);
+    mu_assert(err == OT_ERR_MAX_SIZE, "Expected a OT_ERR_MAX_SIZE error.");
+
+    ot_free_doc(doc);
+}
+
 MU_TEST_SUITE(doc_test_suite) {
     MU_RUN_TEST(append_empty_op_does_not_segfault);
+    MU_RUN_TEST(append_returns_error_when_max_size_is_reached);
 }
 
 /* client tests */

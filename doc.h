@@ -13,6 +13,8 @@
 typedef struct ot_doc {
     array history;
     ot_op* composed;
+    uint32_t size;
+    uint32_t max_size;
 } ot_doc;
 
 // Creates and returns a new document. It must be freed by the caller using
