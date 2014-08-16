@@ -70,7 +70,7 @@ all: debug release test
 # Debug targets #
 
 $(BIN)/debug/$(LIB): $(SOURCES)
-	$(CC) $(CFLAGS) -c -g -Icjson $(SOURCES)
+	$(CC) $(CFLAGS) -c -g $(SOURCES)
 	mkdir -p $(BIN)/debug
 	$(AR) rs $(BIN)/debug/$(LIB) *.o
 ifeq ($(OS), Darwin)
@@ -84,7 +84,7 @@ debug: $(BIN)/debug/$(LIB)
 # Release targets #
 
 $(BIN)/release/$(LIB): $(SOURCES)
-	$(CC) $(CFLAGS) -DNDEBUG -c -O3 -Icjson $(SOURCES)
+	$(CC) $(CFLAGS) -DNDEBUG -c -O3 $(SOURCES)
 	mkdir -p $(BIN)/release
 	$(AR) rs $(BIN)/release/$(LIB) *.o
 ifeq ($(OS), Darwin)
@@ -99,11 +99,11 @@ release: $(BIN)/release/$(LIB)
 
 $(BIN)/debug/scenarios$(EXESUFFIX): $(BIN)/debug/$(LIB) $(SCENARIOS) \
 	test/scenarios/scenario.h
-	$(CC) $(CFLAGS) -g -Icjson -o "$(BIN)/debug/scenarios$(EXESUFFIX)" \
+	$(CC) $(CFLAGS) -g -o "$(BIN)/debug/scenarios$(EXESUFFIX)" \
 	$(SCENARIOS) $(BIN)/debug/$(LIB)
 
 $(BIN)/debug/test$(EXESUFFIX): $(BIN)/debug/$(LIB) test/libot_test.c
-	$(CC) $(CFLAGS) -g -Icjson -o "$(BIN)/debug/test$(EXESUFFIX)" \
+	$(CC) $(CFLAGS) -g -o "$(BIN)/debug/test$(EXESUFFIX)" \
 	test/libot_test.c $(BIN)/debug/$(LIB)
 
 test: $(BIN)/debug/test$(EXESUFFIX) $(BIN)/debug/scenarios$(EXESUFFIX)

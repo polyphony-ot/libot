@@ -7,7 +7,7 @@
 #include "ot.h"
 #include "array.h"
 #include "hex.h"
-#include "cJSON.h"
+#include "cjson/cJSON.h"
 #include "doc.h"
 
 // Decodes an operation from a UTF-8 JSON string.
