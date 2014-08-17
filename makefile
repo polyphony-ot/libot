@@ -32,6 +32,9 @@ SOURCES=\
 # List of sources for test scenarios.
 SCENARIOS=$(wildcard test/scenarios/*.c)
 
+# List of source for unit tests.
+TESTS=$(wildcard test/unit/*.c)
+
 # Output directory where binaries and build artifacts will be placed.
 BIN=bin
 
@@ -102,9 +105,9 @@ $(BIN)/debug/scenarios$(EXESUFFIX): $(BIN)/debug/$(LIB) $(SCENARIOS) \
 	$(CC) $(CFLAGS) -g -o "$(BIN)/debug/scenarios$(EXESUFFIX)" \
 	$(SCENARIOS) $(BIN)/debug/$(LIB)
 
-$(BIN)/debug/test$(EXESUFFIX): $(BIN)/debug/$(LIB) test/libot_test.c
+$(BIN)/debug/test$(EXESUFFIX): $(BIN)/debug/$(LIB) $(TESTS)
 	$(CC) $(CFLAGS) -g -o "$(BIN)/debug/test$(EXESUFFIX)" \
-	test/libot_test.c $(BIN)/debug/$(LIB)
+	$(TESTS) $(BIN)/debug/$(LIB)
 
 test: $(BIN)/debug/test$(EXESUFFIX) $(BIN)/debug/scenarios$(EXESUFFIX)
 	$(TESTRUNNER) $(BIN)/debug/test$(EXESUFFIX)
