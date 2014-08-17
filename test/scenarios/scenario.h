@@ -8,6 +8,7 @@
 #include <string.h>
 #include "../../server.h"
 #include "../../client.h"
+#include "../common.h"
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-function"
@@ -48,12 +49,6 @@ static int client_event(ot_event_type t, ot_op* op);
 // Assertion macros for validating common conditions in scenario tests. If an
 // assertion fails, it will return false to fail the test and output a helpful
 // error message.
-
-// Debugging macros for creating a string containing the current line number.
-// These are used by assertions so they can output where a test fails.
-#define S(x) #x
-#define S_(x) S(x)
-#define STRLINE S_(__LINE__)
 
 // Asserts that an operation's snapshot is equal to an expected string. If it
 // isn't, the test will fail and msg will be set to an error message.
@@ -180,7 +175,10 @@ static char* client_queues[MAX_CLIENTS][MAX_CLIENT_QUEUE];
 static int server_send(const char* op) {
     assert(server_queue_len != MAX_SERVER_QUEUE);
 
-    server_queue[server_queue_len] = strdup(op);
+    size_t len = strlen(op) + 1;
+    char* copy = malloc(len);
+    memcpy(copy, op, len);
+    server_queue[server_queue_len] = copy;
     server_queue_len++;
     return 0;
 }
@@ -194,7 +192,10 @@ static int client_send(const char* op) {
 
     assert(client_queue_lens[id] != MAX_CLIENT_QUEUE);
 
-    client_queues[id][client_queue_lens[id]] = strdup(op);
+    size_t len = strlen(op) + 1;
+    char* copy = malloc(len);
+    memcpy(copy, op, len);
+    client_queues[id][client_queue_lens[id]] = copy;
     client_queue_lens[id]++;
     return 0;
 }
@@ -225,7 +226,7 @@ static bool assert_ops_equal(ot_op* op1, ot_op* op2, char** msg) {
     if (!equal) {
         char* op1_enc = ot_encode(op1);
         char* op2_enc = ot_encode(op2);
-        asprintf(msg, "Operations aren't equal.\n"
+        write_msg(msg, "Operations aren't equal.\n"
                       "\tOperation1: %s\n"
                       "\tOperation2: %s",
                  op1_enc, op2_enc);
@@ -247,7 +248,7 @@ static bool _assert_op_snapshot(ot_op* op, char* const expected, char* prefix,
     int cmp = strcmp(expected, actual);
     if (cmp != 0) {
         char* op_enc = ot_encode(op);
-        asprintf(msg, "%s\n"
+        write_msg(msg, "%s\n"
                       "\tOperation: %s\n"
                       "\tActual Snapshot: %s\n"
                       "\tExpected Snapshot: %s",
@@ -269,7 +270,7 @@ static bool _assert_op_snapshot(ot_op* op, char* const expected, char* prefix,
 static bool _assert_convergence(char* const expected, char* loc, char** msg) {
     for (size_t i = 0; i < clients_len; ++i) {
         char* prefix = NULL;
-        asprintf(&prefix, "%s: Client %zu didn't converge.", loc, i);
+        write_msg(&prefix, "%s: Client %zu didn't converge.", loc, i);
         ot_op* client_op = clients[i]->doc->composed;
         bool passed = _assert_op_snapshot(client_op, expected, prefix, msg);
         free(prefix);
@@ -279,7 +280,7 @@ static bool _assert_convergence(char* const expected, char* loc, char** msg) {
     }
 
     char* prefix = NULL;
-    asprintf(&prefix, "%s: The server didn't converge.", loc);
+    write_msg(&prefix, "%s: The server didn't converge.", loc);
     ot_op* server_op = server->doc->composed;
     bool passed = _assert_op_snapshot(server_op, expected, prefix, msg);
     free(prefix);

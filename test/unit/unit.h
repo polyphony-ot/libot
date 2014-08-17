@@ -4,15 +4,11 @@
 
 #include <stdio.h>
 #include <stdbool.h>
+#include <string.h>
+#include "../common.h"
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-function"
-
-// Debugging macros for creating a string containing the current line number.
-// These are used by assertions so they can output where a test fails.
-#define S(x) #x
-#define S_(x) S(x)
-#define STRLINE S_(__LINE__)
 
 static char* msg = NULL;
 static int passed = 0;
@@ -43,10 +39,40 @@ typedef struct results {
     passed += res.passed;                                                      \
     failed += res.failed;
 
+#define ASSERT_CONDITION(condition, expected, actual, detail, msg)             \
+    if (!assert_condition(condition, expected, actual, detail,                 \
+                          "Line #" STRLINE, msg)) {                            \
+        return false;                                                          \
+    }
+
 #define ASSERT_INT_EQUAL(expected, actual, detail, msg)                        \
     if (!assert_int_equal(expected, actual, detail, "Line #" STRLINE, msg)) {  \
         return false;                                                          \
     }
+
+#define ASSERT_STR_EQUAL(expected, actual, detail, msg)                        \
+    if (!assert_str_equal(expected, actual, detail, "Line #" STRLINE, msg)) {  \
+        return false;                                                          \
+    }
+
+#define FAIL(detail, msg)                                                      \
+    write_msg(msg, "Line #" STRLINE ": %s", detail);                           \
+    return false
+
+static bool assert_condition(bool condition, const char* expected,
+                             const char* actual, const char* detail,
+                             const char* loc, char** msg) {
+
+    if (condition) {
+        return true;
+    }
+
+    write_msg(msg, "%s: %s\n"
+                   "\tActual: %s\n"
+                   "\tExpected: %s",
+              loc, detail, actual, expected);
+    return false;
+}
 
 static bool assert_int_equal(int expected, int actual, char* detail, char* loc,
                              char** msg) {
@@ -55,10 +81,25 @@ static bool assert_int_equal(int expected, int actual, char* detail, char* loc,
         return true;
     }
 
-    asprintf(msg, "%s: %s\n"
-                  "\tActual: %d\n"
-                  "\tExpected: %d",
-             loc, detail, actual, expected);
+    write_msg(msg, "%s: %s\n"
+                   "\tActual: %d\n"
+                   "\tExpected: %d",
+              loc, detail, actual, expected);
+    return false;
+}
+
+static bool assert_str_equal(const char* expected, const char* actual,
+                             const char* detail, const char* loc, char** msg) {
+
+    int cmp = strcmp(expected, actual);
+    if (cmp == 0) {
+        return true;
+    }
+
+    write_msg(msg, "%s: %s\n"
+                   "\tActual: %s\n"
+                   "\tExpected: %s",
+              loc, detail, actual, expected);
     return false;
 }
 
