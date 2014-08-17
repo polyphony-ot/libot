@@ -393,7 +393,9 @@ bool size_equals_length_of_snapshot(char** msg) {
     uint32_t snapshot_len = strlen(snapshot);
     uint32_t size = ot_size(op);
 
-    ASSERT_INT_EQUAL(snapshot_len, size, "Size was not equal to the length of the op's snapshot.", msg);
+    ASSERT_INT_EQUAL(snapshot_len, size,
+                     "Size was not equal to the length of the op's snapshot.",
+                     msg);
 
     ot_free_op(op);
     free(snapshot);

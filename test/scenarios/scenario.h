@@ -227,9 +227,9 @@ static bool assert_ops_equal(ot_op* op1, ot_op* op2, char** msg) {
         char* op1_enc = ot_encode(op1);
         char* op2_enc = ot_encode(op2);
         write_msg(msg, "Operations aren't equal.\n"
-                      "\tOperation1: %s\n"
-                      "\tOperation2: %s",
-                 op1_enc, op2_enc);
+                       "\tOperation1: %s\n"
+                       "\tOperation2: %s",
+                  op1_enc, op2_enc);
         free(op1_enc);
         free(op2_enc);
     }
@@ -249,10 +249,10 @@ static bool _assert_op_snapshot(ot_op* op, char* const expected, char* prefix,
     if (cmp != 0) {
         char* op_enc = ot_encode(op);
         write_msg(msg, "%s\n"
-                      "\tOperation: %s\n"
-                      "\tActual Snapshot: %s\n"
-                      "\tExpected Snapshot: %s",
-                 prefix, op_enc, actual, expected);
+                       "\tOperation: %s\n"
+                       "\tActual Snapshot: %s\n"
+                       "\tExpected Snapshot: %s",
+                  prefix, op_enc, actual, expected);
         free(actual);
         free(op_enc);
         return false;
