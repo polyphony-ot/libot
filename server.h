@@ -7,7 +7,7 @@
 #include "doc.h"
 #include "xform.h"
 #include "compose.h"
-#include "otencode.h"
+#include "encode.h"
 #include "decode.h"
 
 typedef struct {

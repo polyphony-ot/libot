@@ -9,7 +9,7 @@
 #include "../array.h"
 #include "../hex.h"
 #include "../decode.h"
-#include "../otencode.h"
+#include "../encode.h"
 #include "../sha1.h"
 #include "../client.h"
 

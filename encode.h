@@ -1,5 +1,5 @@
-#ifndef libot_otencode_h
-#define libot_otencode_h
+#ifndef LIBOT_ENCODE_H
+#define LIBOT_ENCODE_H
 
 #include <inttypes.h>
 #include "ot.h"

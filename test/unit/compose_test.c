@@ -1,6 +1,6 @@
 #include "../../ot.h"
 #include "../../compose.h"
-#include "../../otencode.h"
+#include "../../encode.h"
 #include "unit.h"
 
 bool param_compose_test(ot_op* op1, ot_op* op2, ot_op* expected, char** msg) {

@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdarg.h>
-#include "otencode.h"
+#include "encode.h"
 #include "hex.h"
 
 static cJSON* cjson_op(const ot_op* const op) {

@@ -22,7 +22,7 @@ SOURCES=\
 	hex.c \
 	ot.c \
 	decode.c \
-	otencode.c \
+	encode.c \
 	server.c \
 	xform.c \
 	sha1.c \

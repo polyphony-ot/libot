@@ -4,7 +4,7 @@
 #include "ot.h"
 #include "compose.h"
 #include "decode.h"
-#include "otencode.h"
+#include "encode.h"
 
 // seed is used to seed rand().
 const int seed = 0;
