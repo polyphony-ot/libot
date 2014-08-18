@@ -8,7 +8,7 @@
 #include "../xform.h"
 #include "../array.h"
 #include "../hex.h"
-#include "../otdecode.h"
+#include "../decode.h"
 #include "../otencode.h"
 #include "../sha1.h"
 #include "../client.h"

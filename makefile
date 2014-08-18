@@ -21,7 +21,7 @@ SOURCES=\
 	compose.c \
 	hex.c \
 	ot.c \
-	otdecode.c \
+	decode.c \
 	otencode.c \
 	server.c \
 	xform.c \

@@ -1,4 +1,4 @@
-#include "otdecode.h"
+#include "decode.h"
 
 // decode_cjson_op decodes a cJSON item into an op.
 ot_err decode_cjson_op(cJSON* json, ot_op* op) {

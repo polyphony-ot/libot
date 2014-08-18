@@ -1,5 +1,5 @@
 #include "../../ot.h"
-#include "../../otdecode.h"
+#include "../../decode.h"
 #include "unit.h"
 
 bool start_fmt_appends_correct_comp_type(char** msg) {

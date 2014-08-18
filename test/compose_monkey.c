@@ -3,7 +3,7 @@
 #include <string.h>
 #include "ot.h"
 #include "compose.h"
-#include "otdecode.h"
+#include "decode.h"
 #include "otencode.h"
 
 // seed is used to seed rand().

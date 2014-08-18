@@ -1,5 +1,5 @@
-#ifndef libot_otdecode_h
-#define libot_otdecode_h
+#ifndef LIBOT_DECODE_H
+#define LIBOT_DECODE_H
 
 #include <string.h>
 #include <stdlib.h>

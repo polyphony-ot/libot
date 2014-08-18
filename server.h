@@ -8,7 +8,7 @@
 #include "xform.h"
 #include "compose.h"
 #include "otencode.h"
-#include "otdecode.h"
+#include "decode.h"
 
 typedef struct {
     send_func send;
