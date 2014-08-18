@@ -3,11 +3,13 @@
 #include "unit.h"
 
 extern results ot_tests();
+extern results compose_tests();
 
 int main() {
     fclose(stderr);
 
     RUN_SUITE(ot_tests);
+    RUN_SUITE(compose_tests);
 
     printf("\n%d tests passed.\n"
            "%d tests failed.\n"

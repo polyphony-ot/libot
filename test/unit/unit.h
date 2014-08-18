@@ -35,9 +35,11 @@ typedef struct results {
     }
 
 #define RUN_SUITE(f)                                                           \
-    results res = f();                                                         \
-    passed += res.passed;                                                      \
-    failed += res.failed;
+    {                                                                          \
+        results res = f();                                                     \
+        passed += res.passed;                                                  \
+        failed += res.failed;                                                  \
+    }
 
 #define ASSERT_CONDITION(condition, expected, actual, detail, msg)             \
     if (!assert_condition(condition, expected, actual, detail,                 \
