@@ -2,7 +2,7 @@
 #include "../../decode.h"
 #include "unit.h"
 
-bool start_fmt_appends_correct_comp_type(char** msg) {
+static bool start_fmt_appends_correct_comp_type(char** msg) {
     const ot_comp_type EXPECTED_TYPE = OT_FORMATTING_BOUNDARY;
     const char* const ANY_NAME = "any name";
     const char* const ANY_VALUE = "any value";
@@ -22,7 +22,7 @@ bool start_fmt_appends_correct_comp_type(char** msg) {
     return true;
 }
 
-bool start_fmt_appends_correct_name_and_value(char** msg) {
+static bool start_fmt_appends_correct_name_and_value(char** msg) {
     const char* const EXPECTED_NAME = "any name";
     const char* const EXPECTED_VALUE = "any value";
 
@@ -43,7 +43,7 @@ bool start_fmt_appends_correct_name_and_value(char** msg) {
     return true;
 }
 
-bool start_fmt_merges_fmtbound_with_previous_fmtbound(char** msg) {
+static bool start_fmt_merges_fmtbound_with_previous_fmtbound(char** msg) {
     const size_t EXPECTED_COMP_COUNT = 1;
     const char* const ANY_NAME = "any name";
     const char* const ANY_VALUE = "any value";
@@ -63,7 +63,7 @@ bool start_fmt_merges_fmtbound_with_previous_fmtbound(char** msg) {
     return true;
 }
 
-bool end_fmt_appends_correct_name_and_value(char** msg) {
+static bool end_fmt_appends_correct_name_and_value(char** msg) {
     char* EXPECTED_NAME = "any name";
     char* EXPECTED_VALUE = "any value";
 
@@ -84,7 +84,7 @@ bool end_fmt_appends_correct_name_and_value(char** msg) {
     return true;
 }
 
-bool end_fmt_merges_fmtbound_with_previous_fmtbound(char** msg) {
+static bool end_fmt_merges_fmtbound_with_previous_fmtbound(char** msg) {
     const size_t EXPECTED_COMP_COUNT = 1;
     const char* const ANY_NAME = "any name";
     const char* const ANY_VALUE = "any value";
@@ -104,7 +104,7 @@ bool end_fmt_merges_fmtbound_with_previous_fmtbound(char** msg) {
     return true;
 }
 
-bool iter_next_on_empty_op(char** msg) {
+static bool iter_next_on_empty_op(char** msg) {
     ot_op* op = ot_new_op();
     ot_iter iter;
 
@@ -122,7 +122,7 @@ bool iter_next_on_empty_op(char** msg) {
     return true;
 }
 
-bool iter_next_iterates_once_over_skip_with_count_one(char** msg) {
+static bool iter_next_iterates_once_over_skip_with_count_one(char** msg) {
     const size_t EXPECTED_ITERATIONS = 1;
     ot_op* op = ot_new_op();
     ot_skip(op, 1);
@@ -143,7 +143,7 @@ bool iter_next_iterates_once_over_skip_with_count_one(char** msg) {
     return true;
 }
 
-bool iter_next_iterates_over_skip_with_count_greater_than_one(char** msg) {
+static bool iter_next_iterates_skip_with_count_greater_than_one(char** msg) {
     const size_t EXPECTED_ITERATIONS = 2;
     ot_op* op = ot_new_op();
     ot_skip(op, 2);
@@ -164,7 +164,7 @@ bool iter_next_iterates_over_skip_with_count_greater_than_one(char** msg) {
     return true;
 }
 
-bool iter_next_iterates_correctly_over_single_insert_component(char** msg) {
+static bool iter_next_iterates_over_single_insert_component(char** msg) {
     ot_op* op = ot_new_op();
     ot_insert(op, "012");
     ot_iter iter;
@@ -186,7 +186,7 @@ bool iter_next_iterates_correctly_over_single_insert_component(char** msg) {
     return true;
 }
 
-bool equal_returns_true_for_two_equal_inserts(char** msg) {
+static bool equal_returns_true_for_two_equal_inserts(char** msg) {
     const char* const NONEMPTY_STRING = "abc";
 
     ot_op* op1 = ot_new_op();
@@ -205,7 +205,7 @@ bool equal_returns_true_for_two_equal_inserts(char** msg) {
     return true;
 }
 
-bool equal_returns_true_for_two_equal_skips(char** msg) {
+static bool equal_returns_true_for_two_equal_skips(char** msg) {
     const int NONZERO_INT = 1;
 
     ot_op* op1 = ot_new_op();
@@ -224,7 +224,7 @@ bool equal_returns_true_for_two_equal_skips(char** msg) {
     return true;
 }
 
-bool equal_returns_false_for_two_skips_with_different_counts(char** msg) {
+static bool equal_returns_false_for_skips_with_different_counts(char** msg) {
     const int NONZERO_INT = 1;
 
     ot_op* op1 = ot_new_op();
@@ -243,7 +243,7 @@ bool equal_returns_false_for_two_skips_with_different_counts(char** msg) {
     return true;
 }
 
-bool equal_returns_true_for_two_empty_operations(char** msg) {
+static bool equal_returns_true_for_two_empty_operations(char** msg) {
     ot_op* op1 = ot_new_op();
     ot_op* op2 = ot_new_op();
 
@@ -257,7 +257,7 @@ bool equal_returns_true_for_two_empty_operations(char** msg) {
     return true;
 }
 
-bool equal_returns_false_for_two_operations_with_different_clients(char** msg) {
+static bool equal_returns_false_for_ops_with_different_clients(char** msg) {
     const int NONZERO_INT = 1;
 
     ot_op* op1 = ot_new_op();
@@ -276,7 +276,7 @@ bool equal_returns_false_for_two_operations_with_different_clients(char** msg) {
     return true;
 }
 
-bool equal_returns_true_for_two_operations_with_same_parent(char** msg) {
+static bool equal_returns_true_for_two_operations_with_same_parent(char** msg) {
     const char* const NONEMPTY_HASH = "cafebabe";
 
     ot_op* op1 = ot_new_op();
@@ -295,7 +295,7 @@ bool equal_returns_true_for_two_operations_with_same_parent(char** msg) {
     return true;
 }
 
-bool equal_returns_true_for_equal_operations_with_insert_and_skip(char** msg) {
+static bool equal_returns_true_for_operations_with_insert_and_skip(char** msg) {
     const int NONZERO_INT = 1;
     const char* const NONEMPTY_STRING = "abc";
 
@@ -317,7 +317,7 @@ bool equal_returns_true_for_equal_operations_with_insert_and_skip(char** msg) {
     return true;
 }
 
-bool equal_returns_false_for_unequal_ops_with_different_lengths(char** msg) {
+static bool equal_returns_false_for_ops_with_different_lengths(char** msg) {
     const int NONZERO_INT = 1;
     const char* const NONEMPTY_STRING = "abc";
 
@@ -338,7 +338,7 @@ bool equal_returns_false_for_unequal_ops_with_different_lengths(char** msg) {
     return true;
 }
 
-bool dup_duplicates_op_with_one_component(char** msg) {
+static bool dup_duplicates_op_with_one_component(char** msg) {
     const char* const NONEMPTY_STRING = "abc";
 
     ot_op* orig = ot_new_op();
@@ -356,7 +356,7 @@ bool dup_duplicates_op_with_one_component(char** msg) {
     return true;
 }
 
-bool size_with_one_insert(char** msg) {
+static bool size_with_one_insert(char** msg) {
     const char* const NONEMPTY_STRING = "abc";
     const int EXPECTED_SIZE = 3;
 
@@ -371,7 +371,7 @@ bool size_with_one_insert(char** msg) {
     return true;
 }
 
-bool size_with_empty_op(char** msg) {
+static bool size_with_empty_op(char** msg) {
     const int EXPECTED_SIZE = 0;
 
     ot_op* op = ot_new_op();
@@ -383,7 +383,7 @@ bool size_with_empty_op(char** msg) {
     return true;
 }
 
-bool size_equals_length_of_snapshot(char** msg) {
+static bool size_equals_length_of_snapshot(char** msg) {
     const char* const NONEMPTY_STRING = "abc";
 
     ot_op* op = ot_new_op();
@@ -410,16 +410,16 @@ results ot_tests() {
     RUN_TEST(end_fmt_merges_fmtbound_with_previous_fmtbound);
     RUN_TEST(iter_next_on_empty_op);
     RUN_TEST(iter_next_iterates_once_over_skip_with_count_one);
-    RUN_TEST(iter_next_iterates_over_skip_with_count_greater_than_one);
-    RUN_TEST(iter_next_iterates_correctly_over_single_insert_component);
+    RUN_TEST(iter_next_iterates_skip_with_count_greater_than_one);
+    RUN_TEST(iter_next_iterates_over_single_insert_component);
     RUN_TEST(equal_returns_true_for_two_equal_inserts);
     RUN_TEST(equal_returns_true_for_two_equal_skips);
-    RUN_TEST(equal_returns_false_for_two_skips_with_different_counts);
+    RUN_TEST(equal_returns_false_for_skips_with_different_counts);
     RUN_TEST(equal_returns_true_for_two_empty_operations);
-    RUN_TEST(equal_returns_false_for_two_operations_with_different_clients);
+    RUN_TEST(equal_returns_false_for_ops_with_different_clients);
     RUN_TEST(equal_returns_true_for_two_operations_with_same_parent);
-    RUN_TEST(equal_returns_true_for_equal_operations_with_insert_and_skip);
-    RUN_TEST(equal_returns_false_for_unequal_ops_with_different_lengths);
+    RUN_TEST(equal_returns_true_for_operations_with_insert_and_skip);
+    RUN_TEST(equal_returns_false_for_ops_with_different_lengths);
     RUN_TEST(dup_duplicates_op_with_one_component);
     RUN_TEST(size_with_one_insert);
     RUN_TEST(size_with_empty_op);
