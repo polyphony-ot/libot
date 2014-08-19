@@ -3,7 +3,8 @@
 #include "../../encode.h"
 #include "unit.h"
 
-bool param_compose_test(ot_op* op1, ot_op* op2, ot_op* expected, char** msg) {
+static bool param_compose_test(ot_op* op1, ot_op* op2, ot_op* expected,
+                               char** msg) {
     ot_op* actual = ot_compose(op1, op2);
     ot_free_op(op1);
     ot_free_op(op2);
@@ -28,7 +29,7 @@ bool param_compose_test(ot_op* op1, ot_op* op2, ot_op* expected, char** msg) {
     return true;
 }
 
-bool compose_skip_skip(char** msg) {
+static bool compose_skip_skip(char** msg) {
     const int NONZERO_INT = 1;
 
     ot_op* expected = ot_new_op();
@@ -43,7 +44,7 @@ bool compose_skip_skip(char** msg) {
     return param_compose_test(op1, op2, expected, msg);
 }
 
-bool compose_skip_insert(char** msg) {
+static bool compose_skip_insert(char** msg) {
     const int NONZERO_INT = 1;
     const char* const NONEMPTY_STRING = "abc";
 
@@ -61,7 +62,7 @@ bool compose_skip_insert(char** msg) {
     return param_compose_test(op1, op2, expected, msg);
 }
 
-bool compose_skip_delete(char** msg) {
+static bool compose_skip_delete(char** msg) {
     const int NONZERO_INT = 1;
 
     ot_op* expected = ot_new_op();
@@ -76,7 +77,7 @@ bool compose_skip_delete(char** msg) {
     return param_compose_test(op1, op2, expected, msg);
 }
 
-bool compose_insert_skip(char** msg) {
+static bool compose_insert_skip(char** msg) {
     const char* const NONEMPTY_STRING = "abc";
     const int insert_len = strlen(NONEMPTY_STRING);
 
@@ -92,7 +93,7 @@ bool compose_insert_skip(char** msg) {
     return param_compose_test(op1, op2, expected, msg);
 }
 
-bool compose_insert_insert(char** msg) {
+static bool compose_insert_insert(char** msg) {
     const char* const INSERT1 = "def";
     const char* const INSERT2 = "abc";
     const int insert2_len = strlen(INSERT2);
@@ -111,7 +112,7 @@ bool compose_insert_insert(char** msg) {
     return param_compose_test(op1, op2, expected, msg);
 }
 
-bool compose_insert_delete(char** msg) {
+static bool compose_insert_delete(char** msg) {
     const char* const NONEMPTY_STRING = "abc";
     const int insert_len = strlen(NONEMPTY_STRING);
 
@@ -126,7 +127,7 @@ bool compose_insert_delete(char** msg) {
     return param_compose_test(op1, op2, expected, msg);
 }
 
-bool compose_delete_skip(char** msg) {
+static bool compose_delete_skip(char** msg) {
     const int NONZERO_INT = 1;
 
     ot_op* expected = NULL;
@@ -140,7 +141,7 @@ bool compose_delete_skip(char** msg) {
     return param_compose_test(op1, op2, expected, msg);
 }
 
-bool compose_delete_insert(char** msg) {
+static bool compose_delete_insert(char** msg) {
     const char* const NONEMPTY_STRING = "abc";
     const int NONZERO_INT = 1;
 
@@ -157,7 +158,7 @@ bool compose_delete_insert(char** msg) {
     return param_compose_test(op1, op2, expected, msg);
 }
 
-bool compose_delete_delete(char** msg) {
+static bool compose_delete_delete(char** msg) {
     const int NONZERO_INT = 1;
 
     ot_op* expected = ot_new_op();
@@ -173,7 +174,7 @@ bool compose_delete_delete(char** msg) {
     return param_compose_test(op1, op2, expected, msg);
 }
 
-bool compose_returns_op_with_same_client_id_and_parent_as_first_op(char** msg) {
+static bool compose_returns_op_with_client_and_parent_of_first_op(char** msg) {
     const int NONZERO_INT = 1;
     const int NONEMPTY_PARENT = 0xFF;
 
@@ -193,7 +194,9 @@ bool compose_returns_op_with_same_client_id_and_parent_as_first_op(char** msg) {
                      msg);
     bool parents_equal = (memcmp(op1->parent, composed->parent, 20) == 0);
     if (!parents_equal) {
-        FAIL("The parent of the composed operation wasn't equal to the parent of the first operation.", msg);
+        FAIL("The parent of the composed operation wasn't equal to the parent "
+             "of the first operation.",
+             msg);
     }
 
     ot_free_op(op1);
@@ -212,7 +215,7 @@ results compose_tests() {
     RUN_TEST(compose_delete_skip);
     RUN_TEST(compose_delete_insert);
     RUN_TEST(compose_delete_delete);
-    RUN_TEST(compose_returns_op_with_same_client_id_and_parent_as_first_op);
+    RUN_TEST(compose_returns_op_with_client_and_parent_of_first_op);
 
     return (results) { passed, failed };
 }
