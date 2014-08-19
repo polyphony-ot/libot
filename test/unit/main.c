@@ -4,12 +4,14 @@
 
 extern results ot_tests();
 extern results compose_tests();
+extern results decode_tests();
 
 int main() {
     fclose(stderr);
 
     RUN_SUITE(ot_tests);
     RUN_SUITE(compose_tests);
+    RUN_SUITE(decode_tests);
 
     printf("\n%d tests passed.\n"
            "%d tests failed.\n"
