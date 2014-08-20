@@ -1,6 +1,6 @@
 /*
     This header contains the scenario testing framework. For a guide on how to
-    create and run scenario tests, see doc/scenarios/scenario-tests.md.
+    create and run scenario tests, see doc/scenario/scenario-tests.md.
 */
 
 #include <stdio.h>

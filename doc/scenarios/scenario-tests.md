@@ -1,9 +1,9 @@
 Scenario Tests
 ==============
 
-Scenario tests are high-level integration tests that can be used to test client-server interactions. They use the scenario testing framework which is defined in `test/scenarios/scenario.h`. This framework makes it easy to test virtually any OT scenario by giving you the ability to control communication between clients and a server.
+Scenario tests are high-level integration tests that can be used to test client-server interactions. They use the scenario testing framework which is defined in `test/scenario/scenario.h`. This framework makes it easy to test virtually any OT scenario by giving you the ability to control communication between clients and a server.
 
-The entire scenario testing framework and reference documentation can be found in [scenario.h](../../test/scenarios/scenario.h).
+The entire scenario testing framework and reference documentation can be found in [scenario.h](../../test/scenario/scenario.h).
 
 How Scenario Tests Work
 -----------------------
@@ -97,7 +97,7 @@ Finally, we assert that all of the clients and the server have converged on the 
 ASSERT_CONVERGENCE("abcdef", msg);
 ```
 
-The last step is to add our test to `scenarios/main.c` so that it is actually run.
+The last step is to add our test to `scenario/main.c` so that it is actually run.
 
 ```c
 int main() {
@@ -147,7 +147,7 @@ Scenario tests are automatically run along with the rest of libot's tests. For e
 ```bash
 $ make clean test
 ...
-bin/debug/scenarios
+bin/debug/scenario
 Running basic_xform_scenario... passed.
 Running scenario2... passed.
 Running scenario3... passed.

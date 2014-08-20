@@ -30,7 +30,7 @@ SOURCES=\
 	cjson/cJSON.c
 
 # List of sources for test scenarios.
-SCENARIOS=$(wildcard test/scenarios/*.c)
+SCENARIOS=$(wildcard test/scenario/*.c)
 
 # List of source for unit tests.
 TESTS=$(wildcard test/unit/*.c)
@@ -100,18 +100,18 @@ release: $(BIN)/release/$(LIB)
 
 # Test targets #
 
-$(BIN)/debug/scenarios$(EXESUFFIX): $(BIN)/debug/$(LIB) $(SCENARIOS) \
-	test/scenarios/scenario.h
-	$(CC) $(CFLAGS) -g -o "$(BIN)/debug/scenarios$(EXESUFFIX)" \
+$(BIN)/debug/scenario$(EXESUFFIX): $(BIN)/debug/$(LIB) $(SCENARIOS) \
+	test/scenario/scenario.h
+	$(CC) $(CFLAGS) -g -o "$(BIN)/debug/scenario$(EXESUFFIX)" \
 	$(SCENARIOS) $(BIN)/debug/$(LIB)
 
 $(BIN)/debug/test$(EXESUFFIX): $(BIN)/debug/$(LIB) $(TESTS)
 	$(CC) $(CFLAGS) -g -o "$(BIN)/debug/test$(EXESUFFIX)" \
 	$(TESTS) $(BIN)/debug/$(LIB)
 
-test: $(BIN)/debug/test$(EXESUFFIX) $(BIN)/debug/scenarios$(EXESUFFIX)
+test: $(BIN)/debug/test$(EXESUFFIX) $(BIN)/debug/scenario$(EXESUFFIX)
 	$(TESTRUNNER) $(BIN)/debug/test$(EXESUFFIX)
-	$(TESTRUNNER) $(BIN)/debug/scenarios$(EXESUFFIX)
+	$(TESTRUNNER) $(BIN)/debug/scenario$(EXESUFFIX)
 ifdef COVERAGE
 	@echo "Code coverage is temporarily disabled due to an incompatibility \
 	between lcov and Apple's (buggy) version of gcov."
