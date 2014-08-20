@@ -1,5 +1,5 @@
-#ifndef libot_compose_h
-#define libot_compose_h
+#ifndef LIBOT_COMPOSE_H
+#define LIBOT_COMPOSE_H
 
 #include <stdlib.h>
 #include <string.h>

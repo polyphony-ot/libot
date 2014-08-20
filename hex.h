@@ -1,5 +1,5 @@
-#ifndef libot_hex_h
-#define libot_hex_h
+#ifndef LIBOT_HEX_H
+#define LIBOT_HEX_H
 
 #include <stdint.h>
 

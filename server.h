@@ -1,5 +1,5 @@
-#ifndef libot_server_h
-#define libot_server_h
+#ifndef LIBOT_SERVER_H
+#define LIBOT_SERVER_H
 
 #include <stdlib.h>
 #include <stdio.h>

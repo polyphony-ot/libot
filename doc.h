@@ -1,5 +1,5 @@
-#ifndef libot_doc_h
-#define libot_doc_h
+#ifndef LIBOT_DOC_H
+#define LIBOT_DOC_H
 
 #include <stdlib.h>
 #include <string.h>

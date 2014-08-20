@@ -1,5 +1,5 @@
-#ifndef libot_xform_h
-#define libot_xform_h
+#ifndef LIBOT_XFORM_H
+#define LIBOT_XFORM_H
 
 #include <stdlib.h>
 #include <string.h>
