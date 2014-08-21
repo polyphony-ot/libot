@@ -2,9 +2,11 @@
     This header contains a minimal unit testing framework.
 */
 
-#include <stdio.h>
 #include <stdbool.h>
+#include <stdio.h>
 #include <string.h>
+#include "../../encode.h"
+#include "../../ot.h"
 #include "../common.h"
 
 #pragma clang diagnostic push
@@ -57,6 +59,11 @@ typedef struct results {
         return false;                                                          \
     }
 
+#define ASSERT_OP_EQUAL(expected, actual, detail, msg)                         \
+    if (!assert_op_equal(expected, actual, detail, "Line #" STRLINE, msg)) {   \
+        return false;                                                          \
+    }
+
 #define FAIL(detail, msg)                                                      \
     write_msg(msg, "Line #" STRLINE ": %s", detail);                           \
     return false
@@ -102,6 +109,27 @@ static bool assert_str_equal(const char* expected, const char* actual,
                    "\tActual: %s\n"
                    "\tExpected: %s",
               loc, detail, actual, expected);
+    return false;
+}
+
+static bool assert_op_equal(const ot_op* const expected,
+                            const ot_op* const actual, const char* detail,
+                            const char* loc, char** msg) {
+
+    bool equal = ot_equal(expected, actual);
+    if (equal) {
+        return true;
+    }
+
+    char* expected_enc = ot_encode(expected);
+    char* actual_enc = ot_encode(actual);
+    write_msg(msg, "%s: %s\n"
+                   "\tActual: %s\n"
+                   "\tExpected: %s",
+              loc, detail, actual_enc, expected_enc);
+
+    free(expected_enc);
+    free(actual_enc);
     return false;
 }
 
