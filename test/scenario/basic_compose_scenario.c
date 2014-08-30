@@ -2,7 +2,7 @@
 
 // In this scenario, two clients make non-concurrent, composable changes so that
 // transformation is never needed.
-bool basic_compose(char** msg) {
+bool basic_compose_scenario(char** msg) {
     setup(2);
 
     ot_op* opa = ot_new_op();

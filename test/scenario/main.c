@@ -27,7 +27,7 @@ int main() {
 
     RUN_SCENARIO(xform_buffer_scenario);
     RUN_SCENARIO(complex_scenario);
-    RUN_SCENARIO(basic_compose);
+    RUN_SCENARIO(basic_compose_scenario);
     RUN_SCENARIO(basic_xform_scenario);
 
     printf("\n%d tests passed.\n"
