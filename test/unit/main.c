@@ -7,6 +7,7 @@ extern results compose_tests();
 extern results decode_tests();
 extern results array_tests();
 extern results xform_tests();
+extern results encode_tests();
 
 int main() {
     fclose(stderr);
@@ -16,6 +17,7 @@ int main() {
     RUN_SUITE(decode_tests);
     RUN_SUITE(array_tests);
     RUN_SUITE(xform_tests);
+    RUN_SUITE(encode_tests);
 
     printf("\n%d tests passed.\n"
            "%d tests failed.\n"

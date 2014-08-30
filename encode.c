@@ -72,3 +72,13 @@ char* ot_encode_doc(const ot_doc* const doc) {
 
     return enc;
 }
+
+char* ot_encode_err(ot_err err) {
+    cJSON* root = cJSON_CreateObject();
+    cJSON_AddNumberToObject(root, "errorCode", err);
+
+    char* enc = cJSON_PrintUnformatted(root);
+    cJSON_Delete(root);
+
+    return enc;
+}
