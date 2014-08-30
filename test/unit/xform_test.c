@@ -189,6 +189,21 @@ static bool xform_returned_ops_have_correct_clients_and_parents(char** msg) {
     return true;
 }
 
+static bool xform_returns_null_when_xform_fails(char** msg) {
+    ot_op* op1 = ot_new_op();
+    ot_skip(op1, 1);
+
+    ot_op* op2 = ot_new_op();
+    ot_skip(op1, 2);
+
+    ot_xform_pair pair = ot_xform(op1, op2);
+    if (pair.op1_prime != NULL || pair.op2_prime != NULL) {
+        FAIL("Transform didn't fail.", msg);
+    }
+
+    return true;
+}
+
 results xform_tests() {
     RUN_TEST(xform_skip_skip);
     RUN_TEST(xform_skip_insert);
@@ -197,6 +212,7 @@ results xform_tests() {
     RUN_TEST(xform_insert_delete);
     RUN_TEST(xform_delete_delete);
     RUN_TEST(xform_returned_ops_have_correct_clients_and_parents);
+    RUN_TEST(xform_returns_null_when_xform_fails);
 
     return (results) { passed, failed };
 }
