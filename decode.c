@@ -2,6 +2,11 @@
 
 // decode_cjson_op decodes a cJSON item into an op.
 ot_err decode_cjson_op(cJSON* json, ot_op* op) {
+    cJSON* error_code = cJSON_GetObjectItem(json, "errorCode");
+    if (error_code != NULL) {
+        return error_code->valueint;
+    }
+
     cJSON* client_idf = cJSON_GetObjectItem(json, "clientId");
     if (client_idf == NULL) {
         return OT_ERR_CLIENT_ID_MISSING;

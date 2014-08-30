@@ -206,6 +206,15 @@ static bool decode_doc_with_insert_skip_and_delete_components(char** msg) {
     return true;
 }
 
+static bool decode_returns_correct_error_code(char** msg) {
+    const char* ENCODED_JSON = "{\"errorCode\":1}";
+    ot_err err = ot_decode(NULL, ENCODED_JSON);
+
+    ASSERT_INT_EQUAL(1, err, "The error code was incorrect.", msg);
+
+    return true;
+}
+
 results decode_tests() {
     RUN_TEST(decode_returns_op_with_correct_skip_component);
     RUN_TEST(decode_returns_op_with_correct_client_id);
@@ -215,6 +224,7 @@ results decode_tests() {
     RUN_TEST(decode_fails_if_components_field_is_missing);
     RUN_TEST(decode_empty_doc_returns_doc_with_no_components);
     RUN_TEST(decode_doc_with_insert_skip_and_delete_components);
+    RUN_TEST(decode_returns_correct_error_code);
 
     return (results) { passed, failed };
 }
