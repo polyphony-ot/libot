@@ -21,8 +21,13 @@ static void free_buffer(ot_client* client) {
     }
 
     if (client->free_buffer_comps) {
-        ot_free_op(client->buffer);
-        client->free_buffer_comps = false;
+        if (!client->free_anticipated_comps) {
+            client->free_anticipated_comps = true;
+            free(client->buffer);
+        } else {
+            ot_free_op(client->buffer);
+            client->free_buffer_comps = false;
+        }
     } else {
         free(client->buffer);
     }
