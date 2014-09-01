@@ -201,6 +201,8 @@ static bool xform_returns_null_when_xform_fails(char** msg) {
         FAIL("Transform didn't fail.", msg);
     }
 
+    ot_free_op(op1);
+    ot_free_op(op2);
     return true;
 }
 
