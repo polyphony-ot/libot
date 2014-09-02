@@ -113,8 +113,10 @@ test: $(BIN)/debug/test$(EXESUFFIX) $(BIN)/debug/scenario$(EXESUFFIX)
 	$(TESTRUNNER) $(BIN)/debug/test$(EXESUFFIX)
 	$(TESTRUNNER) $(BIN)/debug/scenario$(EXESUFFIX)
 ifdef COVERAGE
-	@echo "Code coverage is temporarily disabled due to an incompatibility \
-	between lcov and Apple's (buggy) version of gcov."
+	lcov --capture --directory . --output-file $(BIN)/coverage.info \
+	--rc lcov_branch_coverage=1
+	genhtml $(BIN)/coverage.info --output-directory $(BIN)/coverage \
+	--function-coverage --branch-coverage -t "All Tests"
 	rm *.gcno *.gcda
 endif
 
