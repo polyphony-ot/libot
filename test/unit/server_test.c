@@ -28,7 +28,7 @@ static int event(ot_event_type t, ot_op* op) {
     return 0;
 }
 
-static bool server_receive_fires_event_when_xform_error_occurs(char** msg) {
+static bool server_receive_fires_event_when_parent_cannot_be_found(char** msg) {
     ot_op* initial_op = ot_new_op();
     ot_insert(initial_op, "abc");
 
@@ -88,7 +88,7 @@ static bool server_receive_fires_event_when_append_error_occurs(char** msg) {
 }
 
 results server_tests() {
-    RUN_TEST(server_receive_fires_event_when_xform_error_occurs);
+    RUN_TEST(server_receive_fires_event_when_parent_cannot_be_found);
     RUN_TEST(server_receive_fires_event_when_append_error_occurs);
 
     return (results) { passed, failed };
