@@ -130,11 +130,37 @@ static bool server_receive_fires_event_when_a_decode_error_occurs(char** msg) {
     return true;
 }
 
+static bool server_receive_when_op_has_parent_and_doc_is_empty(char** msg) {
+    ot_server* server = ot_new_server(send, event);
+    ot_doc* doc = ot_new_doc();
+    ot_server_open(server, doc);
+
+    const int NONEMPTY_HASH = 0xFF;
+    ot_op* invalid_op = ot_new_op();
+    ot_insert(invalid_op, "abc");
+    memset(invalid_op->parent, NONEMPTY_HASH, 20);
+
+    char* invalid_op_enc = ot_encode(invalid_op);
+    ot_server_receive(server, invalid_op_enc);
+
+    ot_op* dec = ot_new_op();
+    ot_err err = ot_decode(dec, sent_msg);
+    ASSERT_INT_EQUAL(OT_ERR_XFORM_FAILED, err, "Sent error was incorrect.",
+                     msg);
+
+    ot_free_op(dec);
+    ot_free_op(invalid_op);
+    ot_free_server(server);
+    free(invalid_op_enc);
+    return true;
+}
+
 results server_tests() {
     RUN_TEST(server_receive_fires_event_when_parent_cannot_be_found);
     RUN_TEST(server_receive_fires_event_when_append_error_occurs);
     RUN_TEST(server_receive_fires_event_when_xform_error_occurs);
     RUN_TEST(server_receive_fires_event_when_a_decode_error_occurs);
+    RUN_TEST(server_receive_when_op_has_parent_and_doc_is_empty);
 
     return (results) { passed, failed };
 }

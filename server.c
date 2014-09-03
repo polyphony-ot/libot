@@ -13,9 +13,6 @@ static void send_err(ot_server* server, ot_err err) {
 
 static bool can_append(const ot_doc* doc, const ot_op* op) {
     const char* parent = op->parent;
-    if (memcmp(doc->composed->hash, parent, sizeof(char) * 20) == 0) {
-        return true;
-    }
 
     if (doc->history.len == 0) {
         for (int i = 0; i < 20; ++i) {
@@ -24,6 +21,10 @@ static bool can_append(const ot_doc* doc, const ot_op* op) {
             }
         }
 
+        return true;
+    }
+
+    if (memcmp(doc->composed->hash, parent, sizeof(char) * 20) == 0) {
         return true;
     }
 
@@ -169,7 +170,13 @@ void ot_server_receive(ot_server* server, const char* op) {
         }
     }
 
-    char* doc_enc = ot_encode(doc->composed);
+    char* doc_enc;
+    if (doc->composed == NULL) {
+        doc_enc = "EMPTY";
+    } else {
+        doc_enc = ot_encode(doc->composed);
+    }
+
     if (err == OT_ERR_NONE) {
         fprintf(stderr, "[INFO] Document updated.\n"
                         "\tDocument: %s\n",
@@ -181,5 +188,8 @@ void ot_server_receive(ot_server* server, const char* op) {
                         "\tDocument: %s\n",
                 err, doc_enc);
     }
-    free(doc_enc);
+
+    if (doc->composed != NULL) {
+        free(doc_enc);
+    }
 }
