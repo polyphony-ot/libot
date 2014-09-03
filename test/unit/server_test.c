@@ -58,8 +58,38 @@ static bool server_receive_fires_event_when_xform_error_occurs(char** msg) {
     return true;
 }
 
+static bool server_receive_fires_event_when_append_error_occurs(char** msg) {
+    ot_op* initial_op = ot_new_op();
+    ot_insert(initial_op, "abc");
+
+    ot_doc* doc = ot_new_doc();
+    ot_doc_append(doc, &initial_op);
+
+    ot_server* server = ot_new_server(send, event);
+    ot_server_open(server, doc);
+
+    ot_op* invalid_op = ot_new_op();
+    ot_insert(invalid_op, "abc");
+    memcpy(invalid_op->parent, initial_op->hash, 20);
+
+    char* invalid_op_enc = ot_encode(invalid_op);
+    ot_server_receive(server, invalid_op_enc);
+
+    ot_op* dec = ot_new_op();
+    ot_err err = ot_decode(dec, sent_msg);
+    ASSERT_INT_EQUAL(OT_ERR_APPEND_FAILED, err, "Sent error was incorrect.",
+                     msg);
+
+    ot_free_op(dec);
+    ot_free_op(invalid_op);
+    ot_free_server(server);
+    free(invalid_op_enc);
+    return true;
+}
+
 results server_tests() {
     RUN_TEST(server_receive_fires_event_when_xform_error_occurs);
+    RUN_TEST(server_receive_fires_event_when_append_error_occurs);
 
     return (results) { passed, failed };
 }
