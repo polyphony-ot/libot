@@ -1,0 +1,65 @@
+#include "../../server.h"
+#include "unit.h"
+
+static char* sent_msg = NULL;
+static ot_event_type event_type = 0;
+static ot_op* event_op = NULL;
+
+static int send(const char* msg) {
+    if (sent_msg != NULL) {
+        free(sent_msg);
+    }
+
+    size_t size = strlen(msg) + 1;
+    sent_msg = malloc(sizeof(char) * size);
+    memcpy(sent_msg, msg, size);
+
+    return 0;
+}
+
+static int event(ot_event_type t, ot_op* op) {
+    event_type = t;
+
+    if (event_op != NULL) {
+        ot_free_op(event_op);
+    }
+    event_op = ot_dup_op(op);
+
+    return 0;
+}
+
+static bool server_receive_fires_event_when_xform_error_occurs(char** msg) {
+    ot_op* initial_op = ot_new_op();
+    ot_insert(initial_op, "abc");
+
+    ot_doc* doc = ot_new_doc();
+    ot_doc_append(doc, &initial_op);
+
+    ot_server* server = ot_new_server(send, event);
+    ot_server_open(server, doc);
+
+    const int NONEMPTY_HASH = 0xFF;
+    ot_op* invalid_op = ot_new_op();
+    ot_insert(invalid_op, "abc");
+    memset(invalid_op->parent, NONEMPTY_HASH, 20);
+
+    char* invalid_op_enc = ot_encode(invalid_op);
+    ot_server_receive(server, invalid_op_enc);
+
+    ot_op* dec = ot_new_op();
+    ot_err err = ot_decode(dec, sent_msg);
+    ASSERT_INT_EQUAL(OT_ERR_XFORM_FAILED, err, "Sent error was incorrect.",
+                     msg);
+
+    ot_free_op(dec);
+    ot_free_op(invalid_op);
+    ot_free_server(server);
+    free(invalid_op_enc);
+    return true;
+}
+
+results server_tests() {
+    RUN_TEST(server_receive_fires_event_when_xform_error_occurs);
+
+    return (results) { passed, failed };
+}
