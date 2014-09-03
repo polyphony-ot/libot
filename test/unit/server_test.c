@@ -115,10 +115,26 @@ static bool server_receive_fires_event_when_xform_error_occurs(char** msg) {
     return true;
 }
 
+static bool server_receive_fires_event_when_a_decode_error_occurs(char** msg) {
+    ot_server* server = ot_new_server(send, event);
+    char* invalid_msg = "not json";
+    ot_server_receive(server, invalid_msg);
+
+    ot_op* dec = ot_new_op();
+    ot_err err = ot_decode(dec, sent_msg);
+    ASSERT_INT_EQUAL(OT_ERR_INVALID_JSON, err, "Sent error was incorrect.",
+                     msg);
+
+    ot_free_op(dec);
+    ot_free_server(server);
+    return true;
+}
+
 results server_tests() {
     RUN_TEST(server_receive_fires_event_when_parent_cannot_be_found);
     RUN_TEST(server_receive_fires_event_when_append_error_occurs);
     RUN_TEST(server_receive_fires_event_when_xform_error_occurs);
+    RUN_TEST(server_receive_fires_event_when_a_decode_error_occurs);
 
     return (results) { passed, failed };
 }
