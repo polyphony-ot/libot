@@ -88,7 +88,7 @@ static ot_op* xform(const ot_doc* doc, ot_op* op) {
             composed_enc, op_enc);
 
     ot_xform_pair p = ot_xform(composed, op);
-    if (p.op1_prime == NULL || p.op2_prime == NULL) {
+    if (p.op1_prime == NULL) {
         fprintf(stderr, "[INFO] Transformation failed.\n"
                         "\tServer Operation: %s\n"
                         "\tClient Operation: %s\n",
