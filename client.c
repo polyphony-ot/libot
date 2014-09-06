@@ -1,48 +1,8 @@
 #include "client.h"
 
-static void free_anticipated(ot_client* client) {
-    if (client->anticipated == NULL) {
-        return;
-    }
-
-    if (client->free_anticipated_comps) {
-        ot_free_op(client->anticipated);
-        client->free_anticipated_comps = false;
-    } else {
-        free(client->anticipated);
-    }
-
-    client->anticipated = NULL;
-}
-
-static void free_buffer(ot_client* client) {
-    if (client->buffer == NULL) {
-        return;
-    }
-
-    if (client->free_buffer_comps) {
-        if (!client->free_anticipated_comps) {
-            client->free_anticipated_comps = true;
-            free(client->buffer);
-        } else {
-            ot_free_op(client->buffer);
-            client->free_buffer_comps = false;
-        }
-    } else {
-        free(client->buffer);
-    }
-
-    client->buffer = NULL;
-}
-
 static ot_err buffer_op(ot_client* client, ot_op* op) {
     if (client->buffer == NULL) {
-        client->buffer = malloc(sizeof(ot_op));
-        memcpy(client->buffer, op, sizeof(ot_op));
-
-        // Don't free the buffer op's components because it's a shallow copy of
-        // an op in the doc.
-        client->free_buffer_comps = false;
+        client->buffer = ot_dup_op(op);
         return OT_ERR_NONE;
     }
 
@@ -54,12 +14,9 @@ static ot_err buffer_op(ot_client* client, ot_op* op) {
         return OT_ERR_BUFFER_FAILED;
     }
 
-    free_buffer(client);
-
-    // Set the buffer and mark its components as freeable because it doesn't
-    // point to anywhere within the doc.
+    ot_free_op(client->buffer);
+    client->buffer = NULL;
     client->buffer = composed;
-    client->free_buffer_comps = true;
 
     char* enc = ot_encode(composed);
     fprintf(stderr, "Client's buffer is now: %s\n", enc);
@@ -70,7 +27,10 @@ static ot_err buffer_op(ot_client* client, ot_op* op) {
 
 static void send_buffer(ot_client* client, const char* received_hash) {
     if (client->buffer == NULL) {
-        free_anticipated(client);
+        if (client->anticipated != NULL) {
+            ot_free_op(client->anticipated);
+            client->anticipated = NULL;
+        }
         return;
     }
 
@@ -82,12 +42,14 @@ static void send_buffer(ot_client* client, const char* received_hash) {
     client->send(enc_buf);
     free(enc_buf);
 
-    free_anticipated(client);
-    client->anticipated = malloc(sizeof(ot_op));
-    memcpy(client->anticipated, client->buffer, sizeof(ot_op));
-    client->free_anticipated_comps = false;
+    if (client->anticipated != NULL) {
+        ot_free_op(client->anticipated);
+        client->anticipated = NULL;
+    }
+    client->anticipated = ot_dup_op(client->buffer);
 
-    free_buffer(client);
+    ot_free_op(client->buffer);
+    client->buffer = NULL;
     client->ack_required = true;
 }
 
@@ -115,14 +77,13 @@ static ot_err xform_anticipated(ot_client* client, ot_op* received,
         return OT_ERR_XFORM_FAILED;
     }
 
-    free_anticipated(client);
     *inter = p.op1_prime;
 
+    ot_free_op(client->anticipated);
+    client->anticipated = NULL;
     client->anticipated = p.op2_prime;
-    client->free_anticipated_comps = true;
 
     ot_free_op(received);
-
     return OT_ERR_NONE;
 }
 
@@ -140,11 +101,11 @@ static ot_err xform_buffer(ot_client* client, ot_op* inter, ot_op** apply) {
     }
 
     *apply = p.op2_prime;
-    free_buffer(client);
+    ot_free_op(client->buffer);
+    client->buffer = NULL;
     ot_free_op(inter);
 
     client->buffer = p.op1_prime;
-    client->free_buffer_comps = true;
 
     return OT_ERR_NONE;
 }
@@ -158,8 +119,6 @@ ot_client* ot_new_client(send_func send, ot_event_func event) {
     client->doc = NULL;
     client->client_id = 0;
     client->ack_required = false;
-    client->free_anticipated_comps = false;
-    client->free_buffer_comps = false;
 
     return client;
 }
@@ -170,8 +129,12 @@ void ot_free_client(ot_client* client) {
         ot_free_doc(client->doc);
     }
 
-    free_anticipated(client);
-    free_buffer(client);
+    if (client->anticipated != NULL) {
+        ot_free_op(client->anticipated);
+    }
+    if (client->buffer != NULL) {
+        ot_free_op(client->buffer);
+    }
     free(client);
 }
 
