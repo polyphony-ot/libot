@@ -302,7 +302,7 @@ void ot_client_receive(ot_client* client, const char* op) {
     }
 
     if (client->doc == NULL) {
-        fputs("[INFO] Creating a new document.", stderr);
+        fputs("[INFO] Creating a new document.\n", stderr);
         client->doc = ot_new_doc();
     }
     append_op(client, &apply);
@@ -313,7 +313,7 @@ ot_err ot_client_apply(ot_client* client, ot_op** op) {
     (*op)->client_id = client->client_id;
 
     if (client->doc == NULL) {
-        fputs("[INFO] Creating a new document.", stderr);
+        fputs("[INFO] Creating a new document.\n", stderr);
         client->doc = ot_new_doc();
     }
 

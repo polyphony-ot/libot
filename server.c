@@ -75,9 +75,9 @@ static ot_op* xform(const ot_doc* doc, ot_op* op) {
     char* op_enc = ot_encode(op);
     ot_op* composed = ot_doc_compose_after(doc, op->parent);
     if (composed == NULL) {
-        fprintf(stderr, "[ERROR] Couldn't find the operation's parent.\n"
+        fprintf(stderr, "[ERROR %d] Couldn't find the operation's parent.\n"
                         "\tOperation: %s\n",
-                op_enc);
+                OT_ERR_COMPOSE_FAILED, op_enc);
         free(op_enc);
         return NULL;
     }
@@ -90,10 +90,10 @@ static ot_op* xform(const ot_doc* doc, ot_op* op) {
 
     ot_xform_pair p = ot_xform(composed, op);
     if (p.op1_prime == NULL) {
-        fprintf(stderr, "[INFO] Transformation failed.\n"
+        fprintf(stderr, "[ERROR %d] Transformation failed.\n"
                         "\tServer Operation: %s\n"
                         "\tClient Operation: %s\n",
-                composed_enc, op_enc);
+                OT_ERR_XFORM_FAILED, composed_enc, op_enc);
         free(composed_enc);
         free(op_enc);
         ot_free_op(composed);
@@ -154,7 +154,7 @@ void ot_server_receive(ot_server* server, const char* op) {
     ot_doc* doc = server->doc;
     err = OT_ERR_NONE;
     if (doc == NULL) {
-        fputs("[INFO] Creating a new document.", stderr);
+        fputs("[INFO] Creating a new document.\n", stderr);
         server->doc = ot_new_doc();
         doc = server->doc;
         err = append_op(server, dec);
