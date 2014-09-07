@@ -270,7 +270,7 @@ void ot_client_receive(ot_client* client, const char* op) {
     }
 
     if (dec->client_id == client->client_id) {
-        char hex[41];
+        char hex[41] = { 0 };
         atohex(hex, dec->hash, 20);
         fprintf(stderr, "[INFO] Operation was acknowledged.\n"
                         "\tHash: %s\n",
@@ -310,6 +310,12 @@ void ot_client_receive(ot_client* client, const char* op) {
 }
 
 ot_err ot_client_apply(ot_client* client, ot_op** op) {
+    char* op_enc = ot_encode(*op);
+    fprintf(stderr, "[INFO] Editor applying operation.\n"
+                    "\tOperation: %s\n",
+            op_enc);
+    free(op_enc);
+
     (*op)->client_id = client->client_id;
 
     if (client->doc == NULL) {
