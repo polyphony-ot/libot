@@ -105,7 +105,8 @@ typedef enum {
     OT_CONNECTED = 0,
     OT_DISCONNECTED = 1,
     OT_OP_APPLIED = 2,
-    OT_OP_INCOMING = 3
+    OT_OP_INCOMING = 3,
+    OT_ERROR = 4
 } ot_event_type;
 
 typedef int (*send_func)(const char*);

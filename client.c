@@ -1,26 +1,87 @@
 #include "client.h"
 
+static ot_err append_op(ot_client* client, ot_op** op) {
+    ot_doc* doc = client->doc;
+    char* op_enc = ot_encode(*op);
+    char* doc_enc = NULL;
+    if (doc->composed == NULL) {
+        fprintf(stderr, "[INFO] Appending operation to empty document.\n"
+                        "\tOperation: %s\n",
+                op_enc);
+    } else {
+        doc_enc = ot_encode(doc->composed);
+        fprintf(stderr, "[INFO] Appending operation to document.\n"
+                        "\tDocument: %s\n"
+                        "\tOperation: %s\n",
+                doc_enc, op_enc);
+    }
+
+    ot_err err = ot_doc_append(doc, op);
+    if (err != OT_ERR_NONE) {
+        if (doc->composed == NULL) {
+            fprintf(stderr, "[ERROR %d] Appending operation to empty document "
+                            "failed.\n"
+                            "\tOperation: %s\n",
+                    err, op_enc);
+        } else {
+            fprintf(stderr, "[ERROR %d] Appending operation to document failed."
+                            "\n"
+                            "\tDocument: %s\n"
+                            "\tOperation: %s\n",
+                    err, doc_enc, op_enc);
+            free(doc_enc);
+        }
+
+        ot_free_op(*op);
+        free(op_enc);
+        return err;
+    }
+
+    if (doc_enc != NULL) {
+        free(doc_enc);
+    }
+    free(op_enc);
+
+    return OT_ERR_NONE;
+}
+
 static ot_err buffer_op(ot_client* client, ot_op* op) {
     if (client->buffer == NULL) {
         client->buffer = ot_dup_op(op);
         return OT_ERR_NONE;
     }
 
+    char* buffer_enc = ot_encode(client->buffer);
+    char* op_enc = ot_encode(op);
+    fprintf(stderr, "[INFO] Composing buffer with applied operation.\n"
+                    "\tBuffer: %s\n"
+                    "\tApplied Operation: %s\n",
+            buffer_enc, op_enc);
+
     ot_op* composed = ot_compose(client->buffer, op);
     if (composed == NULL) {
-        char* enc = ot_encode(op);
-        fprintf(stderr, "Client couldn't add op to the buffer: %s\n", enc);
-        free(enc);
+        fprintf(stderr, "[ERROR %d] Composition of buffer with applied "
+                        "operation failed.\n"
+                        "\tBuffer: %s\n"
+                        "\tApplied Operation: %s\n",
+                OT_ERR_COMPOSE_FAILED, buffer_enc, op_enc);
+        free(buffer_enc);
+        free(op_enc);
         return OT_ERR_BUFFER_FAILED;
     }
+    free(buffer_enc);
+    free(op_enc);
+
+    char* composed_enc = ot_encode(composed);
+    fprintf(stderr, "[INFO] Composition of buffer with applied operation "
+                    "succeeded.\n"
+                    "\tComposed Buffer: %s\n",
+            composed_enc);
+    free(composed_enc);
 
     ot_free_op(client->buffer);
     client->buffer = NULL;
     client->buffer = composed;
-
-    char* enc = ot_encode(composed);
-    fprintf(stderr, "Client's buffer is now: %s\n", enc);
-    free(enc);
 
     return 0;
 }
@@ -40,6 +101,7 @@ static void send_buffer(ot_client* client, const char* received_hash) {
 
     char* enc_buf = ot_encode(client->buffer);
     client->send(enc_buf);
+    fprintf(stderr, "[INFO] Sent message.\n\tJSON: %s\n", enc_buf);
     free(enc_buf);
 
     if (client->anticipated != NULL) {
@@ -72,10 +134,37 @@ static ot_err xform_anticipated(ot_client* client, ot_op* received,
         return OT_ERR_NONE;
     }
 
+    char* received_enc = ot_encode(received);
+    char* anticipated_enc = ot_encode(client->anticipated);
+    fprintf(stderr, "[INFO] Transforming received operation against anticipated"
+                    " operation.\n"
+                    "\tReceived Operation: %s\n"
+                    "\tAnticipated Operation: %s\n",
+            received_enc, anticipated_enc);
     ot_xform_pair p = ot_xform(received, client->anticipated);
     if (p.op1_prime == NULL || p.op2_prime == NULL) {
+        fprintf(stderr, "[ERROR %d] Transformation of received operation "
+                        "against anticipated operation failed.\n"
+                        "\tReceived Operation: %s\n"
+                        "\tAnticipated Operation: %s\n",
+                OT_ERR_XFORM_FAILED, received_enc, anticipated_enc);
+
+        free(received_enc);
+        free(anticipated_enc);
         return OT_ERR_XFORM_FAILED;
     }
+    free(received_enc);
+    free(anticipated_enc);
+
+    char* op1_prime_enc = ot_encode(p.op1_prime);
+    char* op2_prime_enc = ot_encode(p.op2_prime);
+    fprintf(stderr, "[INFO] Transformation of received operation against "
+                    "anticipated operation succeeded.\n"
+                    "\tReceived Operation': %s\n"
+                    "\tAnticipated Operation': %s\n",
+            op1_prime_enc, op2_prime_enc);
+    free(op1_prime_enc);
+    free(op2_prime_enc);
 
     *inter = p.op1_prime;
 
@@ -95,10 +184,37 @@ static ot_err xform_buffer(ot_client* client, ot_op* inter, ot_op** apply) {
         return OT_ERR_NONE;
     }
 
+    char* buffer_enc = ot_encode(client->buffer);
+    char* inter_enc = ot_encode(inter);
+    fprintf(stderr, "[INFO] Transforming buffer against intermediate operation."
+                    "\n"
+                    "\tBuffer: %s\n"
+                    "\tIntermediate Operation: %s\n",
+            buffer_enc, inter_enc);
+
     ot_xform_pair p = ot_xform(client->buffer, inter);
     if (p.op1_prime == NULL || p.op2_prime == NULL) {
+        fprintf(stderr, "[ERROR %d] Transformation of buffer against "
+                        "intermediate operation failed.\n"
+                        "\tBuffer: %s\n"
+                        "\tIntermediate Operation: %s\n",
+                OT_ERR_XFORM_FAILED, buffer_enc, inter_enc);
+        free(buffer_enc);
+        free(inter_enc);
         return OT_ERR_XFORM_FAILED;
     }
+    free(buffer_enc);
+    free(inter_enc);
+
+    char* op1_prime_enc = ot_encode(p.op1_prime);
+    char* op2_prime_enc = ot_encode(p.op2_prime);
+    fprintf(stderr, "[INFO] Transformation of buffer against intermediate "
+                    "operation succeeded.\n"
+                    "\tBuffer': %s\n"
+                    "\tIntermediate Operation': %s\n",
+            op1_prime_enc, op2_prime_enc);
+    free(op1_prime_enc);
+    free(op2_prime_enc);
 
     *apply = p.op2_prime;
     ot_free_op(client->buffer);
@@ -128,7 +244,6 @@ void ot_free_client(ot_client* client) {
     if (doc != NULL) {
         ot_free_doc(client->doc);
     }
-
     if (client->anticipated != NULL) {
         ot_free_op(client->anticipated);
     }
@@ -141,20 +256,25 @@ void ot_free_client(ot_client* client) {
 void ot_client_open(ot_client* client, ot_doc* doc) { client->doc = doc; }
 
 void ot_client_receive(ot_client* client, const char* op) {
-    fprintf(stderr, "Client received op: %s\n", op);
+    fprintf(stderr, "[INFO] Received message.\n\tJSON: %s\n", op);
 
     ot_op* dec = ot_new_op();
     ot_err err = ot_decode(dec, op);
     if (err != OT_ERR_NONE) {
-        fprintf(stderr, "Client couldn't decode op. Error code: %d.", err);
+        fprintf(stderr, "[ERROR %d] The decoded operation returned an error.\n"
+                        "\tJSON: %s\n",
+                err, op);
         ot_free_op(dec);
+        fire_op_event(client, OT_ERROR, NULL);
         return;
     }
 
     if (dec->client_id == client->client_id) {
         char hex[41];
-        atohex((char*)&hex, (char*)&dec->hash, 20);
-        fprintf(stderr, "Op %s was acknowledged.\n", hex);
+        atohex(hex, dec->hash, 20);
+        fprintf(stderr, "[INFO] Operation was acknowledged.\n"
+                        "\tHash: %s\n",
+                hex);
 
         client->ack_required = false;
         send_buffer(client, dec->hash);
@@ -168,28 +288,24 @@ void ot_client_receive(ot_client* client, const char* op) {
     ot_op* inter;
     err = xform_anticipated(client, dec, &inter);
     if (err != OT_ERR_NONE) {
-        fprintf(stderr,
-                "Client couldn't transform its anticipated op. Error code: %d.",
-                err);
         ot_free_op(dec);
-        assert(false);
+        fire_op_event(client, OT_ERROR, NULL);
         return;
     }
 
     ot_op* apply;
     err = xform_buffer(client, inter, &apply);
     if (err != OT_ERR_NONE) {
-        fprintf(stderr, "Client couldn't transform its buffer. Error code: %d.",
-                err);
         ot_free_op(inter);
-        assert(false);
+        fire_op_event(client, OT_ERROR, NULL);
         return;
     }
 
     if (client->doc == NULL) {
+        fputs("[INFO] Creating a new document.", stderr);
         client->doc = ot_new_doc();
     }
-    ot_doc_append(client->doc, &apply);
+    append_op(client, &apply);
     fire_op_event(client, OT_OP_APPLIED, apply);
 }
 
@@ -197,11 +313,11 @@ ot_err ot_client_apply(ot_client* client, ot_op** op) {
     (*op)->client_id = client->client_id;
 
     if (client->doc == NULL) {
+        fputs("[INFO] Creating a new document.", stderr);
         client->doc = ot_new_doc();
     }
 
-    ot_doc* doc = client->doc;
-    ot_err append_err = ot_doc_append(doc, op);
+    ot_err append_err = append_op(client, op);
     if (append_err != OT_ERR_NONE) {
         return append_err;
     }
@@ -215,5 +331,5 @@ ot_err ot_client_apply(ot_client* client, ot_op** op) {
         send_buffer(client, NULL);
     }
 
-    return 0;
+    return OT_ERR_NONE;
 }
