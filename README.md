@@ -1,92 +1,66 @@
-# OT
+libot
+=====
 
-## Operations
+A cross-platform library for real-time text editing.
 
-An operation is defined as a list of components that _must_ span the entire document.
+libot is the core of the [polyphony project](https://github.com/polyphony-ot). It uses operational transformation (OT) to allow for real-time text editing between users. Since it's written in C, it can be used on virtually any platform, meaning that the complexities of OT only need to be handled in a single codebase. The other polyphony libraries simply wrap libot in order to provide a more native experience for their own platform.
 
-An operation also has a `clientId`, a `hash`, and a `parent`. `clientId` is a unique integer value assigned to the client by the server. `hash` is a SHA1 hash of the documents contents after the operation is applied. `parent` is the SHA1 hash of the parent document that the operation is based on.
+Getting Started
+---------------
 
-	{
-		"clientId": n,
-		"parent": "0b9cda76238570e1d5790452620b1df31dedf75d",
-        "hash": "2346ad27d7568ba9896f1b7da6b5991251debdf2",
-		"components": []
-	}
+First, [check to see](https://github.com/polyphony-ot) if there's a polyphony library available for your platform. Using a library for your platform will be easier and will provide a more idiomatic API.
 
-## Components
+If there isn't a library for your specific platform (or if you want to make one), take a look at the [Getting Started](doc/getting-started.md) guide for an explanation of how to use libot's API.
 
-### Skip
+### Example
 
-Skips _n_ number of characters from the current position.
+Here's a quick snippet that demonstrates what using libot looks like. The following code shows how a client would insert the text "abc" into a document:
 
-Skips mean that the user did not modify the document at the skipped positions.
+```c
+// This function will be called by libot whenever a message needs to be sent to
+// the server.
+static int send(const char* msg) {
+    // Send msg to the server
+}
 
-	{
-		"type": "skip",
-		"count": n
-	}
+// This function will be called by libot whenever the UI or editor need to be
+// updated with new text.
+static int event(ot_event_type t, ot_op* op) {
+    // Update the UI/editor with the changes in op.
+}
 
-### Insert
+// Create a new client and provide it our send and event functions.
+ot_client* client = ot_new_client(send, event);
 
-Inserts a string at the current position.
+// Create and apply a new op that inserts the text "abc" into the document.
+ot_op* op = ot_new_op();
+ot_insert("abc");
+ot_client_apply(client, op);
+```
 
-Inserts are guaranteed to be contiguous when merging. For example, say user A inserts "abc" at position 0 and user B inserts "def" at position 0. The document will converge on either "abcdef" or "defabc", never "adbecf" or "daebfc".
+That's it! The libot client handles sending our change to the server, notifying our editor that there's new text, and resolving any conflicts with OT.
 
-	{
-		"type": "insert",
-		"text": "str"
-	}
+Building
+--------
 
-### Delete
+To build libot, simply run `make`. This will create debug and release archives of libot which can be found in `bin/debug/libot.a` and `bin/release/libot.a`.
 
-Deletes _n_ number of characters at the current position.
+libot builds using clang by default, but it should also be compatible with gcc.
 
-As with inserts, deletes are guaranteed to be contiguous when merging.
+### Testing
 
-	{
-		"type": "delete",
-		"count": n
-	}
+If you're making changes to libot or running it on a new platform, you'll also want to run tests with `make clean test`. This will run libot's entire test suite.
 
-### Open Element
+Code coverage can also be enabled by setting the `COVERAGE` variable with `make -e COVERAGE=1 clean test`. Note that code coverage requires that [lcov](http://ltp.sourceforge.net/coverage/lcov.php) be installed and in your PATH. The generated report can be found in `bin/coverage/index.html`.
 
-Opens an element at the current position.
+You can also test for memory leaks by using the `TESTRUNNER` variable. This variable allows you to specify an arbitrary wrapper command for running tests. For example, to run the tests with valgrind you'd do `make -e TESTRUNNER=valgrind clean test`.
 
-Elements are distinct from formatting boundaries in a few ways. The primary differences is that elements cannot overlap. For example, `<elemA><elemB></elemA></elemB>` is **not** valid.
+Documentation
+-------------
 
-The second difference is that elements can have a length of 0. A common example of this is a line break. The element `<newLine />` or `<newline></newline>` is valid and will not span any characters in the document. However, having a formatting boundary start and end at the same position is not valid.
+The [doc](doc) directory contains various guides and explanations for the different parts of libot. The [Getting Started](doc/getting-started.md) guide in particular has a good general introduction to working with libot. You can also find reference documentation for specific types and functions in the header files.
 
-	{
-		"type": "openElement",
-		"element": "element"
-	}
+Contributing
+------------
 
-### Close Element
-
-Closes the last opened element at the current position.
-
-	{
-		"type": "closeElement"
-	}
-
-### Formatting Boundary
-
-Inserts a formatting boundary at the current position.
-
-Formatting boundaries make it easy to apply styling that can overlap - something that is not possible with elements. For example, say the user wants the text "**This _is some** text_". `<strong>This <em>is some</strong> text!</em>` would not be possible with elements. While possible to reorder the elements as `<strong>This <em>is some</em></strong><em> text!</em>`, it is much more confusing and difficult. Instead, you could use formatting boundaries to achieve the same effect.
-
-	{
-		"type": "formattingBoundary",
-		"startFormatting": [
-			{
-				"name": "formattingName",
-				"value": "formattingValue"
-			}
-		],
-		"endFormatting": [
-			{
-				"name": "formattingName",
-				"value": "formattingValue"
-			}
-		]
-	}
+Polyphony is looking for contributors! If you're interested in learning how a real-time text editor works, contributing new features, or porting libot to a new platform, please see the [contributing guide](CONTRIBUTING.md).
