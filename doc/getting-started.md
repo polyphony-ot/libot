@@ -219,33 +219,6 @@ all use operational transformation for real-time collaboration. It's also worth
 noting that OT isn't limited to text. It can also be used to do real-time
 drawing, for example.
 
-The theory behind how OT works is relatively complicated, and is outside the
-scope of this guide. However, there are some excellent blog posts and resources
-explaining how it works:
-
-* http://www.codecommit.com/blog/java/understanding-and-applying-operational-transformation
-* https://morols.wordpress.com
-* http://cooffice.ntu.edu.sg/otfaq/
-* http://en.wikipedia.org/wiki/Operational_transformation
-
-### Basics
-
-At its most basic level, the only requirement of an OT algorithm is that all
-clients must converge on the same document. That is, if 100 users are all
-banging randomly on their keyboards, they will all be guaranteed to end up with
-the same exact document, despite any network latency.
-
-If you think about it, this is actually really easy to implement. If two users
-enter text, just delete the whole document and start over. Everyone will have
-converged on an empty document and we've satisifed the properties of OT.
-
-Obviously, this solution isn't useful to anyone. So instead, each OT library or
-editor must devise their own way of getting user changes to converge in a useful
-way. This is why even though Google Docs and Etherpad both use OT, they aren't
-compatible with each other.
-
-### Implementation
-
 To see how libot's OT implementation handles merging concurrent changes, see the
 [documentation on OT](ot.md).
 
