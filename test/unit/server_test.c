@@ -5,10 +5,14 @@ static char* sent_msg = NULL;
 static ot_event_type event_type = 0;
 static ot_op* event_op = NULL;
 
-static int send(const char* msg) {
+static void free_sent() {
     if (sent_msg != NULL) {
         free(sent_msg);
     }
+}
+
+static int send(const char* msg) {
+    free_sent();
 
     size_t size = strlen(msg) + 1;
     sent_msg = malloc(sizeof(char) * size);
@@ -17,12 +21,16 @@ static int send(const char* msg) {
     return 0;
 }
 
-static int event(ot_event_type t, ot_op* op) {
-    event_type = t;
-
+static void free_event() {
     if (event_op != NULL) {
         ot_free_op(event_op);
     }
+}
+
+static int event(ot_event_type t, ot_op* op) {
+    event_type = t;
+
+    free_event();
     event_op = ot_dup_op(op);
 
     return 0;
@@ -186,6 +194,9 @@ results server_tests() {
     RUN_TEST(server_receive_fires_event_when_a_decode_error_occurs);
     RUN_TEST(server_receive_when_op_has_parent_and_doc_is_empty);
     RUN_TEST(server_receive_when_empty_doc_is_opened);
+
+    free_sent();
+    free_event();
 
     return (results) { passed, failed };
 }
