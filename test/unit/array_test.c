@@ -137,5 +137,5 @@ results array_tests() {
     RUN_TEST(copy_copies_array_with_one_element);
     RUN_TEST(copy_copies_array_with_two_elements);
 
-    return (results) { passed, failed };
+    return (results){passed, failed};
 }

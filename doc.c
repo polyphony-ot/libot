@@ -48,7 +48,7 @@ ot_err ot_doc_append(ot_doc* doc, ot_op** op) {
         ot_op* prev = &history[len - 2];
         memcpy(head->parent, prev->hash, 20);
     } else {
-        char zero[20] = { 0 };
+        char zero[20] = {0};
         memcpy(head->parent, zero, 20);
     }
 

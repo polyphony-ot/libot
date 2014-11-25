@@ -14,5 +14,5 @@ static bool encode_err_returns_correct_json(char** msg) {
 results encode_tests() {
     RUN_TEST(encode_err_returns_correct_json);
 
-    return (results) { passed, failed };
+    return (results){passed, failed};
 }

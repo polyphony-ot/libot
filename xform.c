@@ -25,7 +25,7 @@ static delta_pair ot_xform_skip_skip(ot_comp_skip skip1, size_t offset1,
     ot_skip(xform.op1_prime, (uint32_t)min_len);
     ot_skip(xform.op2_prime, (uint32_t)min_len);
 
-    return (delta_pair) { min_len, min_len };
+    return (delta_pair){min_len, min_len};
 }
 
 static delta_pair ot_xform_skip_insert(ot_comp_insert ins, size_t ins_offset,
@@ -43,15 +43,15 @@ static delta_pair ot_xform_skip_insert(ot_comp_insert ins, size_t ins_offset,
     ot_insert(xform.op2_prime, substr);
     free(substr);
 
-    return (delta_pair) { 0, ins_len };
+    return (delta_pair){0, ins_len};
 }
 
 static delta_pair ot_xform_insert_skip(ot_comp_insert ins, size_t ins_offset,
                                        ot_xform_pair xform) {
 
-    ot_xform_pair flip = (ot_xform_pair) { xform.op2_prime, xform.op1_prime };
+    ot_xform_pair flip = (ot_xform_pair){xform.op2_prime, xform.op1_prime};
     delta_pair p = ot_xform_skip_insert(ins, ins_offset, flip);
-    return (delta_pair) { p.delta2, p.delta1 };
+    return (delta_pair){p.delta2, p.delta1};
 }
 
 static delta_pair ot_xform_skip_delete(ot_comp_skip skip, size_t skip_offset,
@@ -64,17 +64,17 @@ static delta_pair ot_xform_skip_delete(ot_comp_skip skip, size_t skip_offset,
 
     ot_delete(xform.op2_prime, (uint32_t)min_len);
 
-    return (delta_pair) { min_len, min_len };
+    return (delta_pair){min_len, min_len};
 }
 
 static delta_pair ot_xform_delete_skip(ot_comp_delete del, size_t del_offset,
                                        ot_comp_skip skip, size_t skip_offset,
                                        ot_xform_pair xform) {
 
-    ot_xform_pair flip = (ot_xform_pair) { xform.op2_prime, xform.op1_prime };
+    ot_xform_pair flip = (ot_xform_pair){xform.op2_prime, xform.op1_prime};
     delta_pair p =
         ot_xform_skip_delete(skip, skip_offset, del, del_offset, flip);
-    return (delta_pair) { p.delta2, p.delta1 };
+    return (delta_pair){p.delta2, p.delta1};
 }
 
 static delta_pair ot_xform_insert_insert(ot_comp_insert op1_insert,
@@ -93,7 +93,7 @@ static delta_pair ot_xform_insert_insert(ot_comp_insert op1_insert,
     ot_insert(xform.op1_prime, substr);
     free(substr);
 
-    return (delta_pair) { len, 0 };
+    return (delta_pair){len, 0};
 }
 
 static delta_pair ot_xform_insert_delete(ot_comp_insert ins, size_t ins_offset,
@@ -111,15 +111,15 @@ static delta_pair ot_xform_insert_delete(ot_comp_insert ins, size_t ins_offset,
     ot_insert(xform.op1_prime, substr);
     free(substr);
 
-    return (delta_pair) { ins_len, 0 };
+    return (delta_pair){ins_len, 0};
 }
 
 static delta_pair ot_xform_delete_insert(ot_comp_insert ins, size_t ins_offset,
                                          ot_xform_pair xform) {
 
-    ot_xform_pair flip = (ot_xform_pair) { xform.op2_prime, xform.op1_prime };
+    ot_xform_pair flip = (ot_xform_pair){xform.op2_prime, xform.op1_prime};
     delta_pair p = ot_xform_insert_delete(ins, ins_offset, flip);
-    return (delta_pair) { p.delta2, p.delta1 };
+    return (delta_pair){p.delta2, p.delta1};
 }
 
 static delta_pair ot_xform_delete_delete(ot_comp_delete del1, size_t offset1,
@@ -129,7 +129,7 @@ static delta_pair ot_xform_delete_delete(ot_comp_delete del1, size_t offset1,
     size_t len2 = (size_t)del2.count - offset2;
     size_t min_len = min(len1, len2);
 
-    return (delta_pair) { min_len, min_len };
+    return (delta_pair){min_len, min_len};
 }
 
 ot_xform_pair ot_xform(ot_op* op1, ot_op* op2) {
@@ -141,7 +141,7 @@ ot_xform_pair ot_xform(ot_op* op1, ot_op* op2) {
     op2_prime->client_id = op2->client_id;
     memcpy(op2_prime->parent, op1->hash, 20);
 
-    ot_xform_pair xform = (ot_xform_pair) { op1_prime, op2_prime };
+    ot_xform_pair xform = (ot_xform_pair){op1_prime, op2_prime};
 
     ot_comp* op1_comps = op1->comps.data;
     ot_comp* op2_comps = op2->comps.data;
@@ -184,7 +184,7 @@ ot_xform_pair ot_xform(ot_op* op1, ot_op* op2) {
             } else {
                 ot_free_op(op1_prime);
                 ot_free_op(op2_prime);
-                return (ot_xform_pair) { NULL, NULL };
+                return (ot_xform_pair){NULL, NULL};
             }
         } else if (op2_comp == NULL) {
             if (op1_comp == NULL) {
@@ -201,7 +201,7 @@ ot_xform_pair ot_xform(ot_op* op1, ot_op* op2) {
             } else {
                 ot_free_op(op1_prime);
                 ot_free_op(op2_prime);
-                return (ot_xform_pair) { NULL, NULL };
+                return (ot_xform_pair){NULL, NULL};
             }
         } else if (op1_comp->type == OT_SKIP) {
             ot_comp_skip op1_skip = op1_comp->value.skip;

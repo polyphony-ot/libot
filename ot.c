@@ -55,7 +55,7 @@ static void append_fmt(array* fmt_array, const char* name, const char* value) {
     size_t value_size = sizeof(char) * (strlen(value) + 1);
 
     ot_fmt* fmt = NULL;
-    ot_fmt* data = (ot_fmt*) fmt_array->data;
+    ot_fmt* data = (ot_fmt*)fmt_array->data;
     for (size_t i = 0; i < fmt_array->len; ++i) {
         ot_fmt* cur_fmt = data + i;
         if (strcmp(cur_fmt->name, name) == 0) {
@@ -345,18 +345,18 @@ uint32_t ot_size(const ot_op* op) {
 
 uint32_t ot_comp_size(const ot_comp* comp) {
     switch (comp->type) {
-        case OT_SKIP:
-            return comp->value.skip.count;
-        case OT_INSERT:
-            return utf8_length(comp->value.insert.text);
-        case OT_DELETE:
-            return comp->value.delete.count;
-        case OT_OPEN_ELEMENT:
-            break;
-        case OT_CLOSE_ELEMENT:
-            break;
-        case OT_FORMATTING_BOUNDARY:
-            break;
+    case OT_SKIP:
+        return comp->value.skip.count;
+    case OT_INSERT:
+        return utf8_length(comp->value.insert.text);
+    case OT_DELETE:
+        return comp->value.delete.count;
+    case OT_OPEN_ELEMENT:
+        break;
+    case OT_CLOSE_ELEMENT:
+        break;
+    case OT_FORMATTING_BOUNDARY:
+        break;
     }
 
     return -1;

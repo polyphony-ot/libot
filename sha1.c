@@ -1,22 +1,24 @@
 #include "sha1.h"
 
-const struct ltc_hash_descriptor sha1_desc = { "sha1",
-                                               2,
-                                               20,
-                                               64,
+const struct ltc_hash_descriptor sha1_desc = {"sha1",
+                                              2,
+                                              20,
+                                              64,
 
-                                               /* OID */
-                                               { 1, 3, 14, 3, 2, 26, },
-                                               6,
-                                               &sha1_init,
-                                               &sha1_process,
-                                               &sha1_done,
-                                               NULL,
-                                               NULL };
+                                              /* OID */
+                                              {
+                                               1, 3, 14, 3, 2, 26,
+                                              },
+                                              6,
+                                              &sha1_init,
+                                              &sha1_process,
+                                              &sha1_done,
+                                              NULL,
+                                              NULL};
 
-#define F0(x, y, z) (z ^ (x&(y ^ z)))
+#define F0(x, y, z) (z ^ (x & (y ^ z)))
 #define F1(x, y, z) (x ^ y ^ z)
-#define F2(x, y, z) ((x& y) | (z&(x | y)))
+#define F2(x, y, z) ((x & y) | (z & (x | y)))
 #define F3(x, y, z) (x ^ y ^ z)
 
 static int sha1_compress(hash_state* md, char* buf) {

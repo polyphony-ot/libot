@@ -226,5 +226,5 @@ results decode_tests() {
     RUN_TEST(decode_doc_with_insert_skip_and_delete_components);
     RUN_TEST(decode_returns_correct_error_code);
 
-    return (results) { passed, failed };
+    return (results){passed, failed};
 }

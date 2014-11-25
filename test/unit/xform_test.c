@@ -216,5 +216,5 @@ results xform_tests() {
     RUN_TEST(xform_returned_ops_have_correct_clients_and_parents);
     RUN_TEST(xform_returns_null_when_xform_fails);
 
-    return (results) { passed, failed };
+    return (results){passed, failed};
 }

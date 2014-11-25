@@ -198,5 +198,5 @@ results server_tests() {
     free_sent();
     free_event();
 
-    return (results) { passed, failed };
+    return (results){passed, failed};
 }

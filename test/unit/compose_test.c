@@ -217,5 +217,5 @@ results compose_tests() {
     RUN_TEST(compose_delete_delete);
     RUN_TEST(compose_returns_op_with_client_and_parent_of_first_op);
 
-    return (results) { passed, failed };
+    return (results){passed, failed};
 }

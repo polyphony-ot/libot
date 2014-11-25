@@ -77,7 +77,7 @@ static bool start_fmt_updates_existing_value(char** msg) {
     ot_fmt last_fmt = fmts[0];
 
     ASSERT_STR_EQUAL(UPDATED_VALUE, last_fmt.value,
-        "Format value wasn't updated with the new value.", msg);
+                     "Format value wasn't updated with the new value.", msg);
 
     ot_free_op(op);
     return true;
@@ -478,5 +478,5 @@ results ot_tests() {
     RUN_TEST(size_with_delete);
     RUN_TEST(size_with_delete_and_insert);
 
-    return (results) { passed, failed };
+    return (results){passed, failed};
 }

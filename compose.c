@@ -23,7 +23,7 @@ static pair ot_compose_skip_skip(ot_comp_skip skip1, size_t offset1,
 
     ot_skip(composed, (uint32_t)min_len);
 
-    return (pair) { min_len, min_len };
+    return (pair){min_len, min_len};
 }
 
 static pair ot_compose_skip_insert(ot_comp_insert insert, size_t insert_offset,
@@ -39,7 +39,7 @@ static pair ot_compose_skip_insert(ot_comp_insert insert, size_t insert_offset,
     ot_insert(composed, substr);
     free(substr);
 
-    return (pair) { 0, insert_len };
+    return (pair){0, insert_len};
 }
 
 static pair ot_compose_skip_delete(ot_comp_skip skip, size_t skip_offset,
@@ -52,7 +52,7 @@ static pair ot_compose_skip_delete(ot_comp_skip skip, size_t skip_offset,
 
     ot_delete(composed, (uint32_t)min_len);
 
-    return (pair) { min_len, min_len };
+    return (pair){min_len, min_len};
 }
 
 static pair ot_compose_insert_skip(ot_comp_insert insert, size_t insert_offset,
@@ -71,7 +71,7 @@ static pair ot_compose_insert_skip(ot_comp_insert insert, size_t insert_offset,
     ot_insert(composed, substr);
     free(substr);
 
-    return (pair) { min_len, min_len };
+    return (pair){min_len, min_len};
 }
 
 static pair ot_compose_insert_insert(ot_comp_insert insert1, size_t offset1,
@@ -90,7 +90,7 @@ static pair ot_compose_insert_insert(ot_comp_insert insert1, size_t offset1,
     ot_insert(composed, substr);
     free(substr);
 
-    return (pair) { 0, min_len };
+    return (pair){0, min_len};
 }
 
 static pair ot_compose_insert_delete(ot_comp_insert ins, size_t ins_offset,
@@ -100,7 +100,7 @@ static pair ot_compose_insert_delete(ot_comp_insert ins, size_t ins_offset,
     size_t del_len = (size_t)del.count - del_offset;
     size_t min_len = min(ins_len, del_len);
 
-    return (pair) { min_len, min_len };
+    return (pair){min_len, min_len};
 }
 
 static pair ot_compose_delete(ot_comp_delete del, size_t del_offset,
@@ -109,7 +109,7 @@ static pair ot_compose_delete(ot_comp_delete del, size_t del_offset,
     size_t del_len = (size_t)del.count - del_offset;
     ot_delete(composed, (uint32_t)del_len);
 
-    return (pair) { del_len, 0 };
+    return (pair){del_len, 0};
 }
 
 ot_op* ot_compose(ot_op* op1, ot_op* op2) {

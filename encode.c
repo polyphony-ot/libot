@@ -35,10 +35,10 @@ static cJSON* cjson_op(const ot_op* const op) {
         cJSON_AddItemToArray(components, component);
     }
 
-    char parent[41] = { 0 };
+    char parent[41] = {0};
     atohex(parent, op->parent, 20);
 
-    char hash[41] = { 0 };
+    char hash[41] = {0};
     atohex(hash, op->hash, 20);
 
     cJSON* root;
