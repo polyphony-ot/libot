@@ -22,6 +22,67 @@ static void ot_free_fmtbound(ot_comp_fmtbound* fmtbound) {
     array_free(&fmtbound->end);
 }
 
+static ot_comp_fmtbound* new_fmtbound(ot_op* op) {
+    ot_comp* comp = array_append(&op->comps);
+    comp->type = OT_FORMATTING_BOUNDARY;
+    ot_comp_fmtbound* fmtbound = &comp->value.fmtbound;
+    array_init(&fmtbound->start, sizeof(ot_fmt));
+    array_init(&fmtbound->end, sizeof(ot_fmt));
+
+    return fmtbound;
+}
+
+static ot_comp_fmtbound* append_fmtbound(ot_op* op) {
+    ot_comp* cur_comp;
+    ot_comp* comps = op->comps.data;
+    ot_comp_fmtbound* fmtbound;
+    if (op->comps.len == 0) {
+        fmtbound = new_fmtbound(op);
+    } else {
+        cur_comp = comps + op->comps.len - 1;
+        if (cur_comp->type != OT_FORMATTING_BOUNDARY) {
+            fmtbound = new_fmtbound(op);
+        } else {
+            fmtbound = &cur_comp->value.fmtbound;
+        }
+    }
+
+    return fmtbound;
+}
+
+static void append_fmt(array* fmt_array, const char* name, const char* value) {
+    size_t name_size = sizeof(char) * (strlen(name) + 1);
+    size_t value_size = sizeof(char) * (strlen(value) + 1);
+
+    ot_fmt* fmt = NULL;
+    ot_fmt* data = (ot_fmt*) fmt_array->data;
+    for (size_t i = 0; i < fmt_array->len; ++i) {
+        ot_fmt* cur_fmt = data + i;
+        if (strcmp(cur_fmt->name, name) == 0) {
+            fmt = cur_fmt;
+            break;
+        }
+    }
+
+    if (fmt == NULL && value != NULL) {
+        fmt = array_append(fmt_array);
+
+        fmt->name = malloc(name_size);
+        memcpy(fmt->name, name, name_size);
+
+        fmt->value = malloc(value_size);
+        memcpy(fmt->value, value, value_size);
+    } else if (fmt != NULL && value == NULL) {
+        // TODO: Remove format
+    } else if (fmt != NULL && value != NULL) {
+        fmt->name = malloc(name_size);
+        memcpy(fmt->name, name, name_size);
+
+        fmt->value = realloc(fmt->value, value_size);
+        memcpy(fmt->value, value, value_size);
+    }
+}
+
 ot_op* ot_new_op() {
     ot_op* op = (ot_op*)malloc(sizeof(ot_op));
     op->client_id = 0;
@@ -228,71 +289,13 @@ void ot_close_element(ot_op* op) {
 }
 
 void ot_start_fmt(ot_op* op, const char* name, const char* value) {
-    ot_comp* cur_comp;
-    ot_comp* comps = op->comps.data;
-    ot_comp_fmtbound* fmtbound;
-    if (op->comps.len == 0) {
-        cur_comp = array_append(&op->comps);
-        cur_comp->type = OT_FORMATTING_BOUNDARY;
-        fmtbound = &cur_comp->value.fmtbound;
-        array_init(&cur_comp->value.fmtbound.start, sizeof(ot_fmt));
-        array_init(&cur_comp->value.fmtbound.end, sizeof(ot_fmt));
-    } else {
-        cur_comp = comps + op->comps.len - 1;
-        if (cur_comp->type != OT_FORMATTING_BOUNDARY) {
-            cur_comp = array_append(&op->comps);
-            cur_comp->type = OT_FORMATTING_BOUNDARY;
-            fmtbound = &cur_comp->value.fmtbound;
-            array_init(&cur_comp->value.fmtbound.start, sizeof(ot_fmt));
-            array_init(&cur_comp->value.fmtbound.end, sizeof(ot_fmt));
-        } else {
-            fmtbound = &cur_comp->value.fmtbound;
-        }
-    }
-
-    ot_fmt* fmt = array_append(&fmtbound->start);
-
-    size_t name_size = sizeof(char) * (strlen(name) + 1);
-    fmt->name = malloc(name_size);
-    memcpy(fmt->name, name, name_size);
-
-    size_t value_size = sizeof(char) * (strlen(value) + 1);
-    fmt->value = malloc(value_size);
-    memcpy(fmt->value, value, value_size);
+    ot_comp_fmtbound* fmtbound = append_fmtbound(op);
+    append_fmt(&fmtbound->start, name, value);
 }
 
 void ot_end_fmt(ot_op* op, const char* name, const char* value) {
-    ot_comp* cur_comp;
-    ot_comp* comps = op->comps.data;
-    ot_comp_fmtbound* fmtbound;
-    if (op->comps.len == 0) {
-        cur_comp = array_append(&op->comps);
-        cur_comp->type = OT_FORMATTING_BOUNDARY;
-        fmtbound = &cur_comp->value.fmtbound;
-        array_init(&cur_comp->value.fmtbound.start, sizeof(ot_fmt));
-        array_init(&cur_comp->value.fmtbound.end, sizeof(ot_fmt));
-    } else {
-        cur_comp = comps + op->comps.len - 1;
-        if (cur_comp->type != OT_FORMATTING_BOUNDARY) {
-            cur_comp = array_append(&op->comps);
-            cur_comp->type = OT_FORMATTING_BOUNDARY;
-            fmtbound = &cur_comp->value.fmtbound;
-            array_init(&cur_comp->value.fmtbound.start, sizeof(ot_fmt));
-            array_init(&cur_comp->value.fmtbound.end, sizeof(ot_fmt));
-        } else {
-            fmtbound = &cur_comp->value.fmtbound;
-        }
-    }
-
-    ot_fmt* fmt = array_append(&fmtbound->end);
-
-    size_t name_size = sizeof(char) * (strlen(name) + 1);
-    fmt->name = malloc(name_size);
-    memcpy(fmt->name, name, name_size);
-
-    size_t value_size = sizeof(char) * (strlen(value) + 1);
-    fmt->value = malloc(value_size);
-    memcpy(fmt->value, value, value_size);
+    ot_comp_fmtbound* fmtbound = append_fmtbound(op);
+    append_fmt(&fmtbound->end, name, value);
 }
 
 char* ot_snapshot(ot_op* op) {

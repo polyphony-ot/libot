@@ -63,6 +63,26 @@ static bool start_fmt_merges_fmtbound_with_previous_fmtbound(char** msg) {
     return true;
 }
 
+static bool start_fmt_updates_existing_value(char** msg) {
+    const char* const ANY_NAME = "any name";
+    const char* const ORIGINAL_VALUE = "original value";
+    const char* const UPDATED_VALUE = "updated value";
+
+    ot_op* op = ot_new_op();
+    ot_start_fmt(op, ANY_NAME, ORIGINAL_VALUE);
+    ot_start_fmt(op, ANY_NAME, UPDATED_VALUE);
+
+    ot_comp* comps = op->comps.data;
+    ot_fmt* fmts = comps[0].value.fmtbound.start.data;
+    ot_fmt last_fmt = fmts[0];
+
+    ASSERT_STR_EQUAL(UPDATED_VALUE, last_fmt.value,
+        "Format value wasn't updated with the new value.", msg);
+
+    ot_free_op(op);
+    return true;
+}
+
 static bool end_fmt_appends_correct_name_and_value(char** msg) {
     char* EXPECTED_NAME = "any name";
     char* EXPECTED_VALUE = "any value";
@@ -436,6 +456,7 @@ results ot_tests() {
     RUN_TEST(start_fmt_appends_correct_comp_type);
     RUN_TEST(start_fmt_appends_correct_name_and_value);
     RUN_TEST(start_fmt_merges_fmtbound_with_previous_fmtbound);
+    RUN_TEST(start_fmt_updates_existing_value);
     RUN_TEST(end_fmt_appends_correct_name_and_value);
     RUN_TEST(end_fmt_merges_fmtbound_with_previous_fmtbound);
     RUN_TEST(iter_next_on_empty_op);
