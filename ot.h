@@ -48,18 +48,15 @@ typedef enum {
     OT_ERR_MAX_SIZE = 11
 } ot_err;
 
-typedef struct ot_fmt {
+typedef struct ot_attr {
     char* name;
     char* value;
-} ot_fmt;
+} ot_attr;
 
 typedef enum {
     OT_SKIP = 0,
     OT_INSERT = 1,
-    OT_DELETE = 2,
-    OT_OPEN_ELEMENT = 3,
-    OT_CLOSE_ELEMENT = 4,
-    OT_FORMATTING_BOUNDARY = 5
+    OT_DELETE = 2
 } ot_comp_type;
 
 typedef struct ot_comp_skip {
@@ -74,23 +71,12 @@ typedef struct ot_comp_delete {
     uint32_t count;
 } ot_comp_delete;
 
-typedef struct ot_comp_open_element {
-    char* elem;
-} ot_comp_open_element;
-
-typedef struct ot_comp_fmtbound {
-    array start;
-    array end;
-} ot_comp_fmtbound;
-
 typedef struct ot_comp {
     ot_comp_type type;
     union {
         ot_comp_skip skip;
         ot_comp_insert insert;
         ot_comp_delete delete;
-        ot_comp_open_element open_element;
-        ot_comp_fmtbound fmtbound;
     } value;
 } ot_comp;
 
@@ -127,15 +113,9 @@ void ot_skip(ot_op* op, uint32_t count);
 // append it to op.
 void ot_insert(ot_op* op, const char* text);
 void ot_delete(ot_op* op, uint32_t count);
-void ot_open_element(ot_op* op, const char* elem);
-void ot_close_element(ot_op* op);
-void ot_start_fmt(ot_op* op, const char* name, const char* value);
-void ot_end_fmt(ot_op* op, const char* name, const char* value);
 char* ot_snapshot(ot_op* op);
 uint32_t ot_size(const ot_op* op);
 uint32_t ot_comp_size(const ot_comp* comp);
-
-ot_comp_fmtbound* ot_new_fmtbound();
 
 typedef struct ot_iter {
     const ot_op* op; // Op to iterator over.

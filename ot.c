@@ -6,83 +6,6 @@
 #include "hex.h"
 #include "utf8.h"
 
-static void ot_free_fmtbound(ot_comp_fmtbound* fmtbound) {
-    ot_fmt* start_data = fmtbound->start.data;
-    for (size_t i = 0; i < fmtbound->start.len; ++i) {
-        free(start_data[i].name);
-        free(start_data[i].value);
-    }
-    array_free(&fmtbound->start);
-
-    ot_fmt* end_data = fmtbound->end.data;
-    for (size_t i = 0; i < fmtbound->end.len; ++i) {
-        free(end_data[i].name);
-        free(end_data[i].value);
-    }
-    array_free(&fmtbound->end);
-}
-
-static ot_comp_fmtbound* new_fmtbound(ot_op* op) {
-    ot_comp* comp = array_append(&op->comps);
-    comp->type = OT_FORMATTING_BOUNDARY;
-    ot_comp_fmtbound* fmtbound = &comp->value.fmtbound;
-    array_init(&fmtbound->start, sizeof(ot_fmt));
-    array_init(&fmtbound->end, sizeof(ot_fmt));
-
-    return fmtbound;
-}
-
-static ot_comp_fmtbound* append_fmtbound(ot_op* op) {
-    ot_comp* cur_comp;
-    ot_comp* comps = op->comps.data;
-    ot_comp_fmtbound* fmtbound;
-    if (op->comps.len == 0) {
-        fmtbound = new_fmtbound(op);
-    } else {
-        cur_comp = comps + op->comps.len - 1;
-        if (cur_comp->type != OT_FORMATTING_BOUNDARY) {
-            fmtbound = new_fmtbound(op);
-        } else {
-            fmtbound = &cur_comp->value.fmtbound;
-        }
-    }
-
-    return fmtbound;
-}
-
-static void append_fmt(array* fmt_array, const char* name, const char* value) {
-    size_t name_size = sizeof(char) * (strlen(name) + 1);
-    size_t value_size = sizeof(char) * (strlen(value) + 1);
-
-    ot_fmt* fmt = NULL;
-    ot_fmt* data = (ot_fmt*)fmt_array->data;
-    for (size_t i = 0; i < fmt_array->len; ++i) {
-        ot_fmt* cur_fmt = data + i;
-        if (strcmp(cur_fmt->name, name) == 0) {
-            fmt = cur_fmt;
-            break;
-        }
-    }
-
-    if (fmt == NULL && value != NULL) {
-        fmt = array_append(fmt_array);
-
-        fmt->name = malloc(name_size);
-        memcpy(fmt->name, name, name_size);
-
-        fmt->value = malloc(value_size);
-        memcpy(fmt->value, value, value_size);
-    } else if (fmt != NULL && value == NULL) {
-        // TODO: Remove format
-    } else if (fmt != NULL && value != NULL) {
-        fmt->name = malloc(name_size);
-        memcpy(fmt->name, name, name_size);
-
-        fmt->value = realloc(fmt->value, value_size);
-        memcpy(fmt->value, value, value_size);
-    }
-}
-
 ot_op* ot_new_op() {
     ot_op* op = (ot_op*)malloc(sizeof(ot_op));
     op->client_id = 0;
@@ -103,21 +26,11 @@ void ot_free_op(ot_op* op) {
 }
 
 void ot_free_comp(ot_comp* comp) {
-    switch (comp->type) {
-    case OT_INSERT:
+    if (comp->type == OT_INSERT) {
         free(comp->value.insert.text);
-        break;
-    case OT_OPEN_ELEMENT:
-        free(comp->value.open_element.elem);
-        break;
-    case OT_FORMATTING_BOUNDARY:
-        ot_free_fmtbound(&comp->value.fmtbound);
-    default:
-        break;
     }
 }
 
-// TODO: Implement copying of formatting boundaries.
 // TODO: Make this more efficient by copying memory instead of recreating the op
 //       using the various OT functions.
 ot_op* ot_dup_op(const ot_op* op) {
@@ -137,14 +50,6 @@ ot_op* ot_dup_op(const ot_op* op) {
             break;
         case OT_DELETE:
             ot_delete(dup, comp->value.delete.count);
-            break;
-        case OT_OPEN_ELEMENT:
-            ot_open_element(dup, comp->value.open_element.elem);
-            break;
-        case OT_CLOSE_ELEMENT:
-            ot_close_element(dup);
-            break;
-        case OT_FORMATTING_BOUNDARY:
             break;
         }
     }
@@ -199,19 +104,6 @@ bool ot_equal(const ot_op* op1, const ot_op* op2) {
                 return false;
             }
 
-            break;
-        case OT_OPEN_ELEMENT: {
-            char* elem1 = comp1.value.open_element.elem;
-            char* elem2 = comp2.value.open_element.elem;
-            if (strcmp(elem1, elem2) != 0) {
-                return false;
-            }
-
-            break;
-        }
-        case OT_CLOSE_ELEMENT:
-            break;
-        case OT_FORMATTING_BOUNDARY:
             break;
         default:
             return false;
@@ -275,29 +167,6 @@ void ot_delete(ot_op* op, uint32_t count) {
     }
 }
 
-void ot_open_element(ot_op* op, const char* elem) {
-    ot_comp* comp = array_append(&op->comps);
-    comp->type = OT_OPEN_ELEMENT;
-    size_t size = sizeof(char) * (strlen(elem) + 1);
-    comp->value.open_element.elem = malloc(size);
-    memcpy(comp->value.open_element.elem, elem, size);
-}
-
-void ot_close_element(ot_op* op) {
-    ot_comp* comp = array_append(&op->comps);
-    comp->type = OT_CLOSE_ELEMENT;
-}
-
-void ot_start_fmt(ot_op* op, const char* name, const char* value) {
-    ot_comp_fmtbound* fmtbound = append_fmtbound(op);
-    append_fmt(&fmtbound->start, name, value);
-}
-
-void ot_end_fmt(ot_op* op, const char* name, const char* value) {
-    ot_comp_fmtbound* fmtbound = append_fmtbound(op);
-    append_fmt(&fmtbound->end, name, value);
-}
-
 char* ot_snapshot(ot_op* op) {
     size_t size = sizeof(char);
     size_t written = 0;
@@ -351,12 +220,6 @@ uint32_t ot_comp_size(const ot_comp* comp) {
         return utf8_length(comp->value.insert.text);
     case OT_DELETE:
         return comp->value.delete.count;
-    case OT_OPEN_ELEMENT:
-        break;
-    case OT_CLOSE_ELEMENT:
-        break;
-    case OT_FORMATTING_BOUNDARY:
-        break;
     }
 
     return -1;

@@ -150,12 +150,6 @@ ot_op* ot_compose(ot_op* op1, ot_op* op2) {
                 ot_insert(composed, op2_comp->value.insert.text);
                 size_t len = utf8_length(op2_comp->value.insert.text);
                 op2_next = ot_iter_skip(&op2_iter, len);
-            } else if (op2_comp->type == OT_OPEN_ELEMENT) {
-                // TODO: Stub
-            } else if (op2_comp->type == OT_CLOSE_ELEMENT) {
-                // TODO: Stub
-            } else if (op2_comp->type == OT_FORMATTING_BOUNDARY) {
-                // TODO: Stub
             } else {
                 // Error out since these two components are not composable. You
                 // cannot skip or delete what doesn't exist in the first op.

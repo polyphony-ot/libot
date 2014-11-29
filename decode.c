@@ -54,17 +54,6 @@ ot_err decode_cjson_op(cJSON* json, ot_op* op) {
             delete->type = OT_DELETE;
             delete->value.delete.count =
                 (uint32_t)cJSON_GetObjectItem(item, "count")->valueint;
-        } else if (memcmp(type, "openElement", 11) == 0) {
-            ot_comp* open_elem = array_append(&op->comps);
-            open_elem->type = OT_OPEN_ELEMENT;
-            open_elem->value.open_element.elem =
-                cJSON_GetObjectItem(item, "element")->valuestring;
-        } else if (memcmp(type, "closeElement", 12) == 0) {
-            ot_comp* open_elem = array_append(&op->comps);
-            open_elem->type = OT_CLOSE_ELEMENT;
-        } else if (memcmp(type, "formattingBoundary", 18) == 0) {
-            ot_comp* open_elem = array_append(&op->comps);
-            open_elem->type = OT_FORMATTING_BOUNDARY;
         } else {
             return OT_ERR_INVALID_COMPONENT;
         }

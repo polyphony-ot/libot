@@ -23,14 +23,6 @@ static cJSON* cjson_op(const ot_op* const op) {
             cJSON_AddStringToObject(component, "type", "delete");
             uint32_t count = comps[i].value.delete.count;
             cJSON_AddNumberToObject(component, "count", count);
-        } else if (t == OT_OPEN_ELEMENT) {
-            cJSON_AddStringToObject(component, "type", "openElement");
-            char* elem = comps[i].value.open_element.elem;
-            cJSON_AddStringToObject(component, "element", elem);
-        } else if (t == OT_CLOSE_ELEMENT) {
-            cJSON_AddStringToObject(component, "type", "closeElement");
-        } else if (t == OT_FORMATTING_BOUNDARY) {
-            // TODO: Implement encoding formatting boundaries.
         }
         cJSON_AddItemToArray(components, component);
     }
