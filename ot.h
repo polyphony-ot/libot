@@ -5,6 +5,7 @@
 #include <stdbool.h>
 #include <inttypes.h>
 #include "array.h"
+#include "attr.h"
 
 typedef enum {
     OT_ERR_NONE = 0,
@@ -48,28 +49,19 @@ typedef enum {
     OT_ERR_MAX_SIZE = 11
 } ot_err;
 
-typedef struct ot_attr {
-    char* name;
-    char* value;
-} ot_attr;
-
-typedef enum {
-    OT_SKIP = 0,
-    OT_INSERT = 1,
-    OT_DELETE = 2
-} ot_comp_type;
+typedef enum { OT_SKIP = 0, OT_INSERT = 1, OT_DELETE = 2 } ot_comp_type;
 
 typedef struct ot_comp_skip {
     uint32_t count;
+    array attrs;
 } ot_comp_skip;
 
 typedef struct ot_comp_insert {
     char* text;
+    array attrs;
 } ot_comp_insert;
 
-typedef struct ot_comp_delete {
-    uint32_t count;
-} ot_comp_delete;
+typedef struct ot_comp_delete { uint32_t count; } ot_comp_delete;
 
 typedef struct ot_comp {
     ot_comp_type type;
@@ -104,6 +96,7 @@ void ot_free_comp(ot_comp* comp);
 ot_op* ot_dup_op(const ot_op* op);
 bool ot_equal(const ot_op* op1, const ot_op* op2);
 void ot_skip(ot_op* op, uint32_t count);
+void ot_skip_attr(ot_op* op, uint32_t count, const array* attrs);
 
 // Appends an insert component to an operation. text is copied and not freed, so
 // the caller must free it manually.
@@ -112,6 +105,7 @@ void ot_skip(ot_op* op, uint32_t count);
 // to the existing insert. Otherwise, it will create a new insert component and
 // append it to op.
 void ot_insert(ot_op* op, const char* text);
+void ot_insert_attr(ot_op* op, const char* text, const array* attrs);
 void ot_delete(ot_op* op, uint32_t count);
 char* ot_snapshot(ot_op* op);
 uint32_t ot_size(const ot_op* op);

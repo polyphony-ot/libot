@@ -330,6 +330,29 @@ static bool size_with_delete_and_insert(char** msg) {
     return true;
 }
 
+static bool inserts_with_same_attributes_are_merged(char** msg) {
+    const char* const INSERT1 = "abc";
+    const char* const INSERT2 = "def";
+    const char* const MERGED = "abcdef";
+
+    array* attrs = ot_new_attrs();
+    ot_add_attr(attrs, "name", "value");
+
+    ot_op* expected = ot_new_op();
+    ot_insert_attr(expected, MERGED, attrs);
+
+    ot_op* actual = ot_new_op();
+    ot_insert_attr(actual, INSERT1, attrs);
+    ot_insert_attr(actual, INSERT2, attrs);
+
+    ASSERT_OP_EQUAL(expected, actual,
+        "Inserts with the same attributes weren't merged.", msg);
+
+    ot_free_op(expected);
+    ot_free_op(actual);
+    return true;
+}
+
 results ot_tests() {
     RUN_TEST(iter_next_on_empty_op);
     RUN_TEST(iter_next_iterates_once_over_skip_with_count_one);
@@ -349,6 +372,7 @@ results ot_tests() {
     RUN_TEST(size_of_op_with_only_inserts_equals_length_of_snapshot);
     RUN_TEST(size_with_delete);
     RUN_TEST(size_with_delete_and_insert);
+    RUN_TEST(inserts_with_same_attributes_are_merged);
 
     return (results){passed, failed};
 }

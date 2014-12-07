@@ -215,6 +215,36 @@ static bool decode_returns_correct_error_code(char** msg) {
     return true;
 }
 
+static bool decode_skip_component_with_attributes(char** msg) {
+    const char* const ENCODED_JSON =
+        "{\"clientId\":0,\"parent\":\"00\","
+        "\"hash\":\"00\",\"components\":[{"
+        "\"type\":\"skip\",\"count\":1,\"attributes\":{\"name\":\"value\"}}]}";
+
+    array* attrs = ot_new_attrs();
+    ot_add_attr(attrs, "name", "value");
+
+    ot_op* expected = ot_new_op();
+    ot_skip_attr(expected, 1, attrs);
+
+    return param_decode_test(ENCODED_JSON, expected, msg);
+}
+
+static bool decode_insert_component_with_attributes(char** msg) {
+    const char* const ENCODED_JSON = "{\"clientId\":0,\"parent\":\"00\","
+                                     "\"hash\":\"00\",\"components\":[{"
+                                     "\"type\":\"insert\",\"text\":\"abc\","
+                                     "\"attributes\":{\"name\":\"value\"}}]}";
+
+    array* attrs = ot_new_attrs();
+    ot_add_attr(attrs, "name", "value");
+
+    ot_op* expected = ot_new_op();
+    ot_insert_attr(expected, "abc", attrs);
+
+    return param_decode_test(ENCODED_JSON, expected, msg);
+}
+
 results decode_tests() {
     RUN_TEST(decode_returns_op_with_correct_skip_component);
     RUN_TEST(decode_returns_op_with_correct_client_id);
@@ -225,6 +255,8 @@ results decode_tests() {
     RUN_TEST(decode_empty_doc_returns_doc_with_no_components);
     RUN_TEST(decode_doc_with_insert_skip_and_delete_components);
     RUN_TEST(decode_returns_correct_error_code);
+    RUN_TEST(decode_skip_component_with_attributes);
+    RUN_TEST(decode_insert_component_with_attributes);
 
     return (results){passed, failed};
 }

@@ -28,6 +28,7 @@ SOURCES=\
 	sha1.c \
 	doc.c \
 	utf8.c \
+	attr.c \
 	cjson/cJSON.c
 
 # List of sources for test scenarios.

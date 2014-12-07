@@ -6,6 +6,33 @@
 #include "hex.h"
 #include "utf8.h"
 
+static bool can_merge_comp(array* comps, ot_comp_type t, const array* attrs) {
+    size_t len = comps->len;
+    if (len == 0) {
+        return false;
+    }
+
+    ot_comp* data = comps->data;
+    ot_comp* last_comp = data + (len - 1);
+    if (last_comp->type != t) {
+        return false;
+    }
+
+    array* last_attrs = NULL;
+    switch (t) {
+    case OT_SKIP:
+        last_attrs = &(last_comp->value.skip.attrs);
+        break;
+    case OT_INSERT:
+        last_attrs = &(last_comp->value.insert.attrs);
+        break;
+    default:
+        break;
+    }
+
+    return ot_attrs_equal(last_attrs, attrs);
+}
+
 ot_op* ot_new_op() {
     ot_op* op = (ot_op*)malloc(sizeof(ot_op));
     op->client_id = 0;
@@ -26,8 +53,16 @@ void ot_free_op(ot_op* op) {
 }
 
 void ot_free_comp(ot_comp* comp) {
-    if (comp->type == OT_INSERT) {
+    switch (comp->type) {
+    case OT_SKIP:
+        array_free(&(comp->value.skip.attrs));
+        break;
+    case OT_INSERT:
         free(comp->value.insert.text);
+        array_free(&(comp->value.insert.attrs));
+        break;
+    default:
+        break;
     }
 }
 
@@ -89,11 +124,21 @@ bool ot_equal(const ot_op* op1, const ot_op* op2) {
                 return false;
             }
 
+            if (!ot_attrs_equal(&comp1.value.skip.attrs,
+                                &comp2.value.skip.attrs)) {
+                return false;
+            }
+
             break;
         case OT_INSERT: {
             char* text1 = comp1.value.insert.text;
             char* text2 = comp2.value.insert.text;
             if (strcmp(text1, text2) != 0) {
+                return false;
+            }
+
+            if (!ot_attrs_equal(&comp1.value.insert.attrs,
+                                &comp2.value.insert.attrs)) {
                 return false;
             }
 
@@ -113,41 +158,59 @@ bool ot_equal(const ot_op* op1, const ot_op* op2) {
     return true;
 }
 
-void ot_skip(ot_op* op, uint32_t count) {
+void ot_skip(ot_op* op, uint32_t count) { ot_skip_attr(op, count, NULL); }
+
+void ot_skip_attr(ot_op* op, uint32_t count, const array* attrs) {
     if (count == 0) {
         return;
     }
 
-    ot_comp* comps = op->comps.data;
-    ot_comp* last = comps + (op->comps.len - 1);
-    if (op->comps.len > 0 && last->type == OT_SKIP) {
+    if (can_merge_comp(&(op->comps), OT_SKIP, attrs)) {
+        ot_comp* comps = op->comps.data;
+        ot_comp* last = comps + (op->comps.len - 1);
         last->value.skip.count += count;
+        return;
+    }
+
+    ot_comp* comp = array_append(&op->comps);
+    comp->type = OT_SKIP;
+    comp->value.skip.count = count;
+
+    if (attrs == NULL) {
+        ot_init_attrs(&(comp->value.skip.attrs));
     } else {
-        ot_comp* comp = array_append(&op->comps);
-        comp->type = OT_SKIP;
-        comp->value.skip.count = count;
+        array_copy(&(comp->value.skip.attrs), attrs);
     }
 }
 
-void ot_insert(ot_op* op, const char* text) {
+void ot_insert(ot_op* op, const char* text) { ot_insert_attr(op, text, NULL); }
+
+void ot_insert_attr(ot_op* op, const char* text, const array* attrs) {
     if (text == NULL) {
         return;
     }
 
     ot_comp* comps = op->comps.data;
-    ot_comp* last = comps + (op->comps.len - 1);
-    if (op->comps.len > 0 && last->type == OT_INSERT) {
+    if (can_merge_comp(&(op->comps), OT_INSERT, attrs)) {
+        ot_comp* last = comps + (op->comps.len - 1);
         size_t len1 = strlen(last->value.insert.text);
         size_t len2 = strlen(text);
         last->value.insert.text =
             realloc(last->value.insert.text, len1 + len2 + 1);
         strcat(last->value.insert.text, text);
+        return;
+    }
+
+    ot_comp* comp = array_append(&op->comps);
+    comp->type = OT_INSERT;
+    size_t size = sizeof(char) * (strlen(text) + 1);
+    comp->value.insert.text = malloc(size);
+    memcpy(comp->value.insert.text, text, size);
+
+    if (attrs == NULL) {
+        ot_init_attrs(&(comp->value.insert.attrs));
     } else {
-        ot_comp* comp = array_append(&op->comps);
-        comp->type = OT_INSERT;
-        size_t size = sizeof(char) * (strlen(text) + 1);
-        comp->value.insert.text = malloc(size);
-        memcpy(comp->value.insert.text, text, size);
+        array_copy(&(comp->value.insert.attrs), attrs);
     }
 }
 

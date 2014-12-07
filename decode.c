@@ -1,5 +1,26 @@
 #include "decode.h"
 
+static void decode_attrs(array* dst, cJSON* json) {
+    array_init(dst, sizeof(ot_attr));
+    if (json != NULL && json->type == cJSON_Object) {
+        int attr_size = cJSON_GetArraySize(json);
+        for (int j = 0; j < attr_size; ++j) {
+            cJSON* attr = cJSON_GetArrayItem(json, j);
+            ot_attr* a = array_append(dst);
+
+            const char* name = attr->string;
+            size_t name_size = sizeof(char) * (strlen(name) + 1);
+            a->name = malloc(name_size);
+            memcpy(a->name, name, name_size);
+
+            const char* value = attr->valuestring;
+            size_t value_size = sizeof(char) * (strlen(value) + 1);
+            a->value = malloc(value_size);
+            memcpy(a->value, value, value_size);
+        }
+    }
+}
+
 // decode_cjson_op decodes a cJSON item into an op.
 ot_err decode_cjson_op(cJSON* json, ot_op* op) {
     cJSON* error_code = cJSON_GetObjectItem(json, "errorCode");
@@ -41,6 +62,9 @@ ot_err decode_cjson_op(cJSON* json, ot_op* op) {
             skip->type = OT_SKIP;
             skip->value.skip.count =
                 (uint32_t)cJSON_GetObjectItem(item, "count")->valueint;
+
+            cJSON* attrs = cJSON_GetObjectItem(item, "attributes");
+            decode_attrs(&(skip->value.skip.attrs), attrs);
         } else if (memcmp(type, "insert", 6) == 0) {
             ot_comp* insert = array_append(&op->comps);
             insert->type = OT_INSERT;
@@ -49,6 +73,9 @@ ot_err decode_cjson_op(cJSON* json, ot_op* op) {
             size_t text_size = sizeof(char) * (strlen(text) + 1);
             insert->value.insert.text = malloc(text_size);
             memcpy(insert->value.insert.text, text, text_size);
+
+            cJSON* attrs = cJSON_GetObjectItem(item, "attributes");
+            decode_attrs(&(insert->value.insert.attrs), attrs);
         } else if (memcmp(type, "delete", 6) == 0) {
             ot_comp* delete = array_append(&op->comps);
             delete->type = OT_DELETE;
