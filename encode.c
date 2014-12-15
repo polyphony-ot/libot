@@ -5,6 +5,18 @@
 #include "encode.h"
 #include "hex.h"
 
+static cJSON* cjson_attrs(array* attrs) {
+    cJSON* cjson = cJSON_CreateObject();
+
+    ot_attr* data = (ot_attr*)attrs->data;
+    for (size_t i = 0; i < attrs->len; ++i) {
+        ot_attr* cur = data + i;
+        cJSON_AddStringToObject(cjson, cur->name, cur->value);
+    }
+
+    return cjson;
+}
+
 static cJSON* cjson_op(const ot_op* const op) {
     ot_comp* comps = op->comps.data;
     cJSON* components = cJSON_CreateArray();
