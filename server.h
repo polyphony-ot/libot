@@ -14,6 +14,7 @@ typedef struct {
     send_func send;
     ot_event_func event;
     ot_doc* doc;
+    void* context;
 } ot_server;
 
 ot_server* ot_new_server(send_func send, ot_event_func event);

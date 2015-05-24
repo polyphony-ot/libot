@@ -11,7 +11,7 @@ static void free_sent() {
     }
 }
 
-static int send(const char* msg) {
+static int send(const char* msg, void* __unused context) {
     free_sent();
 
     size_t size = strlen(msg) + 1;
@@ -27,7 +27,7 @@ static void free_event() {
     }
 }
 
-static int event(ot_event_type t, ot_op* op) {
+static int event(ot_event_type t, ot_op* op, void* __unused context) {
     event_type = t;
 
     free_event();

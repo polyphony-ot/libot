@@ -109,8 +109,8 @@ typedef enum {
     OT_ERROR = 4
 } ot_event_type;
 
-typedef int (*send_func)(const char*);
-typedef int (*ot_event_func)(ot_event_type, ot_op*);
+typedef int (*send_func)(const char*, void*);
+typedef int (*ot_event_func)(ot_event_type, ot_op*, void*);
 
 ot_op* ot_new_op();
 void ot_free_op(ot_op* op);

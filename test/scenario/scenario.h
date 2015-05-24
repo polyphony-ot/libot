@@ -39,10 +39,10 @@ static char* client_queues[MAX_CLIENTS][MAX_CLIENT_QUEUE];
 static size_t clients_len;
 static size_t server_queue_len;
 static char* server_queue[MAX_SERVER_QUEUE];
-static int server_send(const char* op);
-static int server_event(ot_event_type t, ot_op* op);
-static int client_send(const char* op);
-static int client_event(ot_event_type t, ot_op* op);
+static int server_send(const char* op, void* context);
+static int server_event(ot_event_type t, ot_op* op, void* context);
+static int client_send(const char* op, void* context);
+static int client_event(ot_event_type t, ot_op* op, void* context);
 
 // ASSERTIONS
 //
@@ -166,13 +166,13 @@ static size_t server_queue_len = 0;
 static char* server_queue[MAX_SERVER_QUEUE];
 
 // An array containing the lengths of each client queue.
-static size_t client_queue_lens[MAX_CLIENTS] = { 0 };
+static size_t client_queue_lens[MAX_CLIENTS] = {0};
 
 // The 2D array of client queues.
 static char* client_queues[MAX_CLIENTS][MAX_CLIENT_QUEUE];
 
 // Server send callback that stores op in the staging area until it is flushed.
-static int server_send(const char* op) {
+static int server_send(const char* op, void* __unused context) {
     assert(server_queue_len != MAX_SERVER_QUEUE);
 
     size_t len = strlen(op) + 1;
@@ -184,7 +184,7 @@ static int server_send(const char* op) {
 }
 
 // Client send callback that stores op in the staging area until it is flushed.
-static int client_send(const char* op) {
+static int client_send(const char* op, void* __unused context) {
     ot_op* dec = ot_new_op();
     ot_decode(dec, op);
     size_t id = dec->client_id;
@@ -200,24 +200,21 @@ static int client_send(const char* op) {
     return 0;
 }
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wunused-parameter"
-
 // Server event callback function that simply asserts that an event type was
 // provided.
-static int server_event(ot_event_type t, ot_op* op) {
+static int server_event(ot_event_type t, ot_op* __unused op,
+                        void* __unused context) {
     assert(t);
     return 0;
 }
 
 // Client event callback function used by all of the clients that simply asserts
 // that an event type was provided.
-static int client_event(ot_event_type t, ot_op* op) {
+static int client_event(ot_event_type t, ot_op* __unused op,
+                        void* __unused context) {
     assert(t);
     return 0;
 }
-
-#pragma clang diagnostic pop
 
 // Asserts that two operations are equal. If they aren't, msg will be set to an
 // error message.

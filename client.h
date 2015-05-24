@@ -18,6 +18,7 @@ typedef struct {
     bool ack_required;
     ot_op* anticipated;
     ot_op* buffer;
+    void* context;
 } ot_client;
 
 ot_client* ot_new_client(send_func send, ot_event_func event);

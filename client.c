@@ -100,7 +100,7 @@ static void send_buffer(ot_client* client, const char* received_hash) {
     }
 
     char* enc_buf = ot_encode(client->buffer);
-    client->send(enc_buf);
+    client->send(enc_buf, client->context);
     fprintf(stderr, "[INFO] Sent message.\n\tJSON: %s\n", enc_buf);
     free(enc_buf);
 
@@ -116,7 +116,7 @@ static void send_buffer(ot_client* client, const char* received_hash) {
 }
 
 static void fire_op_event(ot_client* client, ot_event_type type, ot_op* op) {
-    client->event(type, op);
+    client->event(type, op, client->context);
 }
 
 // xform_anticipated calculates a new anticipated op by transforming the current
@@ -235,6 +235,7 @@ ot_client* ot_new_client(send_func send, ot_event_func event) {
     client->doc = NULL;
     client->client_id = 0;
     client->ack_required = false;
+    client->context = NULL;
 
     return client;
 }

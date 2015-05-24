@@ -1,7 +1,7 @@
 #include "server.h"
 
 static void send(ot_server* server, const char* json) {
-    server->send(json);
+    server->send(json, server->context);
     fprintf(stderr, "[INFO] Sent message.\n\tJSON: %s\n", json);
 }
 
