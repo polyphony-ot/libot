@@ -115,7 +115,9 @@ extern const struct ltc_hash_descriptor sha1_desc;
 
 #define LTC_ARGCHK(x) assert((x))
 
+#ifndef MIN
 #define MIN(x, y) (((x) < (y)) ? (x) : (y))
+#endif
 
 #define HASH_PROCESS(func_name, compress_name, state_var, block_size)          \
     int func_name(hash_state* md, const char* in, uint32_t inlen) {            \
