@@ -88,7 +88,7 @@ extern const struct ltc_hash_descriptor sha1_desc;
         (y)[0] = (char)(((x) >> 24) & 255);                                    \
         (y)[1] = (char)(((x) >> 16) & 255);                                    \
         (y)[2] = (char)(((x) >> 8) & 255);                                     \
-        (y)[3] = (char)((x) & 255);                                            \
+        (y)[3] = (char)((x)&255);                                              \
     }
 
 #define STORE64H(x, y)                                                         \
@@ -100,17 +100,17 @@ extern const struct ltc_hash_descriptor sha1_desc;
         (y)[4] = (char)(((x) >> 24) & 255);                                    \
         (y)[5] = (char)(((x) >> 16) & 255);                                    \
         (y)[6] = (char)(((x) >> 8) & 255);                                     \
-        (y)[7] = (char)((x) & 255);                                            \
+        (y)[7] = (char)((x)&255);                                              \
     }
 
 #define ROL(x, y)                                                              \
-    ((((uint32_t)(x) << (uint32_t)((y) & 31)) |                                \
-      (((uint32_t)(x) & 0xFFFFFFFFUL) >> (uint32_t)(32 - ((y) & 31)))) &       \
+    ((((uint32_t)(x) << (uint32_t)((y)&31)) |                                  \
+      (((uint32_t)(x)&0xFFFFFFFFUL) >> (uint32_t)(32 - ((y)&31)))) &           \
      0xFFFFFFFFUL)
 
 #define ROLc(x, y)                                                             \
-    ((((uint32_t)(x) << (uint32_t)((y) & 31)) |                                \
-      (((uint32_t)(x) & 0xFFFFFFFFUL) >> (uint32_t)(32 - ((y) & 31)))) &       \
+    ((((uint32_t)(x) << (uint32_t)((y)&31)) |                                  \
+      (((uint32_t)(x)&0xFFFFFFFFUL) >> (uint32_t)(32 - ((y)&31)))) &           \
      0xFFFFFFFFUL)
 
 #define LTC_ARGCHK(x) assert((x))

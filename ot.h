@@ -62,21 +62,13 @@ typedef enum {
     OT_FORMATTING_BOUNDARY = 5
 } ot_comp_type;
 
-typedef struct ot_comp_skip {
-    uint32_t count;
-} ot_comp_skip;
+typedef struct ot_comp_skip { uint32_t count; } ot_comp_skip;
 
-typedef struct ot_comp_insert {
-    char* text;
-} ot_comp_insert;
+typedef struct ot_comp_insert { char* text; } ot_comp_insert;
 
-typedef struct ot_comp_delete {
-    uint32_t count;
-} ot_comp_delete;
+typedef struct ot_comp_delete { uint32_t count; } ot_comp_delete;
 
-typedef struct ot_comp_open_element {
-    char* elem;
-} ot_comp_open_element;
+typedef struct ot_comp_open_element { char* elem; } ot_comp_open_element;
 
 typedef struct ot_comp_fmtbound {
     array start;

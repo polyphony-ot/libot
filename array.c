@@ -8,7 +8,9 @@ void array_init(array* arr, size_t size) {
     arr->data = NULL;
 }
 
-void array_free(array* arr) { free(arr->data); }
+void array_free(array* arr) {
+    free(arr->data);
+}
 
 void array_copy(array* dst, const array* src) {
     dst->len = src->len;

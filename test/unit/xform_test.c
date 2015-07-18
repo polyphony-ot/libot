@@ -37,7 +37,7 @@ static bool param_xform_test(ot_op* initial, ot_op* op1, ot_op* op2,
 
 static bool xform_skip_skip(char** msg) {
     const char* const NONEMPTY_STRING = "abcこんにちは";
-    const uint32_t string_length = (uint32_t) utf8_length(NONEMPTY_STRING);
+    const uint32_t string_length = (uint32_t)utf8_length(NONEMPTY_STRING);
 
     ot_op* initial = ot_new_op();
     ot_insert(initial, NONEMPTY_STRING);
@@ -58,7 +58,7 @@ static bool xform_skip_insert(char** msg) {
     const char* const INSERT1 = "こんにちはdef";
     const char* const INSERT2 = "こんにちはabc";
     const char* const EXPECTED_INSERT = "こんにちはabcこんにちはdef";
-    const uint32_t insert1_length = (uint32_t) utf8_length(INSERT1);
+    const uint32_t insert1_length = (uint32_t)utf8_length(INSERT1);
 
     ot_op* initial = ot_new_op();
     ot_insert(initial, INSERT1);
@@ -78,7 +78,7 @@ static bool xform_skip_insert(char** msg) {
 
 static bool xform_skip_delete(char** msg) {
     const char* const NONEMPTY_STRING = "abcこんにちは";
-    const uint32_t string_length = (uint32_t) utf8_length(NONEMPTY_STRING);
+    const uint32_t string_length = (uint32_t)utf8_length(NONEMPTY_STRING);
 
     ot_op* initial = ot_new_op();
     ot_insert(initial, NONEMPTY_STRING);
@@ -116,8 +116,8 @@ static bool xform_insert_insert(char** msg) {
 static bool xform_insert_delete(char** msg) {
     const char* const INITIAL = "こんにちはabc";
     const char* const INSERT = "こんにちはdef";
-    const uint32_t initial_length = (uint32_t) utf8_length(INITIAL);
-    const uint32_t insert_length = (uint32_t) utf8_length(INSERT);
+    const uint32_t initial_length = (uint32_t)utf8_length(INITIAL);
+    const uint32_t insert_length = (uint32_t)utf8_length(INSERT);
 
     ot_op* initial = ot_new_op();
     ot_insert(initial, INITIAL);
@@ -137,7 +137,7 @@ static bool xform_insert_delete(char** msg) {
 
 static bool xform_delete_delete(char** msg) {
     const char* const INITIAL = "abcこんにちは";
-    const uint32_t initial_length = (uint32_t) utf8_length(INITIAL);
+    const uint32_t initial_length = (uint32_t)utf8_length(INITIAL);
 
     ot_op* initial = ot_new_op();
     ot_insert(initial, INITIAL);

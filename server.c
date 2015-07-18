@@ -135,7 +135,9 @@ void ot_free_server(ot_server* server) {
     free(server);
 }
 
-void ot_server_open(ot_server* server, ot_doc* doc) { server->doc = doc; }
+void ot_server_open(ot_server* server, ot_doc* doc) {
+    server->doc = doc;
+}
 
 void ot_server_receive(ot_server* server, const char* op) {
     fprintf(stderr, "[INFO] Received message.\n\tJSON: %s\n", op);

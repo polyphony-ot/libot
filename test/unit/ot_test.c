@@ -410,7 +410,7 @@ static bool size_of_op_with_only_inserts_equals_length_of_snapshot(char** msg) {
     ot_insert(op, NONEMPTY_STRING);
 
     char* snapshot = ot_snapshot(op);
-    uint32_t snapshot_len = (uint32_t) strlen(snapshot);
+    uint32_t snapshot_len = (uint32_t)strlen(snapshot);
     uint32_t size = ot_size(op);
 
     ASSERT_INT_EQUAL(snapshot_len, size,

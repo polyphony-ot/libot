@@ -79,7 +79,7 @@ static bool compose_skip_delete(char** msg) {
 
 static bool compose_insert_skip(char** msg) {
     const char* const NONEMPTY_STRING = "abcこんにちは";
-    const uint32_t insert_len = (uint32_t) utf8_length(NONEMPTY_STRING);
+    const uint32_t insert_len = (uint32_t)utf8_length(NONEMPTY_STRING);
 
     ot_op* expected = ot_new_op();
     ot_insert(expected, NONEMPTY_STRING);
@@ -96,7 +96,7 @@ static bool compose_insert_skip(char** msg) {
 static bool compose_insert_insert(char** msg) {
     const char* const INSERT1 = "defこんにちは";
     const char* const INSERT2 = "abcこんにちは";
-    const uint32_t insert2_len = (uint32_t) utf8_length(INSERT2);
+    const uint32_t insert2_len = (uint32_t)utf8_length(INSERT2);
     const char* const EXPECTED_INSERT = "abcこんにちはdefこんにちは";
 
     ot_op* expected = ot_new_op();
@@ -114,7 +114,7 @@ static bool compose_insert_insert(char** msg) {
 
 static bool compose_insert_delete(char** msg) {
     const char* const NONEMPTY_STRING = "abcこんにちは";
-    const uint32_t insert_len = (uint32_t) utf8_length(NONEMPTY_STRING);
+    const uint32_t insert_len = (uint32_t)utf8_length(NONEMPTY_STRING);
 
     ot_op* expected = ot_new_op();
 

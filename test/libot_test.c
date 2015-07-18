@@ -369,7 +369,9 @@ MU_TEST(sha1) {
     }
 }
 
-MU_TEST_SUITE(sha1_test_suite) { MU_RUN_TEST(sha1); }
+MU_TEST_SUITE(sha1_test_suite) {
+    MU_RUN_TEST(sha1);
+}
 
 /* doc tests */
 

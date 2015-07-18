@@ -254,7 +254,9 @@ void ot_free_client(ot_client* client) {
     free(client);
 }
 
-void ot_client_open(ot_client* client, ot_doc* doc) { client->doc = doc; }
+void ot_client_open(ot_client* client, ot_doc* doc) {
+    client->doc = doc;
+}
 
 void ot_client_receive(ot_client* client, const char* op) {
     fprintf(stderr, "[INFO] Received message.\n\tJSON: %s\n", op);

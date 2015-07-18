@@ -348,7 +348,7 @@ uint32_t ot_comp_size(const ot_comp* comp) {
     case OT_SKIP:
         return comp->value.skip.count;
     case OT_INSERT:
-        return (uint32_t) utf8_length(comp->value.insert.text);
+        return (uint32_t)utf8_length(comp->value.insert.text);
     case OT_DELETE:
         return comp->value.delete.count;
     case OT_OPEN_ELEMENT:
@@ -381,7 +381,9 @@ static bool ot_iter_adv(ot_iter* iter, size_t n, size_t max) {
     return false;
 }
 
-bool ot_iter_next(ot_iter* iter) { return ot_iter_skip(iter, 1); }
+bool ot_iter_next(ot_iter* iter) {
+    return ot_iter_skip(iter, 1);
+}
 
 // This can be made more efficient instead of simply calling ot_iter_next()
 // "count" times.
