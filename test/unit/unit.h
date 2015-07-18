@@ -83,8 +83,8 @@ static bool assert_condition(bool condition, const char* expected,
     return false;
 }
 
-static bool assert_int_equal(int expected, int actual, char* detail, char* loc,
-                             char** msg) {
+static bool assert_int_equal(unsigned long expected, unsigned long actual,
+                             char* detail, char* loc, char** msg) {
 
     if (expected == actual) {
         return true;

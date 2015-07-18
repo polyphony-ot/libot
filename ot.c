@@ -348,7 +348,7 @@ uint32_t ot_comp_size(const ot_comp* comp) {
     case OT_SKIP:
         return comp->value.skip.count;
     case OT_INSERT:
-        return utf8_length(comp->value.insert.text);
+        return (uint32_t) utf8_length(comp->value.insert.text);
     case OT_DELETE:
         return comp->value.delete.count;
     case OT_OPEN_ELEMENT:

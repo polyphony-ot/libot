@@ -410,7 +410,7 @@ static bool size_of_op_with_only_inserts_equals_length_of_snapshot(char** msg) {
     ot_insert(op, NONEMPTY_STRING);
 
     char* snapshot = ot_snapshot(op);
-    uint32_t snapshot_len = strlen(snapshot);
+    uint32_t snapshot_len = (uint32_t) strlen(snapshot);
     uint32_t size = ot_size(op);
 
     ASSERT_INT_EQUAL(snapshot_len, size,
@@ -423,10 +423,11 @@ static bool size_of_op_with_only_inserts_equals_length_of_snapshot(char** msg) {
 }
 
 static bool size_with_delete(char** msg) {
-    const int EXPECTED_SIZE = -1;
+    const int EXPECTED_SIZE = 0;
     const int DELETE_COUNT = 1;
 
     ot_op* op = ot_new_op();
+    ot_insert(op, "a");
     ot_delete(op, DELETE_COUNT);
     uint32_t actual_size = ot_size(op);
 

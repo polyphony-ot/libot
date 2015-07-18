@@ -134,7 +134,7 @@ static void setup(size_t num_clients) {
     clients_len = num_clients;
     server = ot_new_server(server_send, server_event);
 
-    for (size_t i = 0; i < num_clients; ++i) {
+    for (uint32_t i = 0; i < num_clients; ++i) {
         clients[i] = ot_new_client(client_send, client_event);
         clients[i]->client_id = i;
     }
